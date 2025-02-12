@@ -1,8 +1,9 @@
 # Description
+
 Confirm each of the checklist points has been completed as part of the review process.
 
-
 ## Checklist
+
 - [ ] has cloned repo locally
 - [ ] has successfully run service
 - [ ] has verified all ACs covered by tests

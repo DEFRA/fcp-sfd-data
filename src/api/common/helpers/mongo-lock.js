@@ -18,4 +18,3 @@ async function requireLock(locker, resource) {
 }
 
 export { acquireLock, requireLock }
-

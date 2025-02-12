@@ -18,7 +18,7 @@ describe('#exampleFindAllController', () => {
 
   afterEach(async () => {
     await server.db.collection('example-data').deleteMany({})
-  }) 
+  })
 
   afterAll(async () => {
     await server.stop({ timeout: 0 })
@@ -40,4 +40,3 @@ describe('#exampleFindAllController', () => {
     expect(statusCode).toBe(StatusCodes.OK)
   })
 })
-

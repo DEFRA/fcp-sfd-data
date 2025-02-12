@@ -21,9 +21,6 @@ export default {
     '^.+\\.js$': 'babel-jest'
   },
   transformIgnorePatterns: [
-    `node_modules/(?!${[
-      '@defra/hapi-tracing',
-      'node-fetch'
-    ].join('|')}/)`
+    `node_modules/(?!${['@defra/hapi-tracing', 'node-fetch'].join('|')}/)`
   ]
 }

@@ -21,7 +21,7 @@ describe('Lock Functions', () => {
       const resource = 'testResource'
       const mockLock = { id: 'lockId' }
 
-      locker.lock.mockResolvedValue(mockLock) 
+      locker.lock.mockResolvedValue(mockLock)
 
       const result = await acquireLock(locker, resource, logger)
 
@@ -33,7 +33,7 @@ describe('Lock Functions', () => {
     test('should log error and return null if lock cannot be acquired', async () => {
       const resource = 'testResource'
 
-      locker.lock.mockResolvedValue(null) 
+      locker.lock.mockResolvedValue(null)
 
       const result = await acquireLock(locker, resource, logger)
 

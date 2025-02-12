@@ -6,4 +6,3 @@ const healthController = {
 }
 
 export { healthController }
-

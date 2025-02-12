@@ -16,4 +16,3 @@ const exampleFindOneController = {
 }
 
 export { exampleFindOneController }
-

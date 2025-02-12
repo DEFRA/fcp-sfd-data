@@ -52,7 +52,6 @@ describe('#exampleFindAllController', () => {
       message: 'Not Found',
       statusCode: 404
     })
-    expect(statusCode).toBe(statusCodes.notFound)
+    expect(statusCode).toBe(StatusCodes.NOT_FOUND)
   })
 })
-
