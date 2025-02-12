@@ -1,8 +1,7 @@
 import { createServer } from '~/src/api/index.js'
-import { statusCodes } from '~/src/api/common/constants/status-codes.js'
+import { StatusCodes } from 'http-status-codes'
 
 describe('#exampleFindAllController', () => {
-  /** @type {Server} */
   let server
 
   beforeAll(async () => {
@@ -38,7 +37,7 @@ describe('#exampleFindAllController', () => {
         },
         message: 'success'
       })
-      expect(statusCode).toBe(statusCodes.ok)
+      expect(statusCode).toBe(StatusCodes.OK)
     })
   })
 
@@ -57,6 +56,3 @@ describe('#exampleFindAllController', () => {
   })
 })
 
-/**
- * @import { Server } from '@hapi/hapi'
- */

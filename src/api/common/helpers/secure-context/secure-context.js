@@ -3,10 +3,6 @@ import { config } from '~/src/config/index.js'
 
 import { getTrustStoreCerts } from '~/src/api/common/helpers/secure-context/get-trust-store-certs.js'
 
-/**
- * Creates a new secure context loaded from Base64 encoded certs
- * @satisfies {ServerRegisterPluginObject<void>}
- */
 export const secureContext = {
   plugin: {
     name: 'secure-context',
@@ -37,7 +33,3 @@ export const secureContext = {
     }
   }
 }
-
-/**
- * @import { ServerRegisterPluginObject } from '@hapi/hapi'
- */

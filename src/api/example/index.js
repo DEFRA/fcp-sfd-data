@@ -3,9 +3,6 @@ import {
   exampleFindAllController
 } from '~/src/api/example/controllers/index.js'
 
-/**
- * @satisfies {ServerRegisterPluginObject<void>}
- */
 const example = {
   plugin: {
     name: 'example',
@@ -27,7 +24,3 @@ const example = {
 }
 
 export { example }
-
-/**
- * @import { ServerRegisterPluginObject } from '@hapi/hapi'
- */

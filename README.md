@@ -1,6 +1,6 @@
 # fcp-sfd-data
 
-Core delivery platform Node.js Backend Template.
+Data integration layer for the Single Front Door.
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)

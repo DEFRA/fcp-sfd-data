@@ -21,7 +21,7 @@ describe('Lock Functions', () => {
       const resource = 'testResource'
       const mockLock = { id: 'lockId' }
 
-      locker.lock.mockResolvedValue(mockLock) // Mocking lock method to resolve a lock
+      locker.lock.mockResolvedValue(mockLock) 
 
       const result = await acquireLock(locker, resource, logger)
 
@@ -33,7 +33,7 @@ describe('Lock Functions', () => {
     test('should log error and return null if lock cannot be acquired', async () => {
       const resource = 'testResource'
 
-      locker.lock.mockResolvedValue(null) // Mocking lock method to resolve to null
+      locker.lock.mockResolvedValue(null) 
 
       const result = await acquireLock(locker, resource, logger)
 
@@ -50,7 +50,7 @@ describe('Lock Functions', () => {
       const resource = 'testResource'
       const mockLock = { id: 'lockId' }
 
-      locker.lock.mockResolvedValue(mockLock) // Mocking lock method to resolve a lock
+      locker.lock.mockResolvedValue(mockLock)
 
       const result = await requireLock(locker, resource)
 
@@ -61,7 +61,7 @@ describe('Lock Functions', () => {
     test('should throw error if lock cannot be acquired', async () => {
       const resource = 'testResource'
 
-      locker.lock.mockResolvedValue(null) // Mocking lock method to resolve to null
+      locker.lock.mockResolvedValue(null)
 
       await expect(requireLock(locker, resource)).rejects.toThrow(
         `Failed to acquire lock for ${resource}`

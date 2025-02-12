@@ -1,8 +1,7 @@
 import { createServer } from '~/src/api/index.js'
-import { statusCodes } from '~/src/api/common/constants/status-codes.js'
+import { StatusCodes } from 'http-status-codes'
 
 describe('#healthController', () => {
-  /** @type {Server} */
   let server
 
   beforeAll(async () => {
@@ -21,10 +20,6 @@ describe('#healthController', () => {
     })
 
     expect(result).toEqual({ message: 'success' })
-    expect(statusCode).toBe(statusCodes.ok)
+    expect(statusCode).toBe(StatusCodes.OK)
   })
 })
-
-/**
- * @import { Server } from '@hapi/hapi'
- */

@@ -1,6 +1,3 @@
-/**
- * @type {Config}
- */
 export default {
   rootDir: '.',
   verbose: true,
@@ -25,12 +22,8 @@ export default {
   },
   transformIgnorePatterns: [
     `node_modules/(?!${[
-      '@defra/hapi-tracing', // Supports ESM only
-      'node-fetch' // Supports ESM only
+      '@defra/hapi-tracing',
+      'node-fetch'
     ].join('|')}/)`
   ]
 }
-
-/**
- * @import { Config } from 'jest'
- */
