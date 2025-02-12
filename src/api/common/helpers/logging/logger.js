@@ -2,7 +2,7 @@ import { pino } from 'pino'
 
 import { loggerOptions } from '~/src/api/common/helpers/logging/logger-options.js'
 
-function createLogger() {
+const createLogger = () => {
   return pino(loggerOptions)
 }
 

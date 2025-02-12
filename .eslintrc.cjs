@@ -1,6 +1,3 @@
-/**
- * @type {ESLint.ConfigData}
- */
 module.exports = {
   ignorePatterns: ['.server', '.public', 'src/__fixtures__', 'coverage'],
   overrides: [
@@ -43,34 +40,26 @@ module.exports = {
         ],
         'no-console': 'error',
 
-        // Turn off strict type checking rules
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-return': 'off',
 
-        // JSDoc blocks are optional by default
         'jsdoc/require-jsdoc': 'off',
 
-        // JSDoc @param types are mandatory for JavaScript
         'jsdoc/require-param-description': 'off',
         'jsdoc/require-param-type': 'error',
         'jsdoc/require-param': 'off',
 
-        // JSDoc @property description is optional
         'jsdoc/require-property-description': 'off',
 
-        // JSDoc @returns is optional
         'jsdoc/require-returns-description': 'off',
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-returns': 'off',
 
-        // Check for mandatory file extensions
-        // https://nodejs.org/api/esm.html#mandatory-file-extensions
         'import/extensions': ['error', 'always', { ignorePackages: true }],
 
-        // Skip rules handled by TypeScript compiler
         'import/default': 'off',
         'import/namespace': 'off',
         'n/no-extraneous-require': 'off',
@@ -105,7 +94,6 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
 
-        // Allow require devDependencies
         'n/no-unpublished-require': [
           'error',
           {
@@ -136,11 +124,9 @@ module.exports = {
       files: ['**/*.test.{cjs,js}', '**/__mocks__/**'],
       plugins: ['jest'],
       rules: {
-        // Allow Jest to assert on mocked unbound methods
         '@typescript-eslint/unbound-method': 'off',
         'jest/unbound-method': 'error',
 
-        // Allow import devDependencies
         'n/no-unpublished-import': [
           'error',
           {
@@ -152,7 +138,3 @@ module.exports = {
   ],
   root: true
 }
-
-/**
- * @import { ESLint } from 'eslint'
- */

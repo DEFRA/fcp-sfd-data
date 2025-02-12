@@ -6,7 +6,7 @@ import { config } from '~/src/config/index.js'
 
 const logger = createLogger()
 
-export function setupProxy() {
+export const setupProxy = () => {
   const proxyUrl = config.get('httpProxy')
 
   if (proxyUrl) {

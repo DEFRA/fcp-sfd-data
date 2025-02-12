@@ -11,7 +11,7 @@ import { pulse } from '~/src/api/common/helpers/pulse.js'
 import { requestTracing } from '~/src/api/common/helpers/request-tracing.js'
 import { setupProxy } from '~/src/api/common/helpers/proxy/setup-proxy.js'
 
-async function createServer() {
+const createServer = async () => {
   setupProxy()
   const server = hapi.server({
     port: config.get('port'),

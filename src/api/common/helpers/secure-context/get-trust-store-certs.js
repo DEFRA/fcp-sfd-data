@@ -1,4 +1,4 @@
-function getTrustStoreCerts(envs) {
+const getTrustStoreCerts = (envs) => {
   return Object.entries(envs)
     .map(([key, value]) => key.startsWith('TRUSTSTORE_') && value)
     .filter(

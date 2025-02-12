@@ -1,4 +1,4 @@
-async function acquireLock(locker, resource, logger) {
+const acquireLock = async (locker, resource, logger) => {
   const lock = await locker.lock(resource)
   if (!lock) {
     if (logger) {
