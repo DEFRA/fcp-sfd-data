@@ -5,7 +5,7 @@ export default {
     },
     autoStart: false,
     instance: {
-      dbName: 'cdp-node-backend-template'
+      dbName: 'fcp-sfd-data'
     }
   },
   mongoURLEnvName: 'MONGO_URI',
