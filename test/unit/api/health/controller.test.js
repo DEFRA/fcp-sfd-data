@@ -1,4 +1,4 @@
-import { createServer } from '~/src/api/index.js'
+import { createServer } from '../index.js'
 import { StatusCodes } from 'http-status-codes'
 
 describe('#healthController', () => {
