@@ -3,7 +3,7 @@ services:
     build:
       target: development
     image: fcp-sfd-data-development
-    container_name: fcp-sfd-data-development
+    container_name: fcp-sfd-data-test
     command: npm run test
     env_file:
       - path: .env
@@ -13,6 +13,8 @@ services:
       NODE_ENV: development
       LOCALSTACK_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
+    volumes:
+      - ./coverage:/home/node/coverage
     networks:
       - cdp-tenant
 

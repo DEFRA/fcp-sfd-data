@@ -37,6 +37,7 @@ jobs:
 
       - name: Run Tests
         run: |
+          mkdir -p coverage
           docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
