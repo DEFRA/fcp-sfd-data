@@ -5,10 +5,6 @@ import environments from '../api/common/constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const isProduction = environments.PRODUCTION
-const isDev = environments.DEVELOPMENT
-const isTest = environments.TEST
-
 const config = convict({
   serviceVersion: {
     doc: 'The service version, this variable is injected into your docker container in CDP environments',
@@ -42,23 +38,23 @@ const config = convict({
   isProduction: {
     doc: 'If this application running in the production environment',
     format: Boolean,
-    default: isProduction
+    default: environments.PRODUCTION
   },
   isDevelopment: {
     doc: 'If this application running in the development environment',
     format: Boolean,
-    default: isDev
+    default: environments.DEVELOPMENT
   },
   isTest: {
     doc: 'If this application running in the test environment',
     format: Boolean,
-    default: isTest
+    default: environments.TEST
   },
   log: {
     enabled: {
       doc: 'Is logging enabled',
       format: Boolean,
-      default: !isTest,
+      default: !environments.TEST,
       env: 'LOG_ENABLED'
     },
     level: {
@@ -70,13 +66,13 @@ const config = convict({
     format: {
       doc: 'Format to output logs in.',
       format: ['ecs', 'pino-pretty'],
-      default: isProduction ? 'ecs' : 'pino-pretty',
+      default: environments.PRODUCTION ? 'ecs' : 'pino-pretty',
       env: 'LOG_FORMAT'
     },
     redact: {
       doc: 'Log paths to redact',
       format: Array,
-      default: isProduction
+      default: environments.PRODUCTION
         ? ['req.headers.authorization', 'req.headers.cookie', 'res.headers']
         : ['req', 'res', 'responseTime']
     }
@@ -103,13 +99,13 @@ const config = convict({
   isSecureContextEnabled: {
     doc: 'Enable Secure Context',
     format: Boolean,
-    default: isProduction,
+    default: environments.PRODUCTION,
     env: 'ENABLE_SECURE_CONTEXT'
   },
   isMetricsEnabled: {
     doc: 'Enable metrics reporting',
     format: Boolean,
-    default: isProduction,
+    default: environments.PRODUCTION,
     env: 'ENABLE_METRICS'
   },
   tracing: {
