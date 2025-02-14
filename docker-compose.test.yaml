@@ -5,6 +5,9 @@ services:
     image: fcp-sfd-data-development
     container_name: fcp-sfd-data-development
     command: npm run test
+    env_file:
+      - path: .env
+        required: false
     environment:
       PORT: 3001
       NODE_ENV: development
@@ -14,6 +17,9 @@ services:
       - cdp-tenant
 
   localstack:
+    env_file:
+      - path: .env
+        required: false
 
   mongodb:
     volumes:
