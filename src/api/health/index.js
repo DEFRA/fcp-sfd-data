@@ -1,4 +1,4 @@
-import { healthController } from './controller.js'
+import { healthHandler } from './handler.js'
 
 const health = {
   plugin: {
@@ -7,7 +7,7 @@ const health = {
       server.route({
         method: 'GET',
         path: '/health',
-        ...healthController
+        ...healthHandler
       })
     }
   }
