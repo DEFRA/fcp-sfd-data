@@ -1,12 +1,13 @@
 import convict from 'convict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import environments from '../api/common/constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const isProduction = process.env.NODE_ENV === 'production'
-const isDev = process.env.NODE_ENV === 'development'
-const isTest = process.env.NODE_ENV === 'test'
+const isProduction = environments.PRODUCTION
+const isDev = environments.DEVELOPMENT
+const isTest = environments.TEST
 
 const config = convict({
   serviceVersion: {
