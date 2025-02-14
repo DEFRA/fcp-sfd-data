@@ -45,7 +45,7 @@ services:
       mongodb:
         condition: service_started
     env_file:
-      - 'compose/aws.env'
+      - '.env'
     environment:
       PORT: 3001
       NODE_ENV: development
