@@ -28,13 +28,16 @@ jobs:
           cache: npm
       - run: |
           npm ci
-          npm test
 
-      - name: Test Docker Image Build
+      - name: Build Docker Image
         run: |
           set +e
           docker build --no-cache --tag fcp-sfd-data .
           exit $?
+
+      - name: Run Tests
+        run: |
+          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
         uses: SonarSource/sonarqube-scan-action@v4

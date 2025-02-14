@@ -9,8 +9,8 @@
   },
   "scripts": {
     "pretest": "npm run test:lint",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --verbose --runInBand",
-    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --verbose --runInBand",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand",
+    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand",
     "test:lint": "standard",
     "start:watch": "nodemon --watch src --exec 'node --experimental-vm-modules src/index.js'",
     "start": "node --experimental-vm-modules src/index.js"

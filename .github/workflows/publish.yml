@@ -32,7 +32,10 @@ jobs:
       - name: Create Test Coverage Reports
         run: |
           npm ci
-          npm test
+
+      - name: Run Tests
+        run: |
+          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
         uses: SonarSource/sonarqube-scan-action@v4

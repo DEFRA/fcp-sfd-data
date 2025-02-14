@@ -1,0 +1,23 @@
+services:
+  fcp-sfd-data:
+    build:
+      target: development
+    image: fcp-sfd-data-development
+    container_name: fcp-sfd-data-development
+    command: npm run test
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      LOCALSTACK_ENDPOINT: http://localstack:4566
+      MONGO_URI: mongodb://mongodb:27017/
+    networks:
+      - cdp-tenant
+
+  localstack:
+
+  mongodb:
+    volumes:
+      - mongodb-data:/data
+
+volumes:
+  mongodb-data:
