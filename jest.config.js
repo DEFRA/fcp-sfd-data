@@ -1,6 +1,5 @@
 export default {
   rootDir: '.',
-  verbose: true,
   resetModules: true,
   clearMocks: true,
   silent: false,

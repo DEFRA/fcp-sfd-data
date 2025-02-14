@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, describe, test, expect, beforeAll } from '@jest/globals'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
@@ -33,10 +33,8 @@ describe('#startServer', () => {
   })
 
   describe('When server starts', () => {
-    let server
-
     test('Should start up server as expected', async () => {
-      server = await startServer()
+      await startServer()
 
       expect(createServer).toHaveBeenCalled()
 
