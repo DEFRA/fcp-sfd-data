@@ -14,9 +14,8 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 COPY --chown=node:node package*.json ./
 RUN npm install
 COPY --chown=node:node . .
-RUN npm run build
 
-CMD [ "npm", "run", "docker:dev" ]
+CMD [ "npm", "run", "start:watch" ]
 
 FROM defradigital/node:${PARENT_VERSION} AS production
 ARG PARENT_VERSION
@@ -30,7 +29,7 @@ RUN apk update && \
 USER node
 
 COPY --from=development /home/node/package*.json ./
-COPY --from=development /home/node/.server ./.server/
+COPY --from=development /home/node/src ./src
 
 RUN npm ci --omit=dev
 

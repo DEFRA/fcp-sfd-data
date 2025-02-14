@@ -1,5 +1,6 @@
 import hapiPulse from 'hapi-pulse'
-import { createLogger } from '~/src/api/common/helpers/logging/logger.js'
+
+import { createLogger } from './logging/logger.js'
 
 const tenSeconds = 10 * 1000
 
