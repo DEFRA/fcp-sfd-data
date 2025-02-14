@@ -5,6 +5,10 @@ import environments from '../api/common/constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const isProduction = process.env.NODE_ENV === environments.PRODUCTION
+const isDev = process.env.NODE_ENV === environments.DEVELOPMENT
+const isTest = process.env.NODE_ENV === environments.TEST
+
 const config = convict({
   serviceVersion: {
     doc: 'The service version, this variable is injected into your docker container in CDP environments',
@@ -38,23 +42,23 @@ const config = convict({
   isProduction: {
     doc: 'If this application running in the production environment',
     format: Boolean,
-    default: environments.PRODUCTION
+    default: isProduction
   },
   isDevelopment: {
     doc: 'If this application running in the development environment',
     format: Boolean,
-    default: environments.DEVELOPMENT
+    default: isDev
   },
   isTest: {
     doc: 'If this application running in the test environment',
     format: Boolean,
-    default: environments.TEST
+    default: isTest
   },
   log: {
     enabled: {
       doc: 'Is logging enabled',
       format: Boolean,
-      default: !environments.TEST,
+      default: !isTest,
       env: 'LOG_ENABLED'
     },
     level: {
@@ -66,13 +70,13 @@ const config = convict({
     format: {
       doc: 'Format to output logs in.',
       format: ['ecs', 'pino-pretty'],
-      default: environments.PRODUCTION ? 'ecs' : 'pino-pretty',
+      default: isProduction ? 'ecs' : 'pino-pretty',
       env: 'LOG_FORMAT'
     },
     redact: {
       doc: 'Log paths to redact',
       format: Array,
-      default: environments.PRODUCTION
+      default: isProduction
         ? ['req.headers.authorization', 'req.headers.cookie', 'res.headers']
         : ['req', 'res', 'responseTime']
     }
@@ -99,13 +103,13 @@ const config = convict({
   isSecureContextEnabled: {
     doc: 'Enable Secure Context',
     format: Boolean,
-    default: environments.PRODUCTION,
+    default: isProduction,
     env: 'ENABLE_SECURE_CONTEXT'
   },
   isMetricsEnabled: {
     doc: 'Enable metrics reporting',
     format: Boolean,
-    default: environments.PRODUCTION,
+    default: isProduction,
     env: 'ENABLE_METRICS'
   },
   tracing: {
