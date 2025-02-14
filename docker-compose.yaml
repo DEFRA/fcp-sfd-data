@@ -18,8 +18,7 @@ services:
       - ./src/:/home/node/src
       - ./package.json:/home/node/package.json
     env_file:
-      - path: ./.env
-        required: false
+      - .env
     environment:
       PORT: 3001
       NODE_ENV: development
@@ -34,8 +33,7 @@ services:
       - '4566:4566' # LocalStack Gateway
       - '4510-4559:4510-4559' # external services port range
     env_file:
-      - path: ./.env
-        required: false
+      - .env
     environment:
       DEBUG: ${DEBUG:-1}
       LS_LOG: WARN # Localstack DEBUG Level
