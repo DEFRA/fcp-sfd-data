@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, describe, test, expect, beforeEach, beforeAll, afterEach, afterAll } from '@jest/globals'
 
 import hapi from '@hapi/hapi'
 import tls from 'node:tls'
