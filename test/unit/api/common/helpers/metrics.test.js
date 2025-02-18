@@ -14,7 +14,7 @@ jest.mock('aws-embedded-metrics', () => ({
   })
 }))
 
-jest.unstable_mockModule('../../../../../src/api/common/helpers/logging/logger.js', () => ({
+jest.unstable_mockModule('../../../../../src/logging/logger.js', () => ({
   createLogger: () => ({ error: (...args) => mockLoggerError(...args) })
 }))
 

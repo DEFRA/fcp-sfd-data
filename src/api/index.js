@@ -3,7 +3,7 @@ import hapi from '@hapi/hapi'
 
 import { config } from '../config/index.js'
 import { router } from './router.js'
-import { requestLogger } from './common/helpers/logging/request-logger.js'
+import { requestLogger } from './common/helpers/request-logger.js'
 import { secureContext } from './common/helpers/secure-context/index.js'
 import { pulse } from './common/helpers/pulse.js'
 import { requestTracing } from './common/helpers/request-tracing.js'

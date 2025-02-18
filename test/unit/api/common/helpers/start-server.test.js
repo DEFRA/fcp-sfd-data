@@ -3,7 +3,7 @@ import { jest, describe, test, expect, beforeAll } from '@jest/globals'
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
 
-jest.unstable_mockModule('../../../../../src/api/common/helpers/logging/logger.js', () => ({
+jest.unstable_mockModule('../../../../../src/logging/logger.js', () => ({
   createLogger: () => ({
     info: (...args) => mockLoggerInfo(...args),
     error: (...args) => mockLoggerError(...args)

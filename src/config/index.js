@@ -1,7 +1,7 @@
 import convict from 'convict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import environments from '../api/common/constants/environments.js'
+import environments from '../constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -118,6 +118,40 @@ const config = convict({
       format: String,
       default: 'x-cdp-request-id',
       env: 'TRACING_HEADER'
+    }
+  },
+  aws: {
+    endpoint: {
+      doc: 'AWS Endpoint (for LocalStack)',
+      format: String,
+      default: null,
+      env: 'LOCALSTACK_ENDPOINT'
+    },
+    region: {
+      doc: 'AWS Region',
+      format: String,
+      default: 'eu-west-1',
+      env: 'AWS_REGION'
+    },
+    accessKeyId: {
+      doc: 'AWS Access Key ID',
+      format: String,
+      default: null,
+      env: 'AWS_ACCESS_KEY_ID'
+    },
+    secretAccessKey: {
+      doc: 'AWS Secret Access Key',
+      format: String,
+      default: null,
+      env: 'AWS_SECRET_ACCESS_KEY'
+    }
+  },
+  messaging: {
+    dataIngestQueueUrl: {
+      doc: 'Data Message Queue URL',
+      format: String,
+      default: null,
+      env: 'DATA_MESSAGE_QUEUE_URL'
     }
   }
 })
