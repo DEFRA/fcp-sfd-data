@@ -1,9 +1,8 @@
-import { config } from '~/src/config/index.js'
+import { config } from '../../../config/index.js'
+import { createServer } from '../../index.js'
+import { createLogger } from './logging/logger.js'
 
-import { createServer } from '~/src/api/index.js'
-import { createLogger } from '~/src/api/common/helpers/logging/logger.js'
-
-async function startServer() {
+const startServer = async () => {
   let server
 
   try {

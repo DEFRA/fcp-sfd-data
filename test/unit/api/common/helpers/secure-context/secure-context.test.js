@@ -1,12 +1,10 @@
-import hapi from '@hapi/hapi'
+import { jest, describe, test, expect, beforeEach, beforeAll, afterEach, afterAll } from '@jest/globals'
 
-import { secureContext } from '~/src/api/common/helpers/secure-context/index.js'
-import { requestLogger } from '~/src/api/common/helpers/logging/request-logger.js'
-import { config } from '~/src/config/index.js'
+import hapi from '@hapi/hapi'
+import tls from 'node:tls'
 
 const mockAddCACert = jest.fn()
-const mockTlsCreateSecureContext = jest
-  .fn()
+const mockTlsCreateSecureContext = jest.fn()
   .mockReturnValue({ context: { addCACert: mockAddCACert } })
 
 jest.mock('hapi-pino', () => ({
@@ -18,10 +16,10 @@ jest.mock('hapi-pino', () => ({
   },
   name: 'mock-hapi-pino'
 }))
-jest.mock('node:tls', () => ({
-  ...jest.requireActual('node:tls'),
-  createSecureContext: (...args) => mockTlsCreateSecureContext(...args)
-}))
+
+const { config } = await import('../../../../../../src/config/index.js')
+const { secureContext } = await import('../../../../../../src/api/common/helpers/secure-context/index.js')
+const { requestLogger } = await import('../../../../../../src/api/common/helpers/logging/request-logger.js')
 
 describe('#secureContext', () => {
   let server
@@ -52,6 +50,9 @@ describe('#secureContext', () => {
   describe('When secure context is enabled', () => {
     const PROCESS_ENV = process.env
 
+    const createSecureContextSpy = jest.spyOn(tls, 'createSecureContext')
+      .mockImplementation(mockTlsCreateSecureContext)
+
     beforeAll(() => {
       process.env = { ...PROCESS_ENV }
       process.env.TRUSTSTORE_ONE = 'mock-trust-store-cert-one'
@@ -70,6 +71,7 @@ describe('#secureContext', () => {
 
     afterAll(() => {
       process.env = PROCESS_ENV
+      createSecureContextSpy.mockRestore()
     })
 
     test('Original tls.createSecureContext should have been called', () => {

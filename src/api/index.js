@@ -1,26 +1,24 @@
 import path from 'path'
 import hapi from '@hapi/hapi'
 
-import { config } from '~/src/config/index.js'
-import { router } from '~/src/api/router.js'
-import { requestLogger } from '~/src/api/common/helpers/logging/request-logger.js'
-import { mongoDb } from '~/src/api/common/helpers/mongodb.js'
-import { failAction } from '~/src/api/common/helpers/fail-action.js'
-import { secureContext } from '~/src/api/common/helpers/secure-context/index.js'
-import { pulse } from '~/src/api/common/helpers/pulse.js'
-import { requestTracing } from '~/src/api/common/helpers/request-tracing.js'
-import { setupProxy } from '~/src/api/common/helpers/proxy/setup-proxy.js'
+import { config } from '../config/index.js'
+import { router } from './router.js'
+import { requestLogger } from './common/helpers/logging/request-logger.js'
+import { secureContext } from './common/helpers/secure-context/index.js'
+import { pulse } from './common/helpers/pulse.js'
+import { requestTracing } from './common/helpers/request-tracing.js'
+import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
 
-async function createServer() {
+const createServer = async () => {
   setupProxy()
+
   const server = hapi.server({
     port: config.get('port'),
     routes: {
       validate: {
         options: {
           abortEarly: false
-        },
-        failAction
+        }
       },
       files: {
         relativeTo: path.resolve(config.get('root'), '.public')
@@ -41,19 +39,11 @@ async function createServer() {
     }
   })
 
-  // Hapi Plugins:
-  // requestLogger  - automatically logs incoming requests
-  // requestTracing - trace header logging and propagation
-  // secureContext  - loads CA certificates from environment config
-  // pulse          - provides shutdown handlers
-  // mongoDb        - sets up mongo connection pool and attaches to `server` and `request` objects
-  // router         - routes used in the app
   await server.register([
     requestLogger,
     requestTracing,
     secureContext,
     pulse,
-    mongoDb,
     router
   ])
 

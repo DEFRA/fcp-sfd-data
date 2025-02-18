@@ -1,6 +1,6 @@
 # fcp-sfd-data
 
-Core delivery platform Node.js Backend Template.
+Data integration layer for the Single Front Door.
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
@@ -54,7 +54,7 @@ npm install
 To run the application in `development` mode run:
 
 ```bash
-npm run dev
+npm run start
 ```
 
 ### Testing
@@ -63,14 +63,6 @@ To test the application run:
 
 ```bash
 npm run test
-```
-
-### Production
-
-To mimic the application running in `production` mode locally run:
-
-```bash
-npm start
 ```
 
 ### Npm scripts
@@ -93,68 +85,13 @@ To update dependencies use [npm-check-updates](https://github.com/raineorshine/n
 ncu --interactive --format group
 ```
 
-### Formatting
-
-#### Windows prettier issue
-
-If you are having issues with formatting of line breaks on Windows update your global git config by running:
-
-```bash
-git config --global core.autocrlf false
-```
-
 ## API endpoints
 
 | Endpoint             | Description                    |
 | :------------------- | :----------------------------- |
 | `GET: /health`       | Health                         |
-| `GET: /example    `  | Example API (remove as needed) |
-| `GET: /example/<id>` | Example API (remove as needed) |
 
 ## Development helpers
-
-### MongoDB Locks
-
-If you require a write lock for Mongo you can acquire it via `server.locker` or `request.locker`:
-
-```javascript
-async function doStuff(server) {
-  const lock = await server.locker.lock('unique-resource-name')
-
-  if (!lock) {
-    // Lock unavailable
-    return
-  }
-
-  try {
-    // do stuff
-  } finally {
-    await lock.free()
-  }
-}
-```
-
-Keep it small and atomic.
-
-You may use **using** for the lock resource management.
-Note test coverage reports do not like that syntax.
-
-```javascript
-async function doStuff(server) {
-  await using lock = await server.locker.lock('unique-resource-name')
-
-  if (!lock) {
-    // Lock unavailable
-    return
-  }
-
-  // do stuff
-
-  // lock automatically released
-}
-```
-
-Helper methods are also available in `/src/helpers/mongo-lock.js`.
 
 ### Proxy
 

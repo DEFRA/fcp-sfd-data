@@ -1,8 +1,9 @@
-import { createServer } from '~/src/api/index.js'
-import { statusCodes } from '~/src/api/common/constants/status-codes.js'
+import { describe, test, expect, beforeAll, afterAll } from '@jest/globals'
 
-describe('#healthController', () => {
-  /** @type {Server} */
+import { createServer } from '../../../../src/api/index.js'
+import { StatusCodes } from 'http-status-codes'
+
+describe('#healthHandler', () => {
   let server
 
   beforeAll(async () => {
@@ -21,10 +22,6 @@ describe('#healthController', () => {
     })
 
     expect(result).toEqual({ message: 'success' })
-    expect(statusCode).toBe(statusCodes.ok)
+    expect(statusCode).toBe(StatusCodes.OK)
   })
 })
-
-/**
- * @import { Server } from '@hapi/hapi'
- */

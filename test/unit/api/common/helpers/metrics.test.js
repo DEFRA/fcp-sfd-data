@@ -1,7 +1,6 @@
-import { StorageResolution, Unit } from 'aws-embedded-metrics'
+import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
-import { config } from '~/src/config/index.js'
-import { metricsCounter } from '~/src/api/common/helpers/metrics.js'
+import { StorageResolution, Unit } from 'aws-embedded-metrics'
 
 const mockPutMetric = jest.fn()
 const mockFlush = jest.fn()
@@ -14,9 +13,13 @@ jest.mock('aws-embedded-metrics', () => ({
     flush: mockFlush
   })
 }))
-jest.mock('~/src/api/common/helpers/logging/logger.js', () => ({
+
+jest.unstable_mockModule('../../../../../src/api/common/helpers/logging/logger.js', () => ({
   createLogger: () => ({ error: (...args) => mockLoggerError(...args) })
 }))
+
+const { config } = await import('../../../../../src/config/index.js')
+const { metricsCounter } = await import('../../../../../src/api/common/helpers/metrics.js')
 
 const mockMetricsName = 'mock-metrics-name'
 const defaultMetricsValue = 1
@@ -86,7 +89,3 @@ describe('#metrics', () => {
     })
   })
 })
-
-/**
- * @import { Server } from '@hapi/hapi'
- */
