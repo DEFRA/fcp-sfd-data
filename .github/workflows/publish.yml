@@ -24,17 +24,22 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Build and Publish
-        uses: DEFRA/cdp-build-action/build@main
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Test Coverage Reports
         run: |
           npm ci
-          npm test
+
+      - name: Run Tests
+        run: |
+          mkdir -p coverage
+          chmod -R a+rw ./coverage
+          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
         uses: SonarSource/sonarqube-scan-action@v4
         env: 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Build and Publish
+        uses: DEFRA/cdp-build-action/build@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

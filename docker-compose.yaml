@@ -1,11 +1,39 @@
 services:
+  fcp-sfd-data:
+    build:
+      target: development
+    image: fcp-sfd-data-development
+    container_name: fcp-sfd-data-development
+    ports:
+      - '3001:3001'
+    links:
+      - 'localstack:localstack'
+      - 'mongodb:mongodb'
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    volumes:
+      - ./src/:/home/node/src
+      - ./package.json:/home/node/package.json
+    env_file:
+      - .env
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      LOCALSTACK_ENDPOINT: http://localstack:4566
+      MONGO_URI: mongodb://mongodb:27017/
+    networks:
+      - cdp-tenant
+
   localstack:
     image: localstack/localstack:3.0.2
     ports:
       - '4566:4566' # LocalStack Gateway
       - '4510-4559:4510-4559' # external services port range
     env_file:
-      - 'compose/aws.env'
+      - .env
     environment:
       DEBUG: ${DEBUG:-1}
       LS_LOG: WARN # Localstack DEBUG Level
@@ -31,28 +59,6 @@ services:
     volumes:
       - mongodb-data:/data
     restart: always
-
-  fcp-sfd-data:
-    build: ./
-    ports:
-      - '3001:3001'
-    links:
-      - 'localstack:localstack'
-      - 'mongodb:mongodb'
-    depends_on:
-      localstack:
-        condition: service_healthy
-      mongodb:
-        condition: service_started
-    env_file:
-      - '.env'
-    environment:
-      PORT: 3001
-      NODE_ENV: development
-      LOCALSTACK_ENDPOINT: http://localstack:4566
-      MONGO_URI: mongodb://mongodb:27017/
-    networks:
-      - cdp-tenant
 
 volumes:
   mongodb-data:
