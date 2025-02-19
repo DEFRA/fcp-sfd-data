@@ -24,7 +24,8 @@ services:
       NODE_ENV: development
       LOCALSTACK_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
-      DATA_MESSAGE_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp-sfd-data-ingest.fifo
+      DATA_INGEST_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest.fifo
+      DATA_INGEST_DEAD_LETTER_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest_dlq.fifo
     networks:
       - cdp-tenant
 

@@ -9,11 +9,14 @@ services:
       - path: .env
         required: false
     environment:
-      PORT: 3001
-      NODE_ENV: development
       LOCALSTACK_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
+      DATA_INGEST_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest.fifo
+      DATA_INGEST_DEAD_LETTER_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest_dlq.fifo
     volumes:
+      - ./src/:/home/node/src
+      - ./test/:/home/node/test
+      - ./package.json:/home/node/package.json
       - ./coverage:/home/node/coverage
     networks:
       - cdp-tenant
@@ -22,6 +25,8 @@ services:
     env_file:
       - path: .env
         required: false
+    networks:
+      - cdp-tenant
 
   mongodb:
     volumes:
@@ -29,3 +34,7 @@ services:
 
 volumes:
   mongodb-data:
+
+networks:
+  cdp-tenant:
+    driver: bridge
