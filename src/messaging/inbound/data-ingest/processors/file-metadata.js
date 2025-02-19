@@ -12,7 +12,9 @@ const processV1FileMetadata = async (message) => {
   const [validated, errors] = await validate(v1, message)
 
   if (errors) {
-    throw new Error(`Invalid message: ${errors}`, {
+    logger.error(`Invalid message: ${errors}`)
+
+    throw new Error('Invalid message', {
       cause: UNPROCESSABLE_MESSAGE
     })
   }
@@ -24,7 +26,9 @@ const processV2FileMetadata = async (message) => {
   const [validated, errors] = await validate(dataIngestSchema, message)
 
   if (errors) {
-    throw new Error(`Invalid message: ${errors}`, {
+    logger.error(`Invalid message: ${errors}`)
+
+    throw new Error('Invalid message', {
       cause: UNPROCESSABLE_MESSAGE
     })
   }

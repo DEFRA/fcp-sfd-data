@@ -1,7 +1,7 @@
 export default {
   id: '550e8400-e29b-41d4-a716-446655440000',
   metadata: {
-    id: '123e4567-e89b-12d3-a456-426655440000',
+    id: '09237605-f4e5-4201-aee1-7e42a1682cef',
     source: '/mycontext',
     type: 'uk.gov.fcp.sfd.object.av.clean',
     specversion: '1.0',
