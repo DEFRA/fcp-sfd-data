@@ -1,4 +1,4 @@
-import { jest, describe, test, expect } from '@jest/globals'
+import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
 import { sqsClient } from '../../../../src/messaging/sqs/client.js'
 
