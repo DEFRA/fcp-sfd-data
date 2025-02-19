@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-const v2 = Joi.object({
+const v1 = Joi.object({
   id: Joi.string().guid({ version: ['uuidv4'] }).required(),
   source: Joi.string().required(),
   specversion: Joi.string().required(),
@@ -10,4 +10,4 @@ const v2 = Joi.object({
   data: Joi.object().required()
 }).required()
 
-export default v2
+export default v1
