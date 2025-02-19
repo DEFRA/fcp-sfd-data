@@ -1,7 +1,5 @@
 import v1 from './v1.js'
-import v2 from './v2.js'
 
 export {
-  v1,
-  v2
+  v1
 }

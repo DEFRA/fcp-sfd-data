@@ -1,24 +1,24 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 
-import commsDataMessage from '../../../../mocks/comms-message/v2.js'
+import dataIngestMessage from '../../../mocks/data-ingest/v1CommsMessage.js'
 
-import { validate } from '../../../../../src/schemas/validate.js'
-import { v2 } from '../../../../../src/schemas/comms/index.js'
+import { validate } from '../../../../src/schemas/validate.js'
+import { v1 } from '../../../../src/schemas/data-ingest/index.js'
 
-describe('comms data event v1 schema validation', () => {
-  let mockV2Message
+describe('data ingest event v1 schema validation', () => {
+  let mockV1Message
 
   beforeEach(() => {
-    mockV2Message = {
-      ...commsDataMessage,
+    mockV1Message = {
+      ...dataIngestMessage,
       data: {
-        ...commsDataMessage.data
+        ...dataIngestMessage.data
       }
     }
   })
 
   test('valid object should return message', async () => {
-    const [value, errors] = await validate(v2, commsDataMessage)
+    const [value, errors] = await validate(v1, dataIngestMessage)
 
     expect(value).toBeTruthy()
     expect(errors).toBeNull()
@@ -26,10 +26,10 @@ describe('comms data event v1 schema validation', () => {
 
   describe('required / optional fields', () => {
     beforeEach(() => {
-      mockV2Message = {
-        ...commsDataMessage,
+      mockV1Message = {
+        ...dataIngestMessage,
         data: {
-          ...commsDataMessage.data
+          ...dataIngestMessage.data
         }
       }
     })
@@ -43,9 +43,9 @@ describe('comms data event v1 schema validation', () => {
       ['time'],
       ['data']
     ])('missing CloudEvent %s should return error', async (field) => {
-      delete mockV2Message[field]
+      delete mockV1Message[field]
 
-      const [value, error] = await validate(v2, mockV2Message)
+      const [value, error] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
       expect(error).toBeTruthy()
@@ -55,15 +55,15 @@ describe('comms data event v1 schema validation', () => {
 
   describe('id', () => {
     beforeEach(() => {
-      mockV2Message.id = 'fbbfcf4c-5fc1-4c0c-9fc3-a113be6c8314'
+      mockV1Message.id = 'fbbfcf4c-5fc1-4c0c-9fc3-a113be6c8314'
     })
 
     test.each([
       ['fbbfcf4c-5fc1-4c0c-9fc3-a113be6c8314']
     ])('valid V4 UUID %s should return message', async (id) => {
-      mockV2Message.id = id
+      mockV1Message.id = id
 
-      const [value, errors] = await validate(v2, mockV2Message)
+      const [value, errors] = await validate(v1, mockV1Message)
 
       expect(value).toBeTruthy()
       expect(errors).toBeNull()
@@ -73,9 +73,9 @@ describe('comms data event v1 schema validation', () => {
       [12345, '"id" must be a string'],
       ['sshdjkf', '"id" must be a valid GUID']
     ])('invalid V4 UUID %s should return error', async (id, expectedMessage) => {
-      mockV2Message.id = id
+      mockV1Message.id = id
 
-      const [value, errors] = await validate(v2, mockV2Message)
+      const [value, errors] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()

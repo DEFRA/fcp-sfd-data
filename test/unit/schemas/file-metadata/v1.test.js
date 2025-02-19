@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 
-import fileMetadataMessage from '../../../../mocks/file-metadata/v1.js'
+import fileMetadataMessage from '../../../mocks/file-metadata/v1.js'
 
-import { validate } from '../../../../../src/schemas/validate.js'
-import { v1 } from '../../../../../src/schemas/file-metadata/index.js'
+import { validate } from '../../../../src/schemas/validate.js'
+import { v1 } from '../../../../src/schemas/file-metadata/index.js'
 
 describe('file metadata event v1 schema validation', () => {
   let mockV1Message

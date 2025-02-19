@@ -10,15 +10,15 @@ import {
 import {
   processV1FileMetadata,
   processV2FileMetadata
-} from '../../../../../../src/messaging/inbound/data-ingest/processors/file-metadata'
+} from '../../../../../../src/messaging/inbound/data-ingest/processors/file-metadata.js'
 
 import { getProcessor } from '../../../../../../src/messaging/inbound/data-ingest/processors/processor.js'
 
 import v1CommsMessage from '../../../../../mocks/comms-message/v1.js'
-import v2CommsMessage from '../../../../../mocks/comms-message/v2.js'
+import v2CommsMessage from '../../../../../mocks/data-ingest/v1CommsMessage.js'
 
 import v1FileMetadata from '../../../../../mocks/file-metadata/v1.js'
-import v2FileMetadata from '../../../../../mocks/file-metadata/v2.js'
+import v2FileMetadata from '../../../../../mocks/data-ingest/v1FileMetadata.js'
 
 describe('processor version selection', () => {
   test('unknown message type should throw unprocessable message', () => {

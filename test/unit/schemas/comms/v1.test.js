@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 
-import commsDataMessage from '../../../../mocks/comms-message/v1.js'
+import commsDataMessage from '../../../mocks/comms-message/v1.js'
 
-import { validate } from '../../../../../src/schemas/validate.js'
-import { v1 } from '../../../../../src/schemas/comms/index.js'
+import { validate } from '../../../../src/schemas/validate.js'
+import { v1 } from '../../../../src/schemas/comms/index.js'
 
 describe('comms data event v1 schema validation', () => {
   let mockV1Message
