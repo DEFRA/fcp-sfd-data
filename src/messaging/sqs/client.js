@@ -1,5 +1,5 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
-import { config } from '../config/index.js'
+import { config } from '../../config/index.js'
 
 const sqsClient = new SQSClient({
   endpoint: config.get('aws.endpoint'),

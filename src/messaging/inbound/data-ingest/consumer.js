@@ -2,43 +2,49 @@ import { Consumer } from 'sqs-consumer'
 
 import { createLogger } from '../../../logging/logger.js'
 import { config } from '../../../config/index.js'
-import { handleDataEventMessage } from './handler.js'
+import { handleIngestionMessages } from './handler.js'
 
 const logger = createLogger()
 
-const createIngestConsumer = (sqs) => {
-  const ingestConsumer = Consumer.create({
-    queueUrl: config.get('messaging.dataIngestQueueUrl'),
+let ingestionConsumer
+
+const startIngestion = (sqsClient) => {
+  ingestionConsumer = Consumer.create({
+    queueUrl: config.get('messaging.dataIngestion.queueUrl'),
     batchSize: 10,
-    handleMessageBatch: async (messages) => {
-      for (const message of messages) {
-        await handleDataEventMessage(message)
-      }
-    },
-    sqs
+    visibilityTimeout: config.get('messaging.visibilityTimeout'),
+    heartbeatInterval: config.get('messaging.heartbeatInterval'),
+    waitTimeSeconds: config.get('messaging.waitTimeSeconds'),
+    pollingWaitTime: config.get('messaging.pollingWaitTime'),
+    handleMessageBatch: async (messages) => handleIngestionMessages(sqsClient, messages),
+    sqs: sqsClient
   })
 
-  ingestConsumer.on('started', () => {
-    logger.info('Data layer ingestion consumer started')
+  ingestionConsumer.on('started', () => {
+    logger.info('Data ingestion consumer started')
   })
 
-  ingestConsumer.on('stopped', () => {
-    logger.info('Data layer ingestion consumer stopped')
+  ingestionConsumer.on('stopped', () => {
+    logger.info('Data ingestion consumer stopped')
   })
 
-  ingestConsumer.on('message_processed', (message) => {
-    logger.info(`Data layer ingestion message processed: ${message.MessageId}`)
+  ingestionConsumer.on('error', (err) => {
+    logger.error(`Error during data ingestion message handling: ${err.message}`)
   })
 
-  ingestConsumer.on('error', (err) => {
-    logger.error(`Data layer ingestion error: ${err.message}`)
+  ingestionConsumer.on('processing_error', (err) => {
+    logger.error(`Error during data ingestion message processing: ${err.message}`)
   })
 
-  ingestConsumer.on('processing_error', (err) => {
-    logger.error(`Data layer ingestion processing error: ${err.message}`)
+  ingestionConsumer.on('timeout_error', (err) => {
+    logger.error(`Timeout error during data ingestion message handling: ${err.message}`)
   })
 
-  return ingestConsumer
+  ingestionConsumer.start()
 }
 
-export { createIngestConsumer }
+const stopIngestion = () => {
+  ingestionConsumer.stop()
+}
+
+export { startIngestion, stopIngestion }

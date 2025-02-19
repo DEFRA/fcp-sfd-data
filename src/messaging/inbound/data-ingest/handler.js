@@ -1,10 +1,46 @@
-import util from 'util'
+import { config } from '../../../config/index.js'
 
-const handleDataEventMessage = async (message) => {
-  const body = JSON.parse(message.Body)
-  const content = JSON.parse(body.Message)
+import { UNPROCESSABLE_MESSAGE } from '../../../constants/error-types.js'
 
-  console.log(`Received message: ${util.inspect(content)}`)
+import { createLogger } from '../../../logging/logger.js'
+
+import { getProcessor } from './processors/processor.js'
+
+import { sendMessage } from '../../sqs/send-message.js'
+import { parseSqsMessage } from '../../sqs/parse-message.js'
+
+const logger = createLogger()
+
+const handleIngestionMessages = async (sqsClient, messages) => {
+  const completed = []
+
+  for (const message of messages) {
+    try {
+      const content = parseSqsMessage(message)
+
+      const processor = getProcessor(content)
+
+      await processor(content)
+
+      completed.push(message)
+    } catch (err) {
+      logger.error(`Error processing message: ${err.message}`)
+
+      if (err.cause === UNPROCESSABLE_MESSAGE) {
+        logger.info('Moving unprocessable message to dead letter queue')
+
+        completed.push(message)
+
+        await sendMessage(
+          sqsClient,
+          config.get('messaging.dataIngestion.deadLetterUrl'),
+          message?.Body
+        )
+      }
+    }
+  }
+
+  return completed
 }
 
-export { handleDataEventMessage }
+export { handleIngestionMessages }

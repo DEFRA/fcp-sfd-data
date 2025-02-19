@@ -147,11 +147,43 @@ const config = convict({
     }
   },
   messaging: {
-    dataIngestQueueUrl: {
-      doc: 'Data Message Queue URL',
-      format: String,
-      default: null,
-      env: 'DATA_MESSAGE_QUEUE_URL'
+    waitTimeSeconds: {
+      doc: 'SQS Consumer for which to wait for messages',
+      format: Number,
+      default: 10,
+      env: 'SQS_CONSUMER_WAIT_TIME_SECONDS'
+    },
+    pollingWaitTime: {
+      doc: 'The duration (in seconds) before sqs-consumer polls for new messages',
+      format: Number,
+      default: 0,
+      env: 'SQS_CONSUMER_POLLING_WAIT_TIME'
+    },
+    visibilityTimeout: {
+      doc: 'The duration (in seconds) that the received messages are hidden from subsequent retrieve requests after being retrieved by a ReceiveMessage request',
+      format: Number,
+      default: 30,
+      env: 'SQS_CONSUMER_VISIBILITY_TIMEOUT'
+    },
+    heartbeatInterval: {
+      doc: 'The interval (in seconds) between polling requests when no messages are available',
+      format: Number,
+      default: 5,
+      env: 'SQS_CONSUMER_HEARTBEAT_INTERVAL'
+    },
+    dataIngestion: {
+      queueUrl: {
+        doc: 'URL for the data ingest queue',
+        format: String,
+        default: null,
+        env: 'DATA_INGEST_QUEUE_URL'
+      },
+      deadLetterUrl: {
+        doc: 'URL for the data ingest dead letter queue',
+        format: String,
+        default: null,
+        env: 'DATA_INGEST_DEAD_LETTER_QUEUE_URL'
+      }
     }
   }
 })

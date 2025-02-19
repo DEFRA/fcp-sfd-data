@@ -1,14 +1,12 @@
-import { sqsClient } from '../../clients/sqs.js'
-import { createIngestConsumer } from './data-ingest/consumer.js'
-
-const ingestConsumer = createIngestConsumer(sqsClient)
+import { sqsClient } from '../sqs/client.js'
+import { startIngestion, stopIngestion } from './data-ingest/consumer.js'
 
 const startMessaging = () => {
-  ingestConsumer.start()
+  startIngestion(sqsClient)
 }
 
 const stopMessaging = () => {
-  ingestConsumer.stop()
+  stopIngestion()
 }
 
 export { startMessaging, stopMessaging }
