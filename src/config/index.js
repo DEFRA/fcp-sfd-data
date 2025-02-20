@@ -155,6 +155,12 @@ const config = convict({
       default: 10,
       env: 'SQS_CONSUMER_WAIT_TIME_SECONDS'
     },
+    batchSize: {
+      doc: 'The maximum number of messages to return in each call',
+      format: Number,
+      default: 10,
+      env: 'SQS_CONSUMER_BATCH_SIZE'
+    },
     pollingWaitTime: {
       doc: 'The duration (in seconds) before sqs-consumer polls for new messages',
       format: Number,
@@ -168,7 +174,7 @@ const config = convict({
       env: 'SQS_CONSUMER_VISIBILITY_TIMEOUT'
     },
     heartbeatInterval: {
-      doc: 'The interval (in seconds) between polling requests when no messages are available',
+      doc: 'The interval (in seconds) between requests to extend the message visibility timeout. Must be less than the visibility timeout',
       format: Number,
       default: 5,
       env: 'SQS_CONSUMER_HEARTBEAT_INTERVAL'

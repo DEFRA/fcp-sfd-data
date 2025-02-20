@@ -11,7 +11,7 @@ let ingestionConsumer
 const startIngestion = (sqsClient) => {
   ingestionConsumer = Consumer.create({
     queueUrl: config.get('messaging.dataIngestion.queueUrl'),
-    batchSize: 10,
+    batchSize: config.get('messaging.batchSize'),
     visibilityTimeout: config.get('messaging.visibilityTimeout'),
     heartbeatInterval: config.get('messaging.heartbeatInterval'),
     waitTimeSeconds: config.get('messaging.waitTimeSeconds'),
