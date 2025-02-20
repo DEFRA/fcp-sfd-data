@@ -5,7 +5,7 @@ import {
 } from 'aws-embedded-metrics'
 
 import { config } from '../../../config/index.js'
-import { createLogger } from './logging/logger.js'
+import { createLogger } from '../../../logging/logger.js'
 
 const metricsCounter = async (metricName, value = 1) => {
   const isMetricsEnabled = config.get('isMetricsEnabled')

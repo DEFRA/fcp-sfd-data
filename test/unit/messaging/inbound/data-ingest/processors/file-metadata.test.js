@@ -1,0 +1,63 @@
+import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+
+import { UNPROCESSABLE_MESSAGE } from '../../../../../../src/constants/error-types.js'
+
+import v1FileMetadataMessage from '../../../../../mocks/file-metadata/v1.js'
+import v2FileMetadataMessage from '../../../../../mocks/data-ingest/v1FileMetadata.js'
+
+const mockLoggerInfo = jest.fn()
+const mockLoggerError = jest.fn()
+
+jest.unstable_mockModule('../../../../../../src/logging/logger.js', () => ({
+  createLogger: () => ({
+    info: (...args) => mockLoggerInfo(...args),
+    error: (...args) => mockLoggerError(...args)
+  })
+}))
+
+const {
+  processV1FileMetadata,
+  processV2FileMetadata
+} = await import('../../../../../../src/messaging/inbound/data-ingest/processors/file-metadata.js')
+
+describe('file metadata message processor', () => {
+  describe('v1 message', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    test('should process a valid v1 message', async () => {
+      await processV1FileMetadata(v1FileMetadataMessage)
+
+      expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
+    })
+
+    test('should throw UNPROCESSABLE_MESSAGE error for invalid v1 message', async () => {
+      await expect(processV1FileMetadata({})).rejects.toEqual(expect.objectContaining({
+        message: 'Invalid message',
+        cause: UNPROCESSABLE_MESSAGE
+      }))
+      expect(mockLoggerError).toHaveBeenCalledWith('Invalid message: "id" is required,"metadata" is required')
+    })
+  })
+
+  describe('v2 message', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    test('should process a valid v2 message', async () => {
+      await processV2FileMetadata(v2FileMetadataMessage)
+
+      expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
+    })
+
+    test('should throw UNPROCESSABLE_MESSAGE error for invalid v2 message', async () => {
+      await expect(processV2FileMetadata({})).rejects.toEqual(expect.objectContaining({
+        message: 'Invalid message',
+        cause: UNPROCESSABLE_MESSAGE
+      }))
+      expect(mockLoggerError).toHaveBeenCalledWith('Invalid message: "id" is required,"source" is required,"specversion" is required,"type" is required,"datacontenttype" is required,"time" is required,"data" is required')
+    })
+  })
+})

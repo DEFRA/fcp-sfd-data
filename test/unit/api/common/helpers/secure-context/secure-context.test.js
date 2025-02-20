@@ -19,7 +19,7 @@ jest.mock('hapi-pino', () => ({
 
 const { config } = await import('../../../../../../src/config/index.js')
 const { secureContext } = await import('../../../../../../src/api/common/helpers/secure-context/index.js')
-const { requestLogger } = await import('../../../../../../src/api/common/helpers/logging/request-logger.js')
+const { requestLogger } = await import('../../../../../../src/api/common/helpers/request-logger.js')
 
 describe('#secureContext', () => {
   let server

@@ -1,0 +1,6 @@
+export default {
+  MessageId: 'c651ae86-d8af-48ba-8c20-edf6e1df5115',
+  ReceiptHandle: 'Nzk4Yzk4ZmItM2FjMi00NDUyLTkyZGYtMmZlNDhmMjU2M2JmIGFybjphd3M6c3FzOmV1LXdlc3QtMjowMDAwMDAwMDAwMDA6ZmNwX3NmZF9kYXRhX2luZ2VzdC5maWZvIGM2NTFhZTg2LWQ4YWYtNDhiYS04YzIwLWVkZjZlMWRmNTExNSAxNzM5OTEyMjI2LjE3NTE4NjQ=',
+  MD5OfBody: '059e7afecb694e11f8b6915864455b71',
+  Body: '{"Type": "Notification", "MessageId": "239b5baf-6a99-499c-9a94-d3631ce71ea9", "TopicArn": "arn:aws:sns:eu-west-2:000000000000:fcp_sfd_data.fifo", "Message": "{\\n  \\"id\\": \\"550e8400-e29b-41d4-a716-446655440000\\",\\n  \\"metadata\\": {\\n    \\"id\\": \\"123e4567-e89b-12d3-a456-426655440000\\",\\n    \\"source\\": \\"/mycontext\\",\\n    \\"type\\": \\"uk.gov.fcp.sfd.object.av.clean\\",\\n    \\"specversion\\": \\"1.0\\",\\n    \\"datacontenttype\\": \\"application/json\\",\\n    \\"time\\": \\"2023-10-17T14:48:00.000Z\\",\\n    \\"data\\": {\\n      \\"sbi\\": \\"123456789\\",\\n      \\"blobReference\\": \\"550e8400-e29b-41d4-a716-446655440000\\"\\n    }\\n  }\\n}\\n", "Timestamp": "2025-02-18T16:57:01.930Z", "SequenceNumber": "14945733033204908032", "UnsubscribeURL": "http://127.0.0.1:4566/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-2:000000000000:fcp_sfd_data.fifo:5cf02043-bf54-48e5-8e90-1b71df583bf8"}'
+}
