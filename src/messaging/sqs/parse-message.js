@@ -1,4 +1,4 @@
-import { UNPROCESSABLE_MESSAGE } from '../../constants/error-types.js'
+import { UnprocessableMessageError } from '../../errors/message-errors.js'
 
 const parseSqsMessage = (message) => {
   try {
@@ -10,8 +10,8 @@ const parseSqsMessage = (message) => {
 
     return body
   } catch (err) {
-    throw new Error(`Message content (${message.MessageId}) is not valid JSON`, {
-      cause: UNPROCESSABLE_MESSAGE
+    throw new UnprocessableMessageError('Invalid message', {
+      cause: err
     })
   }
 }

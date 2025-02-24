@@ -1,11 +1,11 @@
 import { describe, test, expect } from '@jest/globals'
 
-import { UNPROCESSABLE_MESSAGE } from '../../../../src/constants/error-types'
+import { UnprocessableMessageError } from '../../../../src/errors/message-errors.js'
 
-import sqsMessage from '../../../mocks/aws/sqs-message'
-import snsSqsMessage from '../../../mocks/aws/sns-sqs-message'
+import sqsMessage from '../../../mocks/aws/sqs-message.js'
+import snsSqsMessage from '../../../mocks/aws/sns-sqs-message.js'
 
-import { parseSqsMessage } from '../../../../src/messaging/sqs/parse-message'
+import { parseSqsMessage } from '../../../../src/messaging/sqs/parse-message.js'
 
 describe('sqs message parser', () => {
   test('sqs message should return message object', () => {
@@ -54,10 +54,7 @@ describe('sqs message parser', () => {
       Body: '{]'
     }
 
-    expect(() => parseSqsMessage(messageBody)).toThrow(expect.objectContaining({
-      message: 'Message content (92f0175e-26c7-4902-80bf-42f0ca9e0969) is not valid JSON',
-      cause: UNPROCESSABLE_MESSAGE
-    }))
+    expect(() => parseSqsMessage(messageBody)).toThrow(UnprocessableMessageError)
   })
 
   test('missing message body should throw unprocessable message', () => {
@@ -65,9 +62,6 @@ describe('sqs message parser', () => {
       MessageId: '92f0175e-26c7-4902-80bf-42f0ca9e0969'
     }
 
-    expect(() => parseSqsMessage(messageBody)).toThrow(expect.objectContaining({
-      message: 'Message content (92f0175e-26c7-4902-80bf-42f0ca9e0969) is not valid JSON',
-      cause: UNPROCESSABLE_MESSAGE
-    }))
+    expect(() => parseSqsMessage(messageBody)).toThrow(UnprocessableMessageError)
   })
 })

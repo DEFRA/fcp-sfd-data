@@ -7,7 +7,7 @@ import { getProcessor } from './processors/processor.js'
 import { sendMessage } from '../../sqs/send-message.js'
 import { parseSqsMessage } from '../../sqs/parse-message.js'
 
-import UnprocessableMessageError from '../../../errors/unprocesable-message.js'
+import { UnprocessableMessageError } from '../../../errors/message-errors.js'
 
 const logger = createLogger()
 

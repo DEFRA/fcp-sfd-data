@@ -4,18 +4,18 @@ import { validate } from '../../../../schemas/validate.js'
 import { v1 } from '../../../../schemas/comms/index.js'
 import { v1 as dataIngestSchema } from '../../../../schemas/data-ingest/index.js'
 
-import UnprocessableMessageError from '../../../../errors/unprocesable-message.js'
+import { UnprocessableMessageError } from '../../../../errors/message-errors.js'
 
 const logger = createLogger()
 
 const processV1CommsData = async (message) => {
-  const [validated, errors] = await validate(v1, message)
+  const [validated, err] = await validate(v1, message)
 
-  if (errors) {
-    logger.error(`Invalid message: ${errors.details.map(d => d.message)}`)
+  if (err) {
+    logger.error(`Invalid message: ${err.details.map(d => d.message)}`)
 
     throw new UnprocessableMessageError('Invalid message', {
-      cause: errors
+      cause: err
     })
   }
 
@@ -23,13 +23,13 @@ const processV1CommsData = async (message) => {
 }
 
 const processV2CommsData = async (message) => {
-  const [validated, errors] = await validate(dataIngestSchema, message)
+  const [validated, err] = await validate(dataIngestSchema, message)
 
-  if (errors) {
-    logger.error(`Invalid message: ${errors.details.map(d => d.message)}`)
+  if (err) {
+    logger.error(`Invalid message: ${err.details.map(d => d.message)}`)
 
     throw new UnprocessableMessageError('Invalid message', {
-      cause: errors
+      cause: err
     })
   }
 

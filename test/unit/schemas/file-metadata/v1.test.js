@@ -18,16 +18,16 @@ describe('file metadata event v1 schema validation', () => {
   })
 
   test('valid message should return message', async () => {
-    const [value, errors] = await validate(v1, fileMetadataMessage)
+    const [value, err] = await validate(v1, fileMetadataMessage)
 
     expect(value).toBeTruthy()
-    expect(errors).toBeNull()
+    expect(err).toBeNull()
   })
 
   test('null message should return error', async () => {
-    const [value, errors] = await validate(v1, null)
+    const [value, err] = await validate(v1, null)
 
-    expect(errors).toBeTruthy()
+    expect(err).toBeTruthy()
     expect(value).toBeNull()
   })
 
@@ -47,12 +47,12 @@ describe('file metadata event v1 schema validation', () => {
     ])('missing data %s should return error', async (field) => {
       delete mockV1Message[field]
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(errors).toBeTruthy()
-      expect(errors).toBeInstanceOf(Error)
-      expect(errors.message).toContain(`"${field}" is required`)
+      expect(err).toBeTruthy()
+      expect(err).toBeInstanceOf(Error)
+      expect(err.message).toContain(`"${field}" is required`)
     })
   })
 
@@ -66,10 +66,10 @@ describe('file metadata event v1 schema validation', () => {
     ])('valid V4 UUID %s should return message', async (id) => {
       mockV1Message.id = id
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeTruthy()
-      expect(errors).toBeNull()
+      expect(err).toBeNull()
     })
 
     test.each([
@@ -78,12 +78,12 @@ describe('file metadata event v1 schema validation', () => {
     ])('invalid V4 UUID %s should return error', async (id, expectedMessage) => {
       mockV1Message.id = id
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(errors).toBeTruthy()
-      expect(errors).toBeInstanceOf(Error)
-      expect(errors.message).toContain(expectedMessage)
+      expect(err).toBeTruthy()
+      expect(err).toBeInstanceOf(Error)
+      expect(err.message).toContain(expectedMessage)
     })
   })
 
@@ -100,21 +100,21 @@ describe('file metadata event v1 schema validation', () => {
     test('valid metadata object should return value', async () => {
       mockV1Message.metadata = fileMetadataMessage.metadata
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeTruthy()
-      expect(errors).toBeNull()
+      expect(err).toBeNull()
     })
 
     test('invalid metadata object should return error', async () => {
       mockV1Message.metadata = ''
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(errors).toBeTruthy()
-      expect(errors).toBeInstanceOf(Error)
-      expect(errors.message).toContain('"metadata" must be of type object')
+      expect(err).toBeTruthy()
+      expect(err).toBeInstanceOf(Error)
+      expect(err.message).toContain('"metadata" must be of type object')
     })
   })
 })

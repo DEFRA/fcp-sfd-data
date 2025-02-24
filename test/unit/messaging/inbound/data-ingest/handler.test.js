@@ -2,7 +2,7 @@ import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
 import snsSqsMessage from '../../../../mocks/aws/sns-sqs-message'
 
-import UnprocessableMessageError from '../../../../../src/errors/unprocesable-message.js'
+import { UnprocessableMessageError } from '../../../../../src/errors/message-errors.js'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()

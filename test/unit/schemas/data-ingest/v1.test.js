@@ -18,10 +18,10 @@ describe('data ingest event v1 schema validation', () => {
   })
 
   test('valid object should return message', async () => {
-    const [value, errors] = await validate(v1, dataIngestMessage)
+    const [value, err] = await validate(v1, dataIngestMessage)
 
     expect(value).toBeTruthy()
-    expect(errors).toBeNull()
+    expect(err).toBeNull()
   })
 
   describe('required / optional fields', () => {
@@ -45,12 +45,12 @@ describe('data ingest event v1 schema validation', () => {
     ])('missing CloudEvent %s should return error', async (field) => {
       delete mockV1Message[field]
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(errors).toBeTruthy()
-      expect(errors).toBeInstanceOf(Error)
-      expect(errors.message).toContain(`"${field}" is required`)
+      expect(err).toBeTruthy()
+      expect(err).toBeInstanceOf(Error)
+      expect(err.message).toContain(`"${field}" is required`)
     })
   })
 
@@ -64,10 +64,10 @@ describe('data ingest event v1 schema validation', () => {
     ])('valid V4 UUID %s should return message', async (id) => {
       mockV1Message.id = id
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeTruthy()
-      expect(errors).toBeNull()
+      expect(err).toBeNull()
     })
 
     test.each([
@@ -76,12 +76,12 @@ describe('data ingest event v1 schema validation', () => {
     ])('invalid V4 UUID %s should return error', async (id, expectedMessage) => {
       mockV1Message.id = id
 
-      const [value, errors] = await validate(v1, mockV1Message)
+      const [value, err] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(errors).toBeTruthy()
-      expect(errors).toBeInstanceOf(Error)
-      expect(errors.message).toContain(expectedMessage)
+      expect(err).toBeTruthy()
+      expect(err).toBeInstanceOf(Error)
+      expect(err.message).toContain(expectedMessage)
     })
   })
 })

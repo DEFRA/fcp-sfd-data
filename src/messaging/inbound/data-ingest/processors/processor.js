@@ -1,5 +1,5 @@
 import { COMMS_EVENT, FILE_METADATA } from '../../../../constants/message-types.js'
-import UnprocessableMessageError from '../../../../errors/unprocesable-message.js'
+import { UnprocessableMessageError } from '../../../../errors/message-errors.js'
 
 import { processV1CommsData, processV2CommsData } from './comms.js'
 import { processV1FileMetadata, processV2FileMetadata } from './file-metadata.js'
