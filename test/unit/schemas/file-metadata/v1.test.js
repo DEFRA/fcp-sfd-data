@@ -51,7 +51,8 @@ describe('file metadata event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual(`"${field}" is required`)
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(`"${field}" is required`)
     })
   })
 
@@ -81,7 +82,8 @@ describe('file metadata event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual(expectedMessage)
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(expectedMessage)
     })
   })
 
@@ -111,7 +113,8 @@ describe('file metadata event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual('"metadata" must be of type object')
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain('"metadata" must be of type object')
     })
   })
 })

@@ -1,9 +1,9 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
-import { UNPROCESSABLE_MESSAGE } from '../../../../../../src/constants/error-types.js'
-
 import v1CommsMessage from '../../../../../mocks/comms-message/v1.js'
 import v2CommsMessage from '../../../../../mocks/data-ingest/v1CommsMessage.js'
+
+import UnprocessableMessageError from '../../../../../../src/errors/unprocesable-message.js'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
@@ -33,10 +33,7 @@ describe('comms message processor', () => {
     })
 
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v1 message', async () => {
-      await expect(processV1CommsData({})).rejects.toEqual(expect.objectContaining({
-        message: 'Invalid message',
-        cause: UNPROCESSABLE_MESSAGE
-      }))
+      await expect(processV1CommsData({})).rejects.toBeInstanceOf(UnprocessableMessageError)
       expect(mockLoggerError).toHaveBeenCalledWith('Invalid message: "id" is required,"commsMessage" is required')
     })
   })
@@ -53,10 +50,7 @@ describe('comms message processor', () => {
     })
 
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v2 message', async () => {
-      await expect(processV2CommsData({})).rejects.toEqual(expect.objectContaining({
-        message: 'Invalid message',
-        cause: UNPROCESSABLE_MESSAGE
-      }))
+      await expect(processV2CommsData({})).rejects.toBeInstanceOf(UnprocessableMessageError)
       expect(mockLoggerError).toHaveBeenCalledWith('Invalid message: "id" is required,"source" is required,"specversion" is required,"type" is required,"datacontenttype" is required,"time" is required,"data" is required')
     })
   })

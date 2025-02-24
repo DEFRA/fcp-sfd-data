@@ -1,13 +1,13 @@
 import { config } from '../../../config/index.js'
 
-import { UNPROCESSABLE_MESSAGE } from '../../../constants/error-types.js'
-
 import { createLogger } from '../../../logging/logger.js'
 
 import { getProcessor } from './processors/processor.js'
 
 import { sendMessage } from '../../sqs/send-message.js'
 import { parseSqsMessage } from '../../sqs/parse-message.js'
+
+import UnprocessableMessageError from '../../../errors/unprocesable-message.js'
 
 const logger = createLogger()
 
@@ -26,7 +26,7 @@ const handleIngestionMessages = async (sqsClient, messages) => {
     } catch (err) {
       logger.error(`Error processing message: ${err.message}`)
 
-      if (err.cause === UNPROCESSABLE_MESSAGE) {
+      if (err instanceof UnprocessableMessageError) {
         logger.info('Moving unprocessable message to dead letter queue')
 
         completed.push(message)

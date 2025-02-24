@@ -44,7 +44,8 @@ describe('comms data event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual(`"${field}" is required`)
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(`"${field}" is required`)
     })
   })
 
@@ -74,7 +75,8 @@ describe('comms data event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual(expectedMessage)
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(expectedMessage)
     })
   })
 
@@ -104,7 +106,8 @@ describe('comms data event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual('"commsMessage" must be of type object')
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain('"commsMessage" must be of type object')
     })
   })
 })

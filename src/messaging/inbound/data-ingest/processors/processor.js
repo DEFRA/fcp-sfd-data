@@ -1,5 +1,5 @@
-import { UNPROCESSABLE_MESSAGE } from '../../../../constants/error-types.js'
 import { COMMS_EVENT, FILE_METADATA } from '../../../../constants/message-types.js'
+import UnprocessableMessageError from '../../../../errors/unprocesable-message.js'
 
 import { processV1CommsData, processV2CommsData } from './comms.js'
 import { processV1FileMetadata, processV2FileMetadata } from './file-metadata.js'
@@ -32,9 +32,7 @@ const getProcessor = (message) => {
   const processor = getCommsProcessor(message) || getFileMetadataProcessor(message)
 
   if (!processor) {
-    throw new Error('Unsupported message type', {
-      cause: UNPROCESSABLE_MESSAGE
-    })
+    throw new UnprocessableMessageError('Unsupported message type')
   }
 
   return processor

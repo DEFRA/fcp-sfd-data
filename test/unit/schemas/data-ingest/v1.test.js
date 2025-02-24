@@ -45,11 +45,12 @@ describe('data ingest event v1 schema validation', () => {
     ])('missing CloudEvent %s should return error', async (field) => {
       delete mockV1Message[field]
 
-      const [value, error] = await validate(v1, mockV1Message)
+      const [value, errors] = await validate(v1, mockV1Message)
 
       expect(value).toBeNull()
-      expect(error).toBeTruthy()
-      expect(error).toContainEqual(`"${field}" is required`)
+      expect(errors).toBeTruthy()
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(`"${field}" is required`)
     })
   })
 
@@ -79,7 +80,8 @@ describe('data ingest event v1 schema validation', () => {
 
       expect(value).toBeNull()
       expect(errors).toBeTruthy()
-      expect(errors).toContainEqual(expectedMessage)
+      expect(errors).toBeInstanceOf(Error)
+      expect(errors.message).toContain(expectedMessage)
     })
   })
 })

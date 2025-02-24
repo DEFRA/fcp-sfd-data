@@ -1,7 +1,5 @@
 import { describe, test, expect } from '@jest/globals'
 
-import { UNPROCESSABLE_MESSAGE } from '../../../../../../src/constants/error-types.js'
-
 import {
   processV1CommsData,
   processV2CommsData
@@ -25,8 +23,7 @@ describe('processor version selection', () => {
     const message = {}
 
     expect(() => getProcessor(message)).toThrow(expect.objectContaining({
-      message: 'Unsupported message type',
-      cause: UNPROCESSABLE_MESSAGE
+      message: 'Unsupported message type'
     }))
   })
 

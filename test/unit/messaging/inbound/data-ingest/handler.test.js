@@ -1,8 +1,8 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
-import { UNPROCESSABLE_MESSAGE } from '../../../../../src/constants/error-types'
-
 import snsSqsMessage from '../../../../mocks/aws/sns-sqs-message'
+
+import UnprocessableMessageError from '../../../../../src/errors/unprocesable-message.js'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
@@ -48,9 +48,7 @@ describe('data ingest handler', () => {
       snsSqsMessage
     ]
 
-    mockProcessor.mockRejectedValueOnce(new Error('Invalid message', {
-      cause: UNPROCESSABLE_MESSAGE
-    }))
+    mockProcessor.mockRejectedValueOnce(new UnprocessableMessageError('Invalid message'))
 
     const completed = await handleIngestionMessages({}, messages)
 
