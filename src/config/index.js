@@ -125,7 +125,7 @@ const config = convict({
       doc: 'AWS Endpoint (for LocalStack)',
       format: String,
       default: null,
-      env: 'SQS_ENDPOINT'
+      env: 'ENDPOINT_URL'
     },
     region: {
       doc: 'AWS Region',
