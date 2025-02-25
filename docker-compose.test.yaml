@@ -16,7 +16,7 @@ services:
     volumes:
       - ./coverage:/home/node/coverage
     networks:
-      - cdp-tenant
+      - fcp-sfd
 
   localstack:
     env_file:
