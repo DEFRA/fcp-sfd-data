@@ -9,7 +9,7 @@ services:
       - path: .env
         required: false
     environment:
-      PORT: 3033
+      PORT: 3555
       NODE_ENV: development
       LOCALSTACK_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
