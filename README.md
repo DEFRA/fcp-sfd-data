@@ -126,7 +126,7 @@ docker build --target development --no-cache --tag fcp-sfd-data:development .
 Run:
 
 ```bash
-docker run -e PORT=3001 -p 3001:3001 fcp-sfd-data:development
+docker run -e PORT=3555 -p 3555:3555 fcp-sfd-data:development
 ```
 
 ### Production image
@@ -140,7 +140,7 @@ docker build --no-cache --tag fcp-sfd-data .
 Run:
 
 ```bash
-docker run -e PORT=3001 -p 3001:3001 fcp-sfd-data
+docker run -e PORT=3555 -p 3555:3555 fcp-sfd-data
 ```
 
 ### Docker Compose
