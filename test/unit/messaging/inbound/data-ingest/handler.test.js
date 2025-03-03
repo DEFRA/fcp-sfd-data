@@ -55,7 +55,7 @@ describe('data ingest handler', () => {
     expect(mockLoggerInfo).toHaveBeenCalledWith('Moving unprocessable message to dead letter queue')
     expect(mockSendMessage).toHaveBeenCalledWith(
       {},
-      'http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest_dlq.fifo',
+      'http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter.fifo',
       snsSqsMessage.Body
     )
     expect(completed).toHaveLength(1)
