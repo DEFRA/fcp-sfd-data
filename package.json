@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-data",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Data integration for Single Front Door",
   "main": "src/index.js",
   "type": "module",
@@ -8,9 +8,10 @@
     "node": ">=22"
   },
   "scripts": {
+    "docker:test:watch": "docker-compose -f docker-compose.yaml -f docker-compose.test.yaml -f docker-compose.test.watch.yaml -p \"fcp-sfd-data-test\" run --rm fcp-sfd-data",
     "pretest": "npm run test:lint",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false",
-    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand",
+    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --watch",
     "test:lint": "standard",
     "start:watch": "nodemon --watch src --exec 'node --experimental-vm-modules src/index.js'",
     "start:debug": "nodemon --watch src --exec 'node --experimental-vm-modules --inspect-brk=0.0.0.0 src/index.js'",
