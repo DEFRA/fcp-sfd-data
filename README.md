@@ -2,169 +2,45 @@
 
 Data integration layer for the Single Front Door.
 
-- [Requirements](#requirements)
-  - [Node.js](#nodejs)
-- [Local development](#local-development)
-  - [Setup](#setup)
-  - [Development](#development)
-  - [Testing](#testing)
-  - [Production](#production)
-  - [Npm scripts](#npm-scripts)
-  - [Update dependencies](#update-dependencies)
-  - [Formatting](#formatting)
-    - [Windows prettier issue](#windows-prettier-issue)
-- [API endpoints](#api-endpoints)
-- [Development helpers](#development-helpers)
-  - [MongoDB Locks](#mongodb-locks)
-- [Docker](#docker)
-  - [Development image](#development-image)
-  - [Production image](#production-image)
-  - [Docker Compose](#docker-compose)
-  - [Dependabot](#dependabot)
-  - [SonarCloud](#sonarcloud)
-- [Licence](#licence)
-  - [About the licence](#about-the-licence)
+This service is part of the [Single Front Door (SFD) service](https://github.com/DEFRA/fcp-sfd-core).
 
-## Requirements
+## Prerequisites
+- Docker
+- Docker Compose
+- Node.js 22.13 LTS - We recommend using [NVM](https://github.com/nvm-sh/nvm) for Unix-based systems or [NVM-Windows](https://github.com/coreybutler/nvm-windows).
 
-### Node.js
+## Setup
 
-Please install [Node.js](http://nodejs.org/) `>= v18` and [npm](https://nodejs.org/) `>= v9`. You will find it
-easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
+### Configuration
 
-To use the correct version of Node.js for this application, via nvm:
+These configuration values should be set in a `.env` file in the root of the project for local development.
 
+If running on CDP the values should be set in the CDP Portal. Please see the CDP Documentation for more information.
+
+| Name | Default Value | Required |
+|------|--------------|----------|
+| AWS_REGION | eu-west-2 | Yes |
+| AWS_DEFAULT_REGION | eu-west-2 | Yes |
+| AWS_ACCESS_KEY_ID | test | Yes |
+| AWS_SECRET_ACCESS_KEY | test | Yes |
+
+### Starting the service
+We recommend using the [SFD Core Repo](https://github.com/DEFRA/fcp-sfd-core) to run this service with dependencies. This aims to streamline the local development process.
+
+If you wish to run this service independently, you can do so by executing the following command:
 ```bash
-cd fcp-sfd-data
-nvm use
+docker compose up
 ```
 
-## Local development
+## Tests
+The tests have been structured into subfolders of `./test` as per the
+[Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
 
-### Setup
-
-Install application dependencies:
-
+### Running Tests
+We use containerised tests to make integration testing with depndencies easier. To run the tests, use the following command:
 ```bash
-npm install
+docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
 ```
-
-### Development
-
-To run the application in `development` mode run:
-
-```bash
-npm run start
-```
-
-### Testing
-
-To test the application run:
-
-```bash
-npm run test
-```
-
-### Npm scripts
-
-All available Npm scripts can be seen in [package.json](./package.json).
-To view them in your command line run:
-
-```bash
-npm run
-```
-
-### Update dependencies
-
-To update dependencies use [npm-check-updates](https://github.com/raineorshine/npm-check-updates):
-
-> The following script is a good start. Check out all the options on
-> the [npm-check-updates](https://github.com/raineorshine/npm-check-updates)
-
-```bash
-ncu --interactive --format group
-```
-
-## API endpoints
-
-| Endpoint             | Description                    |
-| :------------------- | :----------------------------- |
-| `GET: /health`       | Health                         |
-
-## Development helpers
-
-### Proxy
-
-We are using forward-proxy which is set up by default. To make use of this: `import { fetch } from 'undici'` then because of the `setGlobalDispatcher(new ProxyAgent(proxyUrl))` calls will use the ProxyAgent Dispatcher
-
-If you are not using Wreck, Axios or Undici or a similar http that uses `Request`. Then you may have to provide the proxy dispatcher:
-
-To add the dispatcher to your own client:
-
-```javascript
-import { ProxyAgent } from 'undici'
-
-return await fetch(url, {
-  dispatcher: new ProxyAgent({
-    uri: proxyUrl,
-    keepAliveTimeout: 10,
-    keepAliveMaxTimeout: 10
-  })
-})
-```
-
-## Docker
-
-### Development image
-
-Build:
-
-```bash
-docker build --target development --no-cache --tag fcp-sfd-data:development .
-```
-
-Run:
-
-```bash
-docker run -e PORT=3001 -p 3001:3001 fcp-sfd-data:development
-```
-
-### Production image
-
-Build:
-
-```bash
-docker build --no-cache --tag fcp-sfd-data .
-```
-
-Run:
-
-```bash
-docker run -e PORT=3001 -p 3001:3001 fcp-sfd-data
-```
-
-### Docker Compose
-
-A local environment with:
-
-- Localstack for AWS services (S3, SQS)
-- Redis
-- MongoDB
-- This service.
-- A commented out frontend example.
-
-```bash
-docker compose up --build -d
-```
-
-### Dependabot
-
-We have added an example dependabot configuration file to the repository. You can enable it by renaming
-the [.github/example.dependabot.yml](.github/example.dependabot.yml) to `.github/dependabot.yml`
-
-### SonarCloud
-
-Instructions for setting up SonarCloud can be found in [sonar-project.properties](./sonar-project.properties)
 
 ## Licence
 

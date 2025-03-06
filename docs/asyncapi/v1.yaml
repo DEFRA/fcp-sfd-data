@@ -1,0 +1,93 @@
+asyncapi: 3.0.0
+info:
+  title: Single Front Door Data Service
+  version: 1.1.0
+  description: Data layer for the Single Front Door service
+
+channels:
+  fcp-fd-data:
+    address: fcp-fd-data
+    description: |
+      Accepts events for message notifications.
+    messages:
+      commsEvent:
+        $ref: '#/components/messages/commsEvent'
+      fileMetadata:
+        $ref: '#/components/messages/fileMetadata'
+
+operations:
+  fcp-fd-data.subscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/fcp-fd-data'
+
+components:
+  messages:
+    commsEvent:
+      name: Event data for User communications
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/commsEventSchema'
+    fileMetadata:
+      name: Metadata for Uploaded files 
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/fileMetadataSchema'
+        
+  schemas:
+    commsEventSchema:
+      type: object
+      required:
+        - id
+        - commsMessage
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        commsMessage:
+          $ref: '#/components/schemas/commsMessage'
+      additionalProperties: false
+    
+    fileMetadataSchema:
+      type: object
+      required:
+        - id
+        - metadata
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        metadata:
+          $ref: '#/components/schemas/metadata'
+      additionalProperties: false
+
+    commsMessage:
+        type: object
+        description: Metadata for communication events in Cloud Events format
+        example:
+            id: "123e4567-e89b-42d3-a456-426655440000"
+            source: "/mycontext"
+            type: "com.example.someevent"
+            specversion: "1.0"
+            datacontenttype: "application/json"
+            data:
+              placeholder: "data goes here"
+
+    metadata:
+      type: object
+      description: Metadata for uploaded files in Cloud Events format
+      example:
+          id: "123e4567-e89b-42d3-a456-426655440000"
+          source: "/mycontext"
+          type: "com.example.someevent"
+          specversion: "1.0"
+          datacontenttype: "application/json"
+          data:
+            sbi: "1234567890"
+            blobReference: "626901e1-eadc-46ef-8d63-71d87b704484"
+
+    id:
+      type: string
+      format: uuid
+      description: The unique ID of the event
+      example: 123e4567-e89b-42d3-a456-426655440000
+      minlength: 1
+      uniqueItems: true

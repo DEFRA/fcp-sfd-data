@@ -8,12 +8,10 @@ services:
     env_file:
       - path: .env
         required: false
-    environment:
-      PORT: 3001
-      NODE_ENV: development
-      LOCALSTACK_ENDPOINT: http://localstack:4566
-      MONGO_URI: mongodb://mongodb:27017/
     volumes:
+      - ./src/:/home/node/src
+      - ./test/:/home/node/test
+      - ./package.json:/home/node/package.json
       - ./coverage:/home/node/coverage
     networks:
       - cdp-tenant
@@ -22,6 +20,8 @@ services:
     env_file:
       - path: .env
         required: false
+    networks:
+      - cdp-tenant
 
   mongodb:
     volumes:
@@ -29,3 +29,7 @@ services:
 
 volumes:
   mongodb-data:
+
+networks:
+  cdp-tenant:
+    driver: bridge

@@ -1,0 +1,147 @@
+asyncapi: 3.0.0
+info:
+  title: Single Front Door Data Service
+  version: 2.0.0
+  description: Data layer for the Single Front Door service
+
+channels:
+  fcp-sfd-data:
+    address: fcp-sfd-data
+    description: |
+      Accepts events for message notifications.
+    messages:
+      commsEvent:
+        $ref: '#/components/messages/commsEvent'
+      fileMetadata:
+        $ref: '#/components/messages/fileMetadata'
+
+operations:
+  fcp-sfd-data.subscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/fcp-sfd-data'
+
+components:
+  messages:
+    commsEvent:
+      name: Event data for User communications
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/commsEventSchema'
+    fileMetadata:
+      name: Metadata for Uploaded files
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/fileMetadataSchema'
+        
+  schemas:
+    commsEventSchema:
+      type: object
+      required:
+        - id
+        - commsMessage
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        commsMessage:
+          type: object
+          required:
+            - id
+            - source
+            - specversion
+            - type
+            - datacontenttype
+            - time
+            - data
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            source:
+              $ref: '#/components/schemas/source'
+            specversion:
+              $ref: '#/components/schemas/specversion'
+            type:
+              type: string
+              description: The type of the comms event
+              example: uk.gov.fcp.sfd.notification.delivered
+              pattern: '^uk\.gov\.fcp\.sfd\.notification\..*$'
+            datacontenttype:
+              $ref: '#/components/schemas/datacontenttype'
+            time:
+              $ref: '#/components/schemas/time'
+            data:
+              type: object
+              description: The data for the comms event
+          additionalProperties: false
+
+    fileMetadataSchema:
+      type: object
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        source:
+          $ref: '#/components/schemas/source'
+        specversion:
+          $ref: '#/components/schemas/specversion'
+        type:
+          type: string
+          description: The type of the file metadata event
+          example: uk.gov.fcp.sfd.object.uploaded
+          pattern: '^uk\.gov\.fcp\.sfd\.object\..*$'
+        datacontenttype:
+          $ref: '#/components/schemas/datacontenttype'
+        time:
+          $ref: '#/components/schemas/time'
+        data:
+          type: object
+          description: The data for the file metadata event
+      additionalProperties: false
+
+    id:
+      type: string
+      format: uuid
+      description: The unique ID of the event
+      example: 123e4567-e89b-42d3-a456-426655440000
+      minlength: 1
+      uniqueItems: true
+
+    specversion:
+      type: string
+      description: Version of the CloudEvents specification used by the event
+      example: "1.0"
+      minlength: 3
+      maxlength: 10
+
+    type:
+      type: string
+      description: Type of event in reverse DNS notation
+      example: uk.gov.fcp.sfd.notification.request
+      minlength: 3
+      maxlength: 250
+
+    source:
+      type: string
+      description: Service publishing the event
+      example: ffc-ahwr-claim
+      minlength: 1
+      maxlength: 100
+
+    time:
+      type: string
+      format: date-time
+      description: Time the event occurred
+      example: "2023-10-17T14:48:00Z"
+
+    datacontenttype:
+      type: string
+      description: Format of the event data
+      default: "application/json"
+      example: "application/json"
