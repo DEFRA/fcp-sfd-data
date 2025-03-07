@@ -10,6 +10,7 @@ console.log(url)
 const client = new MongoClient(url)
 await client.connect()
 console.log('MongoDB connected')
-const db = client.db(config.get('mongo.database'))
+const db = await client.db(config.get('mongo.database'))
+const notifications = await db.collection('notifications')
 
-export default db
+export { db, notifications }

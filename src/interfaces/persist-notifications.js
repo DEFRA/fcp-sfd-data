@@ -1,8 +1,9 @@
-import db from '../data/index.js'
+import { notifications } from '../data/index.js'
 
 const persistCommsNotification = async (notification) => {
-  const collection = db.collection('testCollection') // this is tightly coupled to the test... how do we fix this?
-  await collection.insertOne(notification)
+  await notifications.insertOne(notification)
+  // this is tightly coupled to the test... how do we fix this?
+  // as part of the db setup created a seperate variable to reference the specific container
 }
 
 export {

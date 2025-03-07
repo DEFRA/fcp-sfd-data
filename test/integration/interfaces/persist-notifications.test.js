@@ -1,16 +1,15 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect, beforeEach } from '@jest/globals'
 import { persistCommsNotification } from '../../../src/interfaces/persist-notifications.js'
-import db from '../../../src/data/index.js'
+import { notifications } from '../../../src/data/index.js'
 
 describe('Persist notifications to db', () => {
   beforeEach(async () => {
-    const collection = db.collection('testCollection')
-    await collection.deleteMany({})
+    await notifications.deleteMany({})
   })
-  test('should persist one record', async () => {
+
+  test('should persist a notification', async () => {
     await persistCommsNotification({ testKey: 'test-value' })
-    const collection = db.collection('testCollection')
-    const result = await collection.find().toArray()
+    const result = await notifications.find().toArray()
 
     expect(result).toBeDefined()
     expect(result.length).toBe(1)
