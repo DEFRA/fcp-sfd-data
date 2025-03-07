@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "docker:test:watch": "docker-compose -f docker-compose.yaml -f docker-compose.test.yaml -f docker-compose.test.watch.yaml -p \"fcp-sfd-data-test\" run --rm fcp-sfd-data",
+    "docker:test:watch": "docker-compose -f docker-compose.yaml -f docker-compose.test.yaml -f docker-compose.test.watch.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "pretest": "npm run test:lint",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false",
     "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --watch",
@@ -40,7 +40,7 @@
     "joi": "17.13.3",
     "lodash": "4.17.21",
     "mongo-locks": "3.0.2",
-    "mongodb": "6.10.0",
+    "mongodb": "^6.10.0",
     "node-fetch": "3.3.2",
     "pino": "9.5.0",
     "pino-pretty": "13.0.0",
