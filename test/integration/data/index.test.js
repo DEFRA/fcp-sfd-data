@@ -7,4 +7,9 @@ describe('Create Mongo client', () => {
     expect(db.s.namespace.db).toBe('fcp-sfd-data')
     expect(db.databaseName).toBe('fcp-sfd-data')
   })
+  test('should connect to a collection', async () => {
+    const collection = db.collection('testCollection')
+    expect(collection).toBeDefined()
+    expect(collection.s.namespace.collection).toBe('testCollection')
+  })
 })
