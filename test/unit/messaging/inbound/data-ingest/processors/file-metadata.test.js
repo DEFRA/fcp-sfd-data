@@ -15,6 +15,11 @@ jest.unstable_mockModule('../../../../../../src/logging/logger.js', () => ({
   })
 }))
 
+const mockPersistFileMetadata = jest.fn()
+jest.unstable_mockModule('../../../../../../src/interfaces/persist-inbound.js', () => ({
+  persistFileMetadata: mockPersistFileMetadata
+}))
+
 const {
   processV1FileMetadata,
   processV2FileMetadata
@@ -32,6 +37,16 @@ describe('file metadata message processor', () => {
       expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
     })
 
+    test('should call persistFileMetadata for valid v1 message', async () => {
+      await processV1FileMetadata(v1FileMetadataMessage)
+      expect(mockPersistFileMetadata).toHaveBeenCalled()
+    })
+
+    test('should not call persistFileMetadata for invalid v1 message', async () => {
+      await expect(processV1FileMetadata({})).rejects.toThrow(UnprocessableMessageError)
+      expect(mockPersistFileMetadata).not.toHaveBeenCalled()
+    })
+
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v1 message', async () => {
       await expect(processV1FileMetadata({})).rejects.toThrow(UnprocessableMessageError)
       expect(mockLoggerError).toHaveBeenCalledWith('Invalid message: "id" is required,"metadata" is required')
@@ -47,6 +62,16 @@ describe('file metadata message processor', () => {
       await processV2FileMetadata(v2FileMetadataMessage)
 
       expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
+    })
+
+    test('should call persistFileMetadata for valid v2 message', async () => {
+      await processV2FileMetadata(v2FileMetadataMessage)
+      expect(mockPersistFileMetadata).toHaveBeenCalled()
+    })
+
+    test('should not call persistFileMetadata for invalid v2 message', async () => {
+      await expect(processV2FileMetadata({})).rejects.toThrow(UnprocessableMessageError)
+      expect(mockPersistFileMetadata).not.toHaveBeenCalled()
     })
 
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v2 message', async () => {

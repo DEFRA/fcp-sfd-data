@@ -6,6 +6,8 @@ import { v1 as dataIngestSchema } from '../../../../schemas/data-ingest/index.js
 
 import { UnprocessableMessageError } from '../../../../errors/message-errors.js'
 
+import { persistFileMetadata } from '../../../../interfaces/persist-inbound.js'
+
 const logger = createLogger()
 
 const processV1FileMetadata = async (message) => {
@@ -18,7 +20,7 @@ const processV1FileMetadata = async (message) => {
       cause: err
     })
   }
-
+  await persistFileMetadata(validated)
   logger.info(`File metadata message processed successfully, eventId: ${validated.metadata.id}`)
 }
 
@@ -32,7 +34,7 @@ const processV2FileMetadata = async (message) => {
       cause: err
     })
   }
-
+  await persistFileMetadata(validated)
   logger.info(`File metadata message processed successfully, eventId: ${validated.id}`)
 }
 
