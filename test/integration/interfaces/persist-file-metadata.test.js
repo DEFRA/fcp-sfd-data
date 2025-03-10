@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach, jest } from '@jest/globals'
 import { persistFileMetadata } from '../../../src/interfaces/persist-inbound.js'
 import { fileMetadataCollection, notificationsCollection } from '../../../src/data/index.js'
 
@@ -17,11 +17,15 @@ describe('Persist notifications to db', () => {
     expect(result[0].testKey).toBe('test-value')
   })
 
-  test('should not persist a record if it is not an object', async () => {
+  test('should throw an error if persisting file metadata fails', async () => {
+    jest.spyOn(fileMetadataCollection, 'insertOne').mockImplementation(() => {
+      throw new Error('Database error')
+    })
+
     try {
-      await persistFileMetadata('test-value')
+      await persistFileMetadata({ testKey: 'test-value' })
     } catch (error) {
-      expect(error.message).toBe('Invalid notification format')
+      expect(error.message).toBe('Error while persisting file metadata: Database error')
     }
   })
 })

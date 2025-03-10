@@ -1,17 +1,19 @@
 import { notificationsCollection, fileMetadataCollection } from '../data/index.js'
 
 const persistCommsNotification = async (notification) => {
-  if (typeof notification !== 'object') {
-    throw new Error('Invalid notification format')
+  try {
+    await notificationsCollection.insertOne(notification)
+  } catch (error) {
+    throw new Error(`Error while persisting comms notification: ${error.message}`)
   }
-  await notificationsCollection.insertOne(notification)
 }
 
 const persistFileMetadata = async (metadata) => {
-  if (typeof metadata !== 'object') {
-    throw new Error('Invalid notification format')
+  try {
+    await fileMetadataCollection.insertOne(metadata)
+  } catch (error) {
+    throw new Error(`Error while persisting file metadata: ${error.message}`)
   }
-  await fileMetadataCollection.insertOne(metadata)
 }
 
 export {
