@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals'
-import { db, client } from '../../../src/data/index.js'
+import { db, client } from '../../../src/data/db-connection.js'
 
 describe('Create Mongo client', () => {
   test('should return an instance of database client', async () => {

@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterAll } from '@jest/globals'
 import { persistFileMetadata } from '../../../src/interfaces/persist-inbound.js'
-import { fileMetadataCollection, client } from '../../../src/data/index.js'
+import { fileMetadataCollection, client } from '../../../src/data/db-connection.js'
 
 import v1FileMetadata from '../../mocks/file-metadata/v1.js'
 

@@ -1,4 +1,4 @@
-import { notificationsCollection, fileMetadataCollection } from '../data/index.js'
+import { notificationsCollection, fileMetadataCollection } from '../data/db-connection.js'
 
 const persistCommsNotification = async (notification) => {
   try {

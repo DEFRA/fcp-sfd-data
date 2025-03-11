@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterAll } from '@jest/globals'
 import { persistCommsNotification } from '../../../src/interfaces/persist-inbound.js'
-import { notificationsCollection, client } from '../../../src/data/index.js'
+import { notificationsCollection, client } from '../../../src/data/db-connection.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
 
