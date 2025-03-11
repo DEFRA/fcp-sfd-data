@@ -4,7 +4,7 @@ import { config } from '../../config/index.js'
 
 const sqsConfig = {
   endpoint: config.get('aws.sqsEndpoint'),
-  region: config.get('aws.region'),
+  region: config.get('aws.region')
 }
 
 if (config.get('aws.accessKeyId') || config.get('aws.secretAccessKey')) {
