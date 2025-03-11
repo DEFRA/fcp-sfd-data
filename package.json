@@ -8,9 +8,10 @@
     "node": ">=22"
   },
   "scripts": {
+    "docker:test": "docker-compose -f docker-compose.yaml -f docker-compose.test.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "docker:test:watch": "docker-compose -f docker-compose.yaml -f docker-compose.test.yaml -f docker-compose.test.watch.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "pretest": "npm run test:lint",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false --forceExit",
     "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --watch",
     "test:lint": "standard",
     "start:watch": "nodemon --watch src --exec 'node --experimental-vm-modules src/index.js'",
