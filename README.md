@@ -39,7 +39,7 @@ The tests have been structured into subfolders of `./test` as per the
 ### Running Tests
 We use containerised tests to make integration testing with depndencies easier. To run the tests, use the following command:
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
+docker compose -f docker compose.yaml -f docker compose.test.yaml run --rm "fcp-sfd-data"
 ```
 
 ## Licence

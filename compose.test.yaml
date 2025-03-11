@@ -8,8 +8,10 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      DOCKER_TEST: true
     volumes:
-      - ./src/:/home/node/src
+      - ./src:/home/node/src
       - ./test/:/home/node/test
       - ./package.json:/home/node/package.json
       - ./coverage:/home/node/coverage

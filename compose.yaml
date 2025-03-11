@@ -15,7 +15,7 @@ services:
       mongodb:
         condition: service_started
     volumes:
-      - ./src/:/home/node/src
+      - ./src:/home/node/src
       - ./package.json:/home/node/package.json
     env_file:
       - .env

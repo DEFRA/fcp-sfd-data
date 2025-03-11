@@ -1,0 +1,12 @@
+services:
+  fcp-sfd-data:
+    command: npm run test:watch
+    volumes:
+      - ./.git:/home/node/.git
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MONGO_URI: whatever
+      MONGO_URI_LOCAL: mongodb://mongodb:27017/
+      DOCKER_TEST: true

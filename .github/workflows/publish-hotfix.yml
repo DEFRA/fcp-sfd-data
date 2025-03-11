@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir -p coverage
           chmod -R a+rw ./coverage
-          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
+          docker compose -f docker compose.yaml -f docker compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: Publish Hot Fix
         uses: DEFRA/cdp-build-action/build-hotfix@main

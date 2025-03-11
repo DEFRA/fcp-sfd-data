@@ -1,7 +1,0 @@
-services:
-  fcp-sfd-data:
-    command: >
-      sh -c "npm run test:watch"
-
-    volumes:
-      - ./.git:/home/node/.git
