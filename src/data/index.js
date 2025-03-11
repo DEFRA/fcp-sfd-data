@@ -15,4 +15,9 @@ const fileMetadataCollection = await db.collection('fileMetadata')
 
 console.log('MongoDB connected')
 
-export { db, notificationsCollection, fileMetadataCollection }
+export {
+  db,
+  client,
+  notificationsCollection,
+  fileMetadataCollection
+}
