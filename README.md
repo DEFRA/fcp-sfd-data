@@ -37,9 +37,14 @@ The tests have been structured into subfolders of `./test` as per the
 [Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
 
 ### Running Tests
-We use containerised tests to make integration testing with depndencies easier. To run the tests, use the following command:
+We use containerised tests to make integration testing with dependencies easier. To run the tests, use the following command:
 ```bash
-docker compose -f docker compose.yaml -f docker compose.test.yaml run --rm "fcp-sfd-data"
+npm run docker:test
+```
+
+To run the tests in watch mode, use the following command:
+```bash
+npm run docker:test:watch
 ```
 
 ## Licence
