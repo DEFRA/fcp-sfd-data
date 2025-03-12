@@ -1,18 +1,29 @@
 import convict from 'convict'
-import { describe, test, expect, beforeEach } from '@jest/globals'
-import { mongoConfig } from '../../../src/config/mongo.js'
+import { describe, test, expect, beforeAll } from '@jest/globals'
 
 describe('mongoConfig', () => {
-  beforeEach(() => {
-    delete process.env.DOCKER_TEST
+  beforeAll(() => {
     process.env.MONGO_URI = 'mongo-uri'
     process.env.MONGO_URI_LOCAL = 'mongo-uri-local'
   })
 
-  test('should use MONGO_URI_LOCAL when DOCKER_TEST is true', () => {
-    process.env.DOCKER_TEST = 'true'
+  test('should use MONGO_URI when DOCKER_TEST is not set', async () => {
+    delete process.env.DOCKER_TEST
+    const { mongoConfig } = await import('../../../src/config/mongo.js')
+
     const config = convict(mongoConfig)
     const mongoURI = config.get('mongo.urlToHttpOptions')
+
+    expect(mongoURI).toBe('mongo-uri')
+  })
+
+  test('should use MONGO_URI_LOCAL when DOCKER_TEST is set to true', async () => {
+    process.env.DOCKER_TEST = 'true'
+    const { mongoConfig } = await import('../../../src/config/mongo.js')
+
+    const config = convict(mongoConfig)
+    const mongoURI = config.get('mongo.urlToHttpOptions')
+
     expect(mongoURI).toBe('mongo-uri-local')
   })
 })

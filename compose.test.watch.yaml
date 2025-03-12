@@ -7,6 +7,5 @@ services:
       - path: .env
         required: false
     environment:
-      MONGO_URI: whatever
-      MONGO_URI_LOCAL: mongodb://mongodb:27017/
       DOCKER_TEST: true
+      MONGO_URI_LOCAL: mongodb://mongodb:27017/
