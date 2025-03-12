@@ -1,8 +1,11 @@
 import { MongoClient } from 'mongodb'
 import { config } from '../config/index.js'
 
-console.log(config.get('mongo')) // urlToHttpOptions returns undefined
-const url = 'mongodb://mongodb:27017/'
+// urlToHttpOptions returns undefined
+console.log('DOCKER_TEST env', process.env.DOCKER_TEST)
+console.log('MONGO_URI env', process.env.MONGO_URI)
+console.log('MONGO_URI_LOCAL env', process.env.MONGO_URI_LOCAL)
+const url = config.get('mongo.urlToHttpOptions')
 
 const client = new MongoClient(url)
 await client.connect()
