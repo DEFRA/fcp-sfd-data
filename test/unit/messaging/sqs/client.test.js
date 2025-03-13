@@ -15,41 +15,17 @@ jest.unstable_mockModule('../../../../src/config/index.js', () => ({
 describe('sqs client', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockGet.mockImplementation((key) => {
-      switch (key) {
-        case 'aws.sqsEndpoint':
-          return 'http://localhost:4566'
-        case 'aws.region':
-          return 'eu-west-2'
-        default:
-          return undefined
-      }
-    })
   })
 
-  test('should create client without credentials when access keys not provided', async () => {
-    await import('../../../../src/messaging/sqs/client.js')
-    expect(mockSQSClient).toHaveBeenCalledWith({
-      endpoint: 'http://localhost:4566',
-      region: 'eu-west-2'
-    })
-  })
-
-  test('should create client with credentials when access keys are provided', async () => {
-    mockGet.mockImplementation((key) => {
-      switch (key) {
-        case 'aws.sqsEndpoint':
-          return 'http://localhost:4566'
-        case 'aws.region':
-          return 'eu-west-2'
-        case 'aws.accessKeyId':
-          return 'test-access-key'
-        case 'aws.secretAccessKey':
-          return 'test-secret-key'
-        default:
-          return undefined
-      }
-    })
+  test('should create client with correct configuration', async () => {
+    // Set up mock config values
+    const mockConfig = {
+      'aws.sqsEndpoint': 'http://localhost:4566',
+      'aws.region': 'eu-west-2',
+      'aws.accessKeyId': 'test-access-key',
+      'aws.secretAccessKey': 'test-secret-key'
+    }
+    mockGet.mockImplementation(key => mockConfig[key])
 
     await import('../../../../src/messaging/sqs/client.js')
 
@@ -60,6 +36,22 @@ describe('sqs client', () => {
         accessKeyId: 'test-access-key',
         secretAccessKey: 'test-secret-key'
       }
+    })
+  })
+
+  test('should create client without credentials when not provided', async () => {
+    // Set up mock config values without credentials
+    const mockConfig = {
+      'aws.sqsEndpoint': 'http://localhost:4566',
+      'aws.region': 'eu-west-2'
+    }
+    mockGet.mockImplementation(key => mockConfig[key])
+
+    await import('../../../../src/messaging/sqs/client.js')
+
+    expect(mockSQSClient).toHaveBeenCalledWith({
+      endpoint: 'http://localhost:4566',
+      region: 'eu-west-2'
     })
   })
 })
