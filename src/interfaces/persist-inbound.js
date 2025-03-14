@@ -1,5 +1,5 @@
 import { config } from '../config/index.js'
-import db from '../data/db-connection.js'
+import db from '../data/db.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 const fileMetadataCollection = config.get('mongo.collections.fileMetadata')

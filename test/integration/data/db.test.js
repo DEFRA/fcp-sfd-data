@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals'
-import { db, client } from '../../../src/data/db-connection.js'
+import db from '../../../src/data/db.js'
 
 describe('Create Mongo client', () => {
   test('should return an instance of database client', async () => {
@@ -9,8 +9,8 @@ describe('Create Mongo client', () => {
   })
 
   test('should have a connected MongoDB client', async () => {
-    expect(client).toBeDefined()
-    expect(client.topology.isConnected()).toBe(true)
+    expect(db.client).toBeDefined()
+    expect(db.client.topology.isConnected()).toBe(true)
   })
 
   test('db client should be able to upload data to collection', async () => {

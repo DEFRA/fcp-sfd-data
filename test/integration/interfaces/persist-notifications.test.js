@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
 import { persistCommsNotification } from '../../../src/interfaces/persist-inbound.js'
-import db from '../../../src/data/db-connection.js'
+import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
 
