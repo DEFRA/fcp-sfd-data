@@ -1,18 +1,19 @@
 import { MongoClient } from 'mongodb'
+// import { secureContext } from '../api/common/helpers/secure-context/index.js'
 import { config } from '../config/index.js'
 
-const url = config.get('mongo.urlToHttpOptions')
+import { createLogger } from '../logging/logger.js'
 
-const client = new MongoClient(url)
-await client.connect()
+const logger = createLogger()
+
+const client = await MongoClient.connect(config.get('mongo.urlToHttpOptions'), {
+  retryWrites: false,
+  readPreference: 'secondary'
+  // ...(secureContext && { secureContext }) add this in once service running
+})
+
 const db = client.db(config.get('mongo.database'))
 
-const notificationsCollection = await db.collection('notifications')
-const fileMetadataCollection = await db.collection('fileMetadata')
+logger.info('Connected to MongoDB')
 
-export {
-  db,
-  client,
-  notificationsCollection,
-  fileMetadataCollection
-}
+export default db
