@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import { createSecureContext } from '../api/common/helpers/secure-context/index.js'
+import { createSecureContext } from '../api/common/helpers/secure-context/secure-context.js'
 import { config } from '../config/index.js'
 
 import { createLogger } from '../logging/logger.js'

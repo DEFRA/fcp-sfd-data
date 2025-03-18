@@ -3,33 +3,40 @@ import tls from 'node:tls'
 import { config } from '../../../../config/index.js'
 import { getTrustStoreCerts } from './get-trust-store-certs.js'
 
-const createSecureContext = (logger, options = {}) => {
+export const createSecureContext = (logger) => {
   if (config.get('isSecureContextEnabled')) {
     const originalTlsCreateSecureContext = tls.createSecureContext
-    const trustStoreCerts = getTrustStoreCerts(process.env)
 
-    if (!trustStoreCerts.length) {
-      logger.info('Could not find any TRUSTSTORE_ certificates')
+    tls.createSecureContext = function (options = {}) {
+      const trustStoreCerts = getTrustStoreCerts(process.env)
+
+      if (!trustStoreCerts.length) {
+        logger.info('Could not find any TRUSTSTORE_ certificates')
+      }
+
+      const tlsSecureContext = originalTlsCreateSecureContext(options)
+
+      trustStoreCerts.forEach((cert) => {
+        tlsSecureContext.context.addCACert(cert)
+      })
+
+      return tlsSecureContext
     }
 
-    const tlsSecureContext = originalTlsCreateSecureContext(options)
-
-    trustStoreCerts.forEach((cert) => {
-      tlsSecureContext.context.addCACert(cert)
-    })
-
-    return tlsSecureContext
-  } else {
-    logger.info('Custom secure context is disabled')
+    return tls.createSecureContext()
   }
+
+  return null
 }
 
 export const secureContext = {
   plugin: {
     name: 'secure-context',
     register (server) {
-      if (config.get('isSecureContextEnabled')) {
-        server.decorate('server', 'secureContext', createSecureContext(server.logger))
+      const context = createSecureContext(server.logger)
+
+      if (context) {
+        server.decorate('server', 'secureContext', context)
       } else {
         server.logger.info('Custom secure context is disabled')
       }
