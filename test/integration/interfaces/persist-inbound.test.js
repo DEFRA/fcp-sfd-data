@@ -48,9 +48,7 @@ describe('Persist inbound messages to db', () => {
     })
 
     test('should throw error when trying to insert duplicate _id', async () => {
-      // First insert
       await persistFileMetadata(v1FileMetadata)
-      // Try to insert the same document again (same _id)
       await expect(persistFileMetadata(v1FileMetadata))
         .rejects
         .toThrow('Error while persisting file metadata')
