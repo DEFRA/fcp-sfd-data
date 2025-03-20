@@ -16,7 +16,7 @@ jest.unstable_mockModule('../../../../../../src/logging/logger.js', () => ({
 }))
 
 const mockPersistFileMetadata = jest.fn()
-jest.unstable_mockModule('../../../../../../src/interfaces/persist-inbound.js', () => ({
+jest.unstable_mockModule('../../../../../../src/repos/file-metadata.js', () => ({
   persistFileMetadata: mockPersistFileMetadata
 }))
 
