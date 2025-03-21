@@ -24,8 +24,36 @@ describe('Persist inbound messages to db', () => {
       expect(savedNotification.events[0]).toMatchObject(v1CommsMessage)
     })
 
+    test('should append event to existing document when correlationId matches but other values differ', async () => {
+      await persistCommsNotification(v1CommsMessage)
+
+      const modifiedMessage = {
+        ...v1CommsMessage,
+        id: 'different-id',
+        commsMessage: {
+          ...v1CommsMessage.commsMessage,
+          data: {
+            ...v1CommsMessage.commsMessage.data,
+            reference: 'different-reference',
+            sbi: '999999999'
+          }
+        }
+      }
+
+      await persistCommsNotification(modifiedMessage)
+
+      const result = await db.collection(notificationsCollection)
+        .findOne({ _id: v1CommsMessage.commsMessage.data.correlationId })
+
+      expect(result).toBeDefined()
+      expect(result.events).toHaveLength(2)
+      expect(result.events[0]).toMatchObject(v1CommsMessage)
+      expect(result.events[1]).toMatchObject(modifiedMessage)
+      expect(result.events[1].commsMessage.data.reference).toBe('different-reference')
+      expect(result.events[1].commsMessage.data.sbi).toBe('999999999')
+    })
+
     test('should not create a new record when correlationId is the same as an existing document _id', async () => {
-      console.log(v1CommsMessage)
       await persistCommsNotification(v1CommsMessage)
       const correlatedV1CommsMessage = { ...v1CommsMessage, id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' }
       await persistCommsNotification(correlatedV1CommsMessage)
@@ -38,7 +66,29 @@ describe('Persist inbound messages to db', () => {
       expect(result[0].events[1]).toMatchObject(correlatedV1CommsMessage)
     })
 
-    // TODO add test for error handling if correlation id is null
-    // TODO add test to check event with different values but same correlation id are saved in the same document
+    test('should throw error when correlationId is falsy', async () => {
+      const invalidMessage = {
+        ...v1CommsMessage,
+        commsMessage: {
+          ...v1CommsMessage.commsMessage,
+          data: {
+            ...v1CommsMessage.commsMessage.data,
+            correlationId: null
+          }
+        }
+      }
+
+      await expect(persistCommsNotification(invalidMessage))
+        .rejects
+        .toThrow('Error while persisting comms notification: correlationId is required')
+    })
+
+    test('should throw error when database connection fails', async () => {
+      await db.client.close()
+
+      await expect(persistCommsNotification(v1CommsMessage))
+        .rejects
+        .toThrow('Error while persisting comms notification')
+    })
   })
 })
