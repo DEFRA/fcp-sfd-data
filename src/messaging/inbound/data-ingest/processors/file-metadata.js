@@ -20,7 +20,7 @@ const processV1FileMetadata = async (message) => {
       cause: err
     })
   }
-  await persistFileMetadata(validated)
+  await persistFileMetadata(validated.metadata)
   logger.info(`File metadata message processed successfully, eventId: ${validated.metadata.id}`)
 }
 

@@ -39,7 +39,7 @@ describe('file metadata message processor', () => {
 
     test('should call persistFileMetadata for valid v1 message', async () => {
       await processV1FileMetadata(v1FileMetadataMessage)
-      expect(mockPersistFileMetadata).toHaveBeenCalled()
+      expect(mockPersistFileMetadata).toHaveBeenCalledWith(v1FileMetadataMessage.metadata)
     })
 
     test('should not call persistFileMetadata for invalid v1 message', async () => {
@@ -66,7 +66,7 @@ describe('file metadata message processor', () => {
 
     test('should call persistFileMetadata for valid v2 message', async () => {
       await processV2FileMetadata(v2FileMetadataMessage)
-      expect(mockPersistFileMetadata).toHaveBeenCalled()
+      expect(mockPersistFileMetadata).toHaveBeenCalledWith(v2FileMetadataMessage)
     })
 
     test('should not call persistFileMetadata for invalid v2 message', async () => {

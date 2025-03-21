@@ -1,13 +1,13 @@
 import { config } from '../config/index.js'
-import db from '../data/db.js'
+import saveEvent from './common/save-event.js'
 
 const fileMetadataCollection = config.get('mongo.collections.fileMetadata')
 
-const persistFileMetadata = async (metadata) => {
+const persistFileMetadata = async (event) => {
   try {
-    await db.collection(fileMetadataCollection).insertOne(metadata)
+    await saveEvent(fileMetadataCollection, event)
   } catch (error) {
-    throw new Error(`Error while persisting file metadata: ${error.message}`)
+    throw new Error(`Error while persisting file metadata event: ${error.message}`)
   }
 }
 

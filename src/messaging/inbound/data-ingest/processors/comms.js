@@ -20,7 +20,7 @@ const processV1CommsData = async (message) => {
     })
   }
 
-  await persistCommsNotification(validated)
+  await persistCommsNotification(validated.commsMessage)
   logger.info(`Comms message processed successfully, eventId: ${validated.commsMessage.id}`)
 }
 

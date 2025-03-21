@@ -40,7 +40,7 @@ describe('comms message processor', () => {
     test('should call persistCommsNotification with validated message', async () => {
       await processV1CommsData(v1CommsMessage)
 
-      expect(mockPersistCommsNotification).toHaveBeenCalledWith(v1CommsMessage)
+      expect(mockPersistCommsNotification).toHaveBeenCalledWith(v1CommsMessage.commsMessage)
       expect(mockLoggerInfo).toHaveBeenCalledWith('Comms message processed successfully, eventId: a058de5b-42ad-473c-91e7-0797a43fda30')
     })
 
