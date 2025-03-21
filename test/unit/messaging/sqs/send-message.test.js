@@ -13,7 +13,6 @@ jest.unstable_mockModule('../../../../src/logging/logger.js', () => ({
   createLogger: () => ({ error: mockLoggerError })
 }))
 
-// Mock crypto.randomUUID
 global.crypto = {
   randomUUID: mockRandomUUID
 }

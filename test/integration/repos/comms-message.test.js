@@ -74,7 +74,7 @@ describe('Persist inbound messages to db', () => {
           ...v1CommsMessage.commsMessage,
           data: {
             ...v1CommsMessage.commsMessage.data,
-            correlationId: 'a058de5b-42ad-473c-91e7-0797a43fda31' // Different correlationId
+            correlationId: 'a058de5b-42ad-473c-91e7-0797a43fda31'
           }
         }
       }

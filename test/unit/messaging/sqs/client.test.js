@@ -18,7 +18,6 @@ describe('sqs client', () => {
   })
 
   test('should create client with correct configuration', async () => {
-    // Set up mock config values
     const mockConfig = {
       'aws.sqsEndpoint': 'http://localhost:4566',
       'aws.region': 'eu-west-2',
@@ -40,7 +39,6 @@ describe('sqs client', () => {
   })
 
   test('should create client without credentials when not provided', async () => {
-    // Set up mock config values without credentials
     const mockConfig = {
       'aws.sqsEndpoint': 'http://localhost:4566',
       'aws.region': 'eu-west-2'
