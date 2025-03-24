@@ -2,6 +2,7 @@ import { config } from '../../../config/index.js'
 import { createServer } from '../../index.js'
 import { createLogger } from '../../../logging/logger.js'
 import { apolloServer } from '../../../graphql/apollo-server.js'
+import { CommsDataSource } from '../../../graphql/datasources/comms-event.js'
 import hapiApollo from '@as-integrations/hapi'
 
 const startServer = async () => {
@@ -15,7 +16,12 @@ const startServer = async () => {
       plugin: hapiApollo.default,
       options: {
         apolloServer,
-        path: '/graphql'
+        path: '/graphql',
+        context: async (request) => {
+          dataSources: {
+            commsDB: new CommsDataSource({ request })
+          }
+        }
       }
     })
 
