@@ -1,12 +1,24 @@
 import { config } from '../../../config/index.js'
 import { createServer } from '../../index.js'
 import { createLogger } from '../../../logging/logger.js'
+import { apolloServer } from '../../../graphql/apollo-server.js'
+import hapiApollo from '@as-integrations/hapi'
 
 const startServer = async () => {
   let server
 
   try {
+    await apolloServer.start()
     server = await createServer()
+
+    await server.register({
+      plugin: hapiApollo.default,
+      options: {
+        apolloServer,
+        path: '/graphql'
+      }
+    })
+
     await server.start()
 
     server.logger.info('Server started successfully')
