@@ -1,5 +1,5 @@
-import { expect, jest } from '@jest/globals'
-import { TEST, DEVELOPMENT } from '../../src/constants/environments.js'
+import { expect, jest, describe, afterEach, test } from '@jest/globals'
+import environments from '../../src/constants/environments.js'
 
 describe('GraphQL Config', () => {
   afterEach(() => {
@@ -8,14 +8,14 @@ describe('GraphQL Config', () => {
   })
 
   test('should return true for test environment', async () => {
-    process.env.ENVIRONMENT_CODE = TEST
+    process.env.ENVIRONMENT_CODE = environments.TEST
     const { graphqlConfig } = await import('../../src/config/graphql.js')
     const config = graphqlConfig.get('enableIntrospection')
     expect(config).toBe(true)
   })
 
   test('should return true for dev environment', async () => {
-    process.env.ENVIRONMENT_CODE = DEVELOPMENT
+    process.env.ENVIRONMENT_CODE = environments.DEVELOPMENT
     const { graphqlConfig } = await import('../../src/config/graphql.js')
     const config = graphqlConfig.get('enableIntrospection')
     expect(config).toBe(true)

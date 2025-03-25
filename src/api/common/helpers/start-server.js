@@ -17,11 +17,11 @@ const startServer = async () => {
       options: {
         apolloServer,
         path: '/graphql',
-        context: async (request) => {
+        context: async (request) => ({
           dataSources: {
             commsDB: new CommsDataSource({ request })
           }
-        }
+        })
       }
     })
 
