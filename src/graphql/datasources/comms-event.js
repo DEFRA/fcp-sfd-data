@@ -2,9 +2,15 @@
 // - Getting comms event by ID
 // - Getting comms events by property
 
+import { getAllCommsEvents } from '../../repos/comms-message.js'
+
 export class CommsDataSource {
   constructor (request) {
     this.request = request
+  }
+
+  async getAllCommsEvents () {
+    return getAllCommsEvents()
   }
 
   async getCommsEventById (id) {

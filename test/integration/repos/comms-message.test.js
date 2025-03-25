@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification, getAllCommsEvents } from '../../../src/repos/comms-message.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
@@ -114,5 +114,15 @@ describe('Persist inbound messages to db', () => {
         .rejects
         .toThrow('Error while persisting comms notification')
     })
+  })
+})
+
+describe('Retrieve Comms Notifications', () => {
+  test('should return all data from the db', async () => {
+    await db.collection(notificationsCollection).insertOne(v1CommsMessage)
+
+    const result = await getAllCommsEvents()
+    console.log('result', result)
+    expect(result).toBeDefined()
   })
 })
