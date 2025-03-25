@@ -11,6 +11,18 @@ export const mongoConfig = {
       format: String,
       default: 'fcp-sfd-data',
       env: 'MONGO_DATABASE'
+    },
+    collections: {
+      notifications: {
+        doc: 'notifications collection',
+        format: String,
+        default: 'notificationEvents'
+      },
+      fileMetadata: {
+        doc: 'fileMetadata collection',
+        format: String,
+        default: 'fileMetadataEvents'
+      }
     }
   }
 }

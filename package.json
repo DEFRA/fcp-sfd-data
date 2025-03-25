@@ -8,6 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "docker:debug": "docker compose -f compose.yaml -f compose.debug.yaml -p \"fcp-sfd-data\" up",
     "docker:test": "docker compose -f compose.yaml -f compose.test.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "docker:test:watch": "docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "pretest": "npm run test:lint",
@@ -21,7 +22,9 @@
   "author": "Defra DDTS",
   "contributors": [
     "Rana Salem <rana.salem@defra.gov.uk>",
-    "Shaun Fitzsimons <shaun.fitzsimmons@defra.gov.uk>"
+    "Shaun Fitzsimons <shaun.fitzsimmons@defra.gov.uk>",
+    "Simon Dunn <simon.dunn1@defra.gov.uk>",
+    "Adam Kay <adam.kay@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
