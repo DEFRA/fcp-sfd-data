@@ -13,13 +13,25 @@ const persistCommsNotification = async (notification) => {
 }
 
 const getAllCommsEvents = async () => {
-  // does something
-  const notifications = await db.collection(notificationsCollection).find({})
-  // returns data in the correct format
-  return notifications
+  try {
+    const notifications = await db.collection(notificationsCollection).find({}).toArray()
+    return notifications
+  } catch (error) {
+    throw new Error(`Error while fetching comms notifications: ${error.message}`)
+  }
+}
+
+const getCommsEventById = async (id) => {
+  try {
+    const notification = await db.collection(notificationsCollection).findOne({ _id: id })
+    return notification
+  } catch (error) {
+    throw new Error(`Error retrieving comms notification by ID: ${error.message}`)
+  }
 }
 
 export {
   persistCommsNotification,
-  getAllCommsEvents
+  getAllCommsEvents,
+  getCommsEventById
 }

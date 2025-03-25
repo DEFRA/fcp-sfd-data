@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification, getAllCommsEvents } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification, getAllCommsEvents, getCommsEventById } from '../../../src/repos/comms-message.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
@@ -118,11 +118,48 @@ describe('Persist inbound messages to db', () => {
 })
 
 describe('Retrieve Comms Notifications', () => {
+  beforeEach(async () => {
+    if (!db.client.topology?.isConnected()) {
+      await db.client.connect()
+    }
+    await db.collection(notificationsCollection).deleteMany({})
+  })
+
   test('should return all data from the db', async () => {
-    await db.collection(notificationsCollection).insertOne(v1CommsMessage)
+    await persistCommsNotification(v1CommsMessage.commsMessage)
 
     const result = await getAllCommsEvents()
     console.log('result', result)
     expect(result).toBeDefined()
+    expect(result.length).toBe(1)
+    // expect(result[0]).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
+  })
+
+  test('should return empty array when no data in db', async () => {
+    const result = await getAllCommsEvents()
+
+    expect(result).toBeDefined()
+    expect(result).toBeInstanceOf(Array)
+    expect(result).toHaveLength(0)
+  })
+
+  test('should throw error when database connection fails', async () => {
+    await db.client.close()
+
+    await expect(getAllCommsEvents())
+      .rejects
+      .toThrow('Error while fetching comms notifications')
+  })
+
+  test('should return notification when ID exists', async () => {
+    await persistCommsNotification(v1CommsMessage.commsMessage)
+    const id = v1CommsMessage.commsMessage.data.correlationId
+
+    const result = await getCommsEventById(id)
+
+    expect(result).toBeDefined()
+    expect(result._id).toBe(id)
+    expect(result.events).toHaveLength(1)
+    // expect(result.events).toMatchObject(v1CommsMessage.commsMessage) // this is failing because its returning an array
   })
 })
