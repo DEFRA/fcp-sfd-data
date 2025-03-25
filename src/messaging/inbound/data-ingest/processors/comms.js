@@ -1,6 +1,6 @@
 import { createLogger } from '../../../../logging/logger.js'
 import { validate } from '../../../../schemas/validate.js'
-import { persistCommsNotification } from '../../../../repos/comms-message.js'
+import { persistCommsNotification } from '../../../../repos/comms-notification.js'
 
 import { v1 } from '../../../../schemas/comms/index.js'
 import { v1 as dataIngestSchema } from '../../../../schemas/data-ingest/index.js'

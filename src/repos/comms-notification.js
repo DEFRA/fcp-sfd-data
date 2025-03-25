@@ -3,9 +3,9 @@ import saveEvent from './common/save-event.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
-const persistCommsNotification = async (notification) => {
+const persistCommsNotification = async (event) => {
   try {
-    await saveEvent(notificationsCollection, notification)
+    await saveEvent(notificationsCollection, event)
   } catch (error) {
     throw new Error(`Error while persisting comms notification: ${error.message}`)
   }
