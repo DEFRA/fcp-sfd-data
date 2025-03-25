@@ -1,9 +1,5 @@
-const getCommsEventById = async (_, { key, value }) => {
-  return {
-    getCommsEventById: {
-      test: 'getCommsEventById'
-    }
-  }
+const getCommsEventById = async (_, { id }, { dataSources }) => {
+  return dataSources.commsDB.getCommsEventById(id)
 }
 
 export default getCommsEventById
