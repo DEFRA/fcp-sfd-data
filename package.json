@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-data",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Data integration for Single Front Door",
   "main": "src/index.js",
   "type": "module",
@@ -8,9 +8,11 @@
     "node": ">=22"
   },
   "scripts": {
+    "docker:test": "docker compose -f compose.yaml -f compose.test.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
+    "docker:test:watch": "docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "pretest": "npm run test:lint",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false",
-    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false --forceExit",
+    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules --no-experimental-require-module\" npx jest --coverage --verbose --runInBand --watch",
     "test:lint": "standard",
     "start:watch": "nodemon --watch src --exec 'node --experimental-vm-modules src/index.js'",
     "start:debug": "nodemon --watch src --exec 'node --experimental-vm-modules --inspect-brk=0.0.0.0 src/index.js'",
@@ -23,8 +25,6 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@apollo/server": "^4.11.3",
-    "@as-integrations/hapi": "^2.0.1",
     "@aws-sdk/client-sqs": "3.749.0",
     "@defra/hapi-tracing": "1.0.0",
     "@elastic/ecs-pino-format": "1.5.0",

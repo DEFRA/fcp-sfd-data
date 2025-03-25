@@ -1,0 +1,80 @@
+services:
+  fcp-sfd-data:
+    build:
+      target: development
+    image: fcp-sfd-data-development
+    container_name: fcp-sfd-data-development
+    ports:
+      - '3000:3000'
+    links:
+      - 'localstack:localstack'
+      - 'mongodb:mongodb'
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    volumes:
+      - ./src:/home/node/src
+      - ./package.json:/home/node/package.json
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      SQS_ENDPOINT: http://localstack:4566
+      MONGO_URI: mongodb://mongodb:27017/
+      DATA_INGEST_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest.fifo
+      DATA_INGEST_DEAD_LETTER_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter.fifo
+      AWS_REGION: ${AWS_REGION:-eu-west-2}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-eu-west-2}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+    networks:
+      - cdp-tenant
+
+  localstack:
+    image: localstack/localstack:3.0.2
+    ports:
+      - '4566:4566' # LocalStack Gateway
+      - '4510-4559:4510-4559' # external services port range
+    env_file:
+      - .env
+    environment:
+      DEBUG: ${DEBUG:-1}
+      LS_LOG: WARN # Localstack DEBUG Level
+      SERVICES: s3,sqs,sns,firehose
+      LOCALSTACK_HOST: 127.0.0.1
+      EXTRA_CORS_ALLOWED_ORIGINS: "http://localhost:5173,http://127.0.0.1:5173"
+      EXTRA_CORS_ALLOWED_HEADERS: 'X-Amzn-Query-Mode'
+      AWS_REGION: ${AWS_REGION:-eu-west-2}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-eu-west-2}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+    volumes:
+      - '${TMPDIR:-/tmp}/localstack:/var/lib/localstack'
+      - ./compose/start-localstack.sh:/etc/localstack/init/ready.d/start-localstack.sh
+    healthcheck:
+      test: ['CMD', 'curl', 'localhost:4566']
+      interval: 5s
+      start_period: 5s
+      retries: 3
+    networks:
+      - cdp-tenant
+
+  mongodb:
+    image: mongo:6.0.13
+    networks:
+      - cdp-tenant
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb-data:/data
+    restart: always
+
+volumes:
+  mongodb-data:
+
+networks:
+  cdp-tenant:
+    driver: bridge

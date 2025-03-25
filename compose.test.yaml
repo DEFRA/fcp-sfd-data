@@ -1,0 +1,38 @@
+services:
+  fcp-sfd-data:
+    build:
+      target: development
+    image: fcp-sfd-data-development
+    container_name: fcp-sfd-data-test
+    command: npm run test
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DOCKER_TEST: true
+      MONGO_URI_LOCAL: mongodb://mongodb:27017/
+    volumes:
+      - ./src:/home/node/src
+      - ./test/:/home/node/test
+      - ./package.json:/home/node/package.json
+      - ./coverage:/home/node/coverage
+    networks:
+      - cdp-tenant
+
+  localstack:
+    env_file:
+      - path: .env
+        required: false
+    networks:
+      - cdp-tenant
+
+  mongodb:
+    volumes:
+      - mongodb-data:/data
+
+volumes:
+  mongodb-data:
+
+networks:
+  cdp-tenant:
+    driver: bridge
