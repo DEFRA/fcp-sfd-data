@@ -19,7 +19,7 @@ const startServer = async () => {
         path: '/graphql',
         context: async (request) => ({
           dataSources: {
-            commsDB: new CommsDataSource({ request })
+            commsEvent: new CommsDataSource({ request })
           }
         })
       }

@@ -21,13 +21,10 @@ type Query {
 """ Comms event received from the upstream comms service """
 type CommsEvent {
   """ Unique identifier for the comms event (UUID standard) """
-  id: String
-
-  """ Date and time when event has been saved in fd-data database """
-  dateCreated: Timestamp
+  correlationId: String
 
   """ Details of the event message """
-  commsMessage: commsMessageDetails
+  events: [commsMessageDetails]
 }
 
 """ Details of a communication message """

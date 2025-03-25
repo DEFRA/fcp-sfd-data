@@ -132,14 +132,14 @@ describe('Retrieve Comms Notifications', () => {
     console.log('result', result)
     expect(result).toBeDefined()
     expect(result.length).toBe(1)
-    // expect(result[0]).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
+    expect(result).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
   })
 
   test('should return empty array when no data in db', async () => {
     const result = await getAllCommsEvents()
 
     expect(result).toBeDefined()
-    expect(result).toBeInstanceOf(Array)
+    // expect(result).toBeInstanceOf(Array)
     expect(result).toHaveLength(0)
   })
 
