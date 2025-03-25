@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Test code and Create Test Coverage Reports
         uses: actions/setup-node@v4
@@ -39,7 +41,7 @@ jobs:
         run: |
           mkdir -p coverage
           chmod -R a+rw ./coverage
-          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-data"
+          docker compose -f compose.yaml -f compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
         uses: SonarSource/sonarqube-scan-action@v4

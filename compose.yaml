@@ -6,6 +6,7 @@ services:
     container_name: fcp-sfd-data-development
     ports:
       - '3000:3000'
+      - '9229:9229'
     links:
       - 'localstack:localstack'
       - 'mongodb:mongodb'
@@ -15,7 +16,7 @@ services:
       mongodb:
         condition: service_started
     volumes:
-      - ./src/:/home/node/src
+      - ./src:/home/node/src
       - ./package.json:/home/node/package.json
     env_file:
       - .env

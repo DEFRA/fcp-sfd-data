@@ -1,0 +1,8 @@
+services:
+  fcp-sfd-data:
+    command: npm run test:watch
+    volumes:
+      - ./.git:/home/node/.git
+    env_file:
+      - path: .env
+        required: false

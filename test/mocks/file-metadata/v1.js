@@ -9,7 +9,8 @@ export default {
     time: '2023-10-17T14:48:00.000Z',
     data: {
       sbi: '123456789',
-      blobReference: '550e8400-e29b-41d4-a716-446655440000'
+      blobReference: '550e8400-e29b-41d4-a716-446655440000',
+      correlationId: '09237605-f4e5-4201-aee1-7e42a1682cef'
     }
   }
 }
