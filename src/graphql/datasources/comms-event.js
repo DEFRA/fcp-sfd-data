@@ -8,7 +8,6 @@ export class CommsDataSource {
   }
 
   async getCommsEventById (id) {
-    // Mock implementation returning a single event
     return {
       id: id || '550e8400-e29b-41d4-a716-446655440000',
       dateCreated: new Date().toISOString(),
