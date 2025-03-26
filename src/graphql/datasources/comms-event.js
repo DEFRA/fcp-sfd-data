@@ -1,4 +1,4 @@
-import { getCommsEventById, getByProperty } from '../../repos/comms-message.js'
+import { getCommsEventById, getCommsEventByProperty } from '../../repos/comms-message.js'
 import enumMap from '../schema/comms-message/enum-map.js'
 
 export class CommsDataSource {
@@ -11,7 +11,7 @@ export class CommsDataSource {
   }
 
   async getCommsEventByProperty (key, value) {
-    const mappedKey = enumMap[key] ? `events.${enumMap[key]}` : key
-    return getByProperty(mappedKey, value)
+    const mappedKey = `events.${enumMap[key]}`
+    return getCommsEventByProperty(mappedKey, value)
   }
 }

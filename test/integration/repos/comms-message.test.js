@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification, getCommsEventById, getByProperty } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification, getCommsEventById, getCommsEventByProperty } from '../../../src/repos/comms-message.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
@@ -120,12 +120,10 @@ describe('Comms Notification Repository', () => {
   })
 
   describe('getCommsEventById', () => {
-    test('should return empty array when no data in db', async () => {
-      const result = await getCommsEventById('a058de5b-42ad-473c-91e7-0797a43fda30')
-
-      expect(result).toBeDefined()
-      expect(result).toBeInstanceOf(Array)
-      expect(result).toHaveLength(0)
+    test('should throw error when event not found', async () => {
+      await expect(getCommsEventById('a058de5b-42ad-473c-91e7-0797a43fda30'))
+        .rejects
+        .toThrow('Error while fetching comms notifications')
     })
 
     test('should throw error when database connection fails', async () => {
@@ -149,12 +147,12 @@ describe('Comms Notification Repository', () => {
     })
   })
 
-  describe('getByProperty', () => {
+  describe('getCommsEventByProperty', () => {
     test('should return one event by property', async () => {
       await persistCommsNotification(v1CommsMessage.commsMessage)
       const value = v1CommsMessage.commsMessage.data.sbi
 
-      const result = await getByProperty('events.data.sbi', value)
+      const result = await getCommsEventByProperty('events.data.sbi', value)
 
       expect(result).toBeDefined()
       expect(result).toHaveLength(1)
@@ -178,7 +176,7 @@ describe('Comms Notification Repository', () => {
 
       await persistCommsNotification(modifiedMessage.commsMessage)
 
-      const result = await getByProperty('events.data.sbi', v1CommsMessage.commsMessage.data.sbi)
+      const result = await getCommsEventByProperty('events.data.sbi', v1CommsMessage.commsMessage.data.sbi)
 
       expect(result).toHaveLength(1)
       expect(result[0].events).toHaveLength(2)
@@ -187,11 +185,18 @@ describe('Comms Notification Repository', () => {
       expect(result[0].events[1].data.reference).toBe('different-reference')
     })
 
-    test('should return empty array when no matching documents', async () => {
-      const result = await getByProperty('events.data.sbi', 'non-existent-sbi')
+    test('should throw error when event not found', async () => {
+      await expect(getCommsEventByProperty('events.data.sbi', 'non-existent-sbi'))
+        .rejects
+        .toThrow('Error while fetching comms notifications')
+    })
 
-      expect(result).toBeDefined()
-      expect(result).toHaveLength(0)
+    test('should throw error when database connection fails', async () => {
+      await db.client.close()
+
+      await expect(getCommsEventByProperty('events.data.sbi', 'non-existent-sbi'))
+        .rejects
+        .toThrow('Error while fetching comms notifications')
     })
   })
 })
