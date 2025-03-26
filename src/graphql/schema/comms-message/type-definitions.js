@@ -10,12 +10,12 @@ type Query {
   """
   GET a specific comms event by its ID
   """
-  commsEventByPK(id: String!): CommsEvent
+  getCommsEventById(id: String!): CommsEvent
 
   """
   GET comms events filtered by a specific property and value
   """
-  commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent]
+  getCommsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent]
 }
 
 """ Comms event received from the upstream comms service """

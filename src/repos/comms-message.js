@@ -12,15 +12,6 @@ const persistCommsNotification = async (notification) => {
   }
 }
 
-const getAllCommsEvents = async () => {
-  try {
-    const notifications = await db.collection(notificationsCollection).find({}).toArray()
-    return notifications
-  } catch (error) {
-    throw new Error(`Error while fetching comms notifications: ${error.message}`)
-  }
-}
-
 const getCommsEventById = async (id) => {
   try {
     const notification = await db.collection(notificationsCollection).findOne({ _id: id })
@@ -30,8 +21,20 @@ const getCommsEventById = async (id) => {
   }
 }
 
+const getByProperty = async (key, value) => {
+  try {
+    const query = { [key]: value }
+    console.log('key:::', key)
+    console.log('value:::', value)
+    const notifications = await db.collection(notificationsCollection).find(query).toArray()
+    return notifications.map((notification) => ({ correlationId: notification._id, events: notification.events }))
+  } catch (error) {
+    throw new Error(`Error while fetching comms notifications: ${error.message}`)
+  }
+}
+
 export {
   persistCommsNotification,
-  getAllCommsEvents,
+  getByProperty,
   getCommsEventById
 }

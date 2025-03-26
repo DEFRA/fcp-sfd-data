@@ -6,4 +6,6 @@ const getMetadata = async (_, { key, value }) => {
   }
 }
 
-export default getMetadata
+export {
+  getMetadata
+}

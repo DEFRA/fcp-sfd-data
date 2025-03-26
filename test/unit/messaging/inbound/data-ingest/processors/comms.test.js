@@ -16,7 +16,7 @@ jest.unstable_mockModule('../../../../../../src/logging/logger.js', () => ({
   })
 }))
 
-jest.unstable_mockModule('../../../../../../src/repos/comms-notification.js', () => ({
+jest.unstable_mockModule('../../../../../../src/repos/comms-message.js', () => ({
   persistCommsNotification: mockPersistCommsNotification
 }))
 

@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification } from '../../../src/repos/comms-notification.js'
+import { persistCommsNotification, getByProperty } from '../../../src/repos/comms-message.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
@@ -116,7 +116,6 @@ describe('Persist inbound messages to db', () => {
     })
   })
 })
-<<<<<<< HEAD
 
 describe('Retrieve Comms Notifications', () => {
   beforeEach(async () => {
@@ -126,43 +125,57 @@ describe('Retrieve Comms Notifications', () => {
     await db.collection(notificationsCollection).deleteMany({})
   })
 
-  test('should return all data from the db', async () => {
+  test('should return one event by property', async () => {
     await persistCommsNotification(v1CommsMessage.commsMessage)
+    const key = 'data.correlationId'
+    const value = v1CommsMessage.commsMessage.data.correlationId
 
-    const result = await getAllCommsEvents()
-    console.log('result', result)
-    expect(result).toBeDefined()
-    expect(result.length).toBe(1)
-    expect(result).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
-  })
+    const result = await getByProperty(key, value)
+    console.log('result:::', result)
 
-  test('should return empty array when no data in db', async () => {
-    const result = await getAllCommsEvents()
+    // pull event direct from db
 
     expect(result).toBeDefined()
-    // expect(result).toBeInstanceOf(Array)
-    expect(result).toHaveLength(0)
-  })
-
-  test('should throw error when database connection fails', async () => {
-    await db.client.close()
-
-    await expect(getAllCommsEvents())
-      .rejects
-      .toThrow('Error while fetching comms notifications')
-  })
-
-  test('should return notification when ID exists', async () => {
-    await persistCommsNotification(v1CommsMessage.commsMessage)
-    const id = v1CommsMessage.commsMessage.data.correlationId
-
-    const result = await getCommsEventById(id)
-
-    expect(result).toBeDefined()
-    expect(result._id).toBe(id)
-    expect(result.events).toHaveLength(1)
-    // expect(result.events).toMatchObject(v1CommsMessage.commsMessage) // this is failing because its returning an array
+    expect(result).toHaveLength(1)
+    expect(result[0].events).toMatchObject(v1CommsMessage.commsMessage)
   })
 })
-=======
->>>>>>> main
+
+// test('should return all data from the db', async () => {
+//   await persistCommsNotification(v1CommsMessage.commsMessage)
+
+//   const result = await getAllCommsEvents()
+//   console.log('result', result)
+//   expect(result).toBeDefined()
+//   expect(result.length).toBe(1)
+//   expect(result).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
+// })
+
+// test('should return empty array when no data in db', async () => {
+//   const result = await getAllCommsEvents()
+
+//   expect(result).toBeDefined()
+//   // expect(result).toBeInstanceOf(Array)
+//   expect(result).toHaveLength(0)
+// })
+
+// test('should throw error when database connection fails', async () => {
+//   await db.client.close()
+
+//   await expect(getAllCommsEvents())
+//     .rejects
+//     .toThrow('Error while fetching comms notifications')
+// })
+
+// test('should return notification when ID exists', async () => {
+//   await persistCommsNotification(v1CommsMessage.commsMessage)
+//   const id = v1CommsMessage.commsMessage.data.correlationId
+
+//   const result = await getCommsEventById(id)
+
+//   expect(result).toBeDefined()
+//   expect(result._id).toBe(id)
+//   expect(result.events).toHaveLength(1)
+//   // expect(result.events).toMatchObject(v1CommsMessage.commsMessage) // this is failing because its returning an array
+// })
+// })

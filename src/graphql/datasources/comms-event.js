@@ -1,12 +1,12 @@
-import { getAllCommsEvents, getCommsEventById } from '../../repos/comms-message.js'
+import { getCommsEventById, getByProperty } from '../../repos/comms-message.js'
 
 export class CommsDataSource {
   constructor (request) {
     this.request = request
   }
 
-  async getAllCommsEvents () {
-    return getAllCommsEvents()
+  async getByProperty () {
+    return getByProperty()
   }
 
   async getCommsEventById (id) {
