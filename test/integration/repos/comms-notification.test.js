@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification, getAllCommsEvents, getCommsEventById } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification } from '../../../src/repos/comms-notification.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
@@ -116,6 +116,7 @@ describe('Persist inbound messages to db', () => {
     })
   })
 })
+<<<<<<< HEAD
 
 describe('Retrieve Comms Notifications', () => {
   beforeEach(async () => {
@@ -163,3 +164,5 @@ describe('Retrieve Comms Notifications', () => {
     // expect(result.events).toMatchObject(v1CommsMessage.commsMessage) // this is failing because its returning an array
   })
 })
+=======
+>>>>>>> main
