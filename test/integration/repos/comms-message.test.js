@@ -124,6 +124,7 @@ describe('Comms Notification Repository', () => {
       const result = await getCommsEventById('a058de5b-42ad-473c-91e7-0797a43fda30')
 
       expect(result).toBeDefined()
+      expect(result).toBeInstanceOf(Array)
       expect(result).toHaveLength(0)
     })
 
@@ -151,9 +152,9 @@ describe('Comms Notification Repository', () => {
   describe('getByProperty', () => {
     test('should return one event by property', async () => {
       await persistCommsNotification(v1CommsMessage.commsMessage)
-      const value = v1CommsMessage.commsMessage.data.correlationId
+      const value = v1CommsMessage.commsMessage.data.sbi
 
-      const result = await getByProperty('_id', value)
+      const result = await getByProperty('events.data.sbi', value)
 
       expect(result).toBeDefined()
       expect(result).toHaveLength(1)
@@ -170,22 +171,27 @@ describe('Comms Notification Repository', () => {
           ...v1CommsMessage.commsMessage,
           data: {
             ...v1CommsMessage.commsMessage.data,
-            reference: 'different-reference',
-            sbi: '999999999'
+            reference: 'different-reference'
           }
         }
       }
 
       await persistCommsNotification(modifiedMessage.commsMessage)
 
-      const value = v1CommsMessage.commsMessage.data.correlationId
-      const result = await getByProperty('_id', value)
+      const result = await getByProperty('events.data.sbi', v1CommsMessage.commsMessage.data.sbi)
 
-      expect(result).toBeDefined()
       expect(result).toHaveLength(1)
       expect(result[0].events).toHaveLength(2)
       expect(result[0].events[0]).toMatchObject(v1CommsMessage.commsMessage)
       expect(result[0].events[1]).toMatchObject(modifiedMessage.commsMessage)
+      expect(result[0].events[1].data.reference).toBe('different-reference')
+    })
+
+    test('should return empty array when no matching documents', async () => {
+      const result = await getByProperty('events.data.sbi', 'non-existent-sbi')
+
+      expect(result).toBeDefined()
+      expect(result).toHaveLength(0)
     })
   })
 })

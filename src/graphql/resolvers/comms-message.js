@@ -3,7 +3,7 @@ const getCommsEventById = async (_, { id }, { dataSources }) => {
 }
 
 const getCommsEventByProperty = async (_, { key, value }, { dataSources }) => {
-  return dataSources.commsDB.getCommsEventByProperty(key, value)
+  return dataSources.commsEvent.getCommsEventByProperty(key, value)
 }
 
 export {

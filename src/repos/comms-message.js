@@ -29,8 +29,6 @@ const getCommsEventById = async (id) => {
 const getByProperty = async (key, value) => {
   try {
     const query = { [key]: value }
-    console.log('key:::', key)
-    console.log('value:::', value)
     const notifications = await db.collection(notificationsCollection).find(query).toArray()
     return notifications.map((notification) => ({ correlationId: notification._id, events: notification.events }))
   } catch (error) {
