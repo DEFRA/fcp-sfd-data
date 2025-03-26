@@ -15,9 +15,14 @@ const persistCommsNotification = async (notification) => {
 const getCommsEventById = async (id) => {
   try {
     const notification = await db.collection(notificationsCollection).findOne({ _id: id })
+
+    if (!notification) {
+      return []
+    }
+
     return { correlationId: notification._id, events: notification.events }
   } catch (error) {
-    throw new Error(`Error retrieving comms notification by ID: ${error.message}`)
+    throw new Error(`Error while fetching comms notifications: ${error.message}`)
   }
 }
 

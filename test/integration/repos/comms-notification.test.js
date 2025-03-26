@@ -1,18 +1,21 @@
 import { describe, test, expect, beforeEach } from '@jest/globals'
 import { config } from '../../../src/config/index.js'
-import { persistCommsNotification, getByProperty } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification, getCommsEventById, getByProperty } from '../../../src/repos/comms-message.js'
 import db from '../../../src/data/db.js'
 
 import v1CommsMessage from '../../mocks/comms-message/v1.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
-describe('Persist inbound messages to db', () => {
+describe('Comms Notification Repository', () => {
   beforeEach(async () => {
+    if (!db.client.topology?.isConnected()) {
+      await db.client.connect()
+    }
     await db.collection(notificationsCollection).deleteMany({})
   })
 
-  describe('comms notifications', () => {
+  describe('persistCommsNotification', () => {
     test('should persist a document in the notifications collection', async () => {
       await persistCommsNotification(v1CommsMessage.commsMessage)
 
@@ -110,72 +113,79 @@ describe('Persist inbound messages to db', () => {
     test('should throw error when database connection fails', async () => {
       await db.client.close()
 
-      await expect(persistCommsNotification(v1CommsMessage))
+      await expect(persistCommsNotification(v1CommsMessage.commsMessage))
         .rejects
         .toThrow('Error while persisting comms notification')
     })
   })
-})
 
-describe('Retrieve Comms Notifications', () => {
-  beforeEach(async () => {
-    if (!db.client.topology?.isConnected()) {
-      await db.client.connect()
-    }
-    await db.collection(notificationsCollection).deleteMany({})
+  describe('getCommsEventById', () => {
+    test('should return empty array when no data in db', async () => {
+      const result = await getCommsEventById('a058de5b-42ad-473c-91e7-0797a43fda30')
+
+      expect(result).toBeDefined()
+      expect(result).toHaveLength(0)
+    })
+
+    test('should throw error when database connection fails', async () => {
+      await db.client.close()
+
+      await expect(getCommsEventById('a058de5b-42ad-473c-91e7-0797a43fda30'))
+        .rejects
+        .toThrow('Error while fetching comms notifications')
+    })
+
+    test('should return notification when ID exists', async () => {
+      await persistCommsNotification(v1CommsMessage.commsMessage)
+      const id = v1CommsMessage.commsMessage.data.correlationId
+
+      const result = await getCommsEventById(id)
+
+      expect(result).toBeDefined()
+      expect(result.correlationId).toBe(id)
+      expect(result.events).toHaveLength(1)
+      expect(result.events[0]).toMatchObject(v1CommsMessage.commsMessage)
+    })
   })
 
-  test('should return one event by property', async () => {
-    await persistCommsNotification(v1CommsMessage.commsMessage)
-    const key = 'data.correlationId'
-    const value = v1CommsMessage.commsMessage.data.correlationId
+  describe('getByProperty', () => {
+    test('should return one event by property', async () => {
+      await persistCommsNotification(v1CommsMessage.commsMessage)
+      const value = v1CommsMessage.commsMessage.data.correlationId
 
-    const result = await getByProperty(key, value)
-    console.log('result:::', result)
+      const result = await getByProperty('_id', value)
 
-    // pull event direct from db
+      expect(result).toBeDefined()
+      expect(result).toHaveLength(1)
+      expect(result[0].events[0]).toMatchObject(v1CommsMessage.commsMessage)
+    })
 
-    expect(result).toBeDefined()
-    expect(result).toHaveLength(1)
-    expect(result[0].events).toMatchObject(v1CommsMessage.commsMessage)
+    test('should return multiple events in a single notification', async () => {
+      await persistCommsNotification(v1CommsMessage.commsMessage)
+
+      const modifiedMessage = {
+        ...v1CommsMessage,
+        id: 'different-id',
+        commsMessage: {
+          ...v1CommsMessage.commsMessage,
+          data: {
+            ...v1CommsMessage.commsMessage.data,
+            reference: 'different-reference',
+            sbi: '999999999'
+          }
+        }
+      }
+
+      await persistCommsNotification(modifiedMessage.commsMessage)
+
+      const value = v1CommsMessage.commsMessage.data.correlationId
+      const result = await getByProperty('_id', value)
+
+      expect(result).toBeDefined()
+      expect(result).toHaveLength(1)
+      expect(result[0].events).toHaveLength(2)
+      expect(result[0].events[0]).toMatchObject(v1CommsMessage.commsMessage)
+      expect(result[0].events[1]).toMatchObject(modifiedMessage.commsMessage)
+    })
   })
 })
-
-// test('should return all data from the db', async () => {
-//   await persistCommsNotification(v1CommsMessage.commsMessage)
-
-//   const result = await getAllCommsEvents()
-//   console.log('result', result)
-//   expect(result).toBeDefined()
-//   expect(result.length).toBe(1)
-//   expect(result).toMatchObject(v1CommsMessage.commsMessage) // this is failing because we need to update the event structure
-// })
-
-// test('should return empty array when no data in db', async () => {
-//   const result = await getAllCommsEvents()
-
-//   expect(result).toBeDefined()
-//   // expect(result).toBeInstanceOf(Array)
-//   expect(result).toHaveLength(0)
-// })
-
-// test('should throw error when database connection fails', async () => {
-//   await db.client.close()
-
-//   await expect(getAllCommsEvents())
-//     .rejects
-//     .toThrow('Error while fetching comms notifications')
-// })
-
-// test('should return notification when ID exists', async () => {
-//   await persistCommsNotification(v1CommsMessage.commsMessage)
-//   const id = v1CommsMessage.commsMessage.data.correlationId
-
-//   const result = await getCommsEventById(id)
-
-//   expect(result).toBeDefined()
-//   expect(result._id).toBe(id)
-//   expect(result.events).toHaveLength(1)
-//   // expect(result.events).toMatchObject(v1CommsMessage.commsMessage) // this is failing because its returning an array
-// })
-// })
