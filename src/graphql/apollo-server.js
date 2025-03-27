@@ -1,6 +1,7 @@
 import { ApolloServer } from '@apollo/server'
-// import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled'
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import { DEVELOPMENT, TEST } from '../constants/environments.js'
 // import { config } from '../config/index.js'
 // import { CommsEventDataSource } from './datasources/comms-event.js'
 import resolvers from './resolvers/index.js'
@@ -9,11 +10,11 @@ import typeDefs from './schema/index.js'
 
 let plugins = []
 
-// if (!isLowerEnv(process.env.ENVIRONMENT_CODE)) {
-// plugins = [ApolloServerPluginLandingPageDisabled()]
-// } else {
-plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
-// }
+if (process.env.ENVIRONMENT_CODE === DEVELOPMENT || process.env.ENVIRONMENT_CODE === TEST) {
+  plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+} else {
+  plugins = [ApolloServerPluginLandingPageDisabled()]
+}
 
 const apolloServer = new ApolloServer({
   typeDefs,
