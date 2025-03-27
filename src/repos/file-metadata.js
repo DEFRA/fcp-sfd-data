@@ -1,5 +1,5 @@
 import { config } from '../config/index.js'
-import saveEvent from './common/save-event.js'
+import { saveEvent, getByProperty } from './common/index.js'
 
 const fileMetadataCollection = config.get('mongo.collections.fileMetadata')
 
@@ -11,6 +11,15 @@ const persistFileMetadata = async (event) => {
   }
 }
 
+const getMetadataByProperty = async (key, value) => {
+  try {
+    return getByProperty(fileMetadataCollection, key, value)
+  } catch (error) {
+    throw new Error(`Error while fetching comms notifications: ${error.message}`)
+  }
+}
+
 export {
-  persistFileMetadata
+  persistFileMetadata,
+  getMetadataByProperty
 }

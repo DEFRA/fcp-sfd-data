@@ -1,6 +1,7 @@
 const enumMap = {
-  SBI: 'data.sbi',
-  BLOB_REFERENCE: 'data.blobReference'
+  SBI: 'events.data.sbi',
+  BLOB_REFERENCE: 'events.data.blobReference',
+  CORRELATION_ID: 'events.data.correlationId'
 }
 
 export default enumMap
