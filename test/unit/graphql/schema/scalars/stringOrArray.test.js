@@ -1,3 +1,4 @@
+import { describe, test, expect } from '@jest/globals'
 import { Kind } from 'graphql'
 import StringOrArray from '../../../../../src/graphql/schema/scalars/string-or-array.js'
 
