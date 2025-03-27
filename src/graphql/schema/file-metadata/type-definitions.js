@@ -10,19 +10,16 @@ type Query {
   """
   GET metadata filtered by a specific property and value
   """
-  getMetadata(key: fileMetadataEnum!, value: StringOrArray!): [FileMetadata]
+  getFileMetadataByProperty(key: fileMetadataEnum!, value: StringOrArray!): [FileMetadata]
 }
 
 """ Metadata received """
 type FileMetadata {
-  """ Unique identifier for the file metadata """
-  id: String
+  """ Unique identifier for fileMetadata (UUID standard) """
+  correlationId: String
 
-  """ Date and time when metadata has been saved in fd-data database """
-  dateCreated: Timestamp
-
-  """ Metadata message in cloudevents format """
-  metadata: metadataDetails
+  """ Array containing all associated events """
+  events: [metadataDetails]
 }
 
 """ Details of the metadata """
@@ -56,6 +53,9 @@ type metadata {
 
   """ Unique reference for the blob """
   blobReference: String
+
+  """ Correlation ID for tracking """
+  correlationId: String
 }
 
 """ Enumeration for file metadata """
@@ -65,6 +65,9 @@ enum fileMetadataEnum {
 
   """ Unique reference for the blob """
   BLOB_REFERENCE
+
+  """ Correlation ID for tracking """
+  CORRELATION_ID
 }
 `
 

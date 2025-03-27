@@ -1,11 +1,7 @@
-const getMetadata = async (_, { key, value }) => {
-  return {
-    getMetadata: {
-      test: 'getMetadata'
-    }
-  }
+const getFileMetadataByProperty = async (_, { key, value }, { dataSources }) => {
+  return dataSources.fileMetadata.getByProperty(key, value)
 }
 
 export {
-  getMetadata
+  getFileMetadataByProperty
 }

@@ -3,6 +3,7 @@ import { createServer } from '../../index.js'
 import { createLogger } from '../../../logging/logger.js'
 import { apolloServer } from '../../../graphql/apollo-server.js'
 import { CommsDataSource } from '../../../graphql/datasources/comms-event.js'
+import { FileMetadata } from '../../../graphql/datasources/file-metadata.js'
 import hapiApollo from '@as-integrations/hapi'
 
 const startServer = async () => {
@@ -19,7 +20,8 @@ const startServer = async () => {
         path: '/graphql',
         context: async (request) => ({
           dataSources: {
-            commsEvent: new CommsDataSource({ request })
+            commsEvent: new CommsDataSource({ request }),
+            fileMetadata: new FileMetadata({ request })
           }
         })
       }
