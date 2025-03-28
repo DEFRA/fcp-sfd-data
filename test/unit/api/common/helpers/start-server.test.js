@@ -16,11 +16,20 @@ const mockServer = {
   logger: {
     info: mockLoggerInfo,
     error: mockLoggerError
-  }
+  },
+  register: jest.fn()
 }
 
 jest.unstable_mockModule('../../../../../src/api/index.js', () => ({
   createServer: jest.fn().mockResolvedValue(mockServer)
+}))
+
+const mockApolloServer = {
+  start: jest.fn()
+}
+
+jest.unstable_mockModule('../../../../../src/graphql/apollo-server.js', () => ({
+  apolloServer: mockApolloServer
 }))
 
 const { config } = await import('../../../../../src/config/index.js')
@@ -36,7 +45,10 @@ describe('#startServer', () => {
     test('Should start up server as expected', async () => {
       await startServer()
 
+      expect(mockApolloServer.start).toHaveBeenCalled()
       expect(createServer).toHaveBeenCalled()
+      expect(mockServer.register).toHaveBeenCalled()
+      expect(mockServer.start).toHaveBeenCalled()
 
       expect(mockLoggerInfo).toHaveBeenNthCalledWith(
         1,
@@ -51,7 +63,7 @@ describe('#startServer', () => {
 
   describe('When server start fails', () => {
     beforeAll(() => {
-      createServer.mockRejectedValue(Error('Server failed to start'))
+      mockApolloServer.start.mockRejectedValue(Error('Server failed to start'))
     })
 
     test('Should log failed startup message', async () => {

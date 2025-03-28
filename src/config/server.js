@@ -1,12 +1,12 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import environments from '../constants/environments.js'
+import { DEVELOPMENT, TEST, PRODUCTION } from '../constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const isProduction = process.env.NODE_ENV === environments.PRODUCTION
-const isDev = process.env.NODE_ENV === environments.DEVELOPMENT
-const isTest = process.env.NODE_ENV === environments.TEST
+const isProduction = process.env.NODE_ENV === PRODUCTION
+const isDev = process.env.NODE_ENV === DEVELOPMENT
+const isTest = process.env.NODE_ENV === TEST
 
 export const serverConfig = {
   serviceVersion: {
