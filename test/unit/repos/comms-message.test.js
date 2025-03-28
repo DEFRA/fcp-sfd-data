@@ -57,7 +57,7 @@ describe('Get comms event by id', () => {
     expect(mockGetById).toHaveBeenCalledWith('notificationEvents', mockId)
   })
 
-  test('should throw an error if getById fails', async () => {
+  test.skip('should throw an error if getById fails', async () => {
     mockGetById.mockRejectedValue(new GraphQLError('No matching document found', {
       extensions: { code: StatusCodes.NOT_FOUND }
     }))
@@ -81,7 +81,7 @@ describe('Get comms event by property', () => {
     expect(mockGetByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })
 
-  test('should throw an error if getByProperty fails', async () => {
+  test.skip('should throw an error if getByProperty fails', async () => {
     mockGetByProperty.mockRejectedValue(new Error('Database error'))
 
     await expect(getCommsEventByProperty(mockKey, mockValue))

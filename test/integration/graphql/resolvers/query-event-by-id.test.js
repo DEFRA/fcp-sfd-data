@@ -47,6 +47,30 @@ describe('GQL get by ID', () => {
     expect(result.events[0].data.commsAddresses).toStrictEqual(validCommsMessage.commsMessage.data.commsAddresses)
   })
 
+  test('returns a single record when searching by id', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByIdQuery,
+        variables: {
+          commsEventByPKId: validCommsMessage.commsMessage.data.correlationId
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+    const result = responseBody.data.getCommsEventById
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(result).toBeDefined()
+    expect(Array.isArray(result)).toBe(false)
+    expect(result.correlationId).toBe(validCommsMessage.commsMessage.data.correlationId)
+  })
+
   test('returns error for null id', async () => {
     const options = {
       method: 'POST',
