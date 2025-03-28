@@ -1,7 +1,6 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 import mockNotification from '../../mocks/comms-message/v1.js'
 import { GraphQLError } from 'graphql'
-import { StatusCodes } from 'http-status-codes'
 
 const mockSaveEvent = jest.fn()
 jest.unstable_mockModule('../../../src/repos/common/save-event.js', () => ({
@@ -57,15 +56,13 @@ describe('Get comms event by id', () => {
     expect(mockGetById).toHaveBeenCalledWith('notificationEvents', mockId)
   })
 
-  test.skip('should throw an error if getById fails', async () => {
-    mockGetById.mockRejectedValue(new GraphQLError('No matching document found', {
-      extensions: { code: StatusCodes.NOT_FOUND }
-    }))
-    try {
-      await getCommsEventById(mockId)
-    } catch (error) {
-      expect(error.message).toBe('Error while fetching comms notifications: Database error')
-    }
+  test('should throw an error if getById fails', async () => {
+    mockGetById.mockRejectedValue(new GraphQLError('No document found'))
+
+    await expect(getCommsEventById(mockId))
+      .rejects
+      .toThrowError('Error while fetching comms notifications: No document found')
+
     expect(mockGetById).toHaveBeenCalledWith('notificationEvents', mockId)
   })
 })
@@ -81,12 +78,12 @@ describe('Get comms event by property', () => {
     expect(mockGetByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })
 
-  test.skip('should throw an error if getByProperty fails', async () => {
-    mockGetByProperty.mockRejectedValue(new Error('Database error'))
+  test('should throw an error if getCommsEventByProperty returns no documents', async () => {
+    mockGetByProperty.mockRejectedValue(new GraphQLError('No document found'))
 
     await expect(getCommsEventByProperty(mockKey, mockValue))
       .rejects
-      .toThrowError('Error while fetching comms notifications: Database error')
+      .toThrowError('Error while fetching comms notifications: No document found')
 
     expect(mockGetByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })

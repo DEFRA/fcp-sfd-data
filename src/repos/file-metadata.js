@@ -13,8 +13,7 @@ const persistFileMetadata = async (event) => {
 
 const getMetadataByProperty = async (key, value) => {
   try {
-    console.log('getMetadataByProperty', key, value)
-    return getByProperty(fileMetadataCollection, key, value)
+    return await getByProperty(fileMetadataCollection, key, value)
   } catch (error) {
     throw new Error(`Error while fetching comms notifications: ${error.message}`)
   }

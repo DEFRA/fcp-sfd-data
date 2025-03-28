@@ -31,7 +31,7 @@ describe('getByProperty Integration Tests', () => {
   test('should throw an error when no documents match the query', async () => {
     await expect(getById(testCollection, 'non-existent-id'))
       .rejects
-      .toThrow('No matching document found')
+      .toThrow('No document found')
   })
 
   test('should throw an error when database connection fails', async () => {

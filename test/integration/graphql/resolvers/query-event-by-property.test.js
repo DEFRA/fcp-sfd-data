@@ -115,7 +115,7 @@ describe('GQL get by property', () => {
     const responseBody = JSON.parse(response.result)
 
     expect(responseBody.errors).toBeDefined()
-    expect(responseBody.errors[0].message).toBe('No matching document found')
+    expect(responseBody.errors[0].message).toBe('Error while fetching comms notifications: No matching document found')
   })
 
   test('returns error for unsupported value type', async () => {

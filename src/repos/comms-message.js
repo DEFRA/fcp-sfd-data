@@ -13,7 +13,7 @@ const persistCommsNotification = async (notification) => {
 
 const getCommsEventById = async (id) => {
   try {
-    return getById(notificationsCollection, id)
+    return await getById(notificationsCollection, id)
   } catch (error) {
     throw new Error(`Error while fetching comms notifications: ${error.message}`)
   }
@@ -21,7 +21,7 @@ const getCommsEventById = async (id) => {
 
 const getCommsEventByProperty = async (key, value) => {
   try {
-    return getByProperty(notificationsCollection, key, value)
+    return await getByProperty(notificationsCollection, key, value)
   } catch (error) {
     throw new Error(`Error while fetching comms notifications: ${error.message}`)
   }

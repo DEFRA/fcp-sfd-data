@@ -7,7 +7,7 @@ const getById = async (collection, id) => {
   const document = await db.collection(collection).findOne({ _id: id })
 
   if (!document) {
-    throw new GraphQLError('No matching document found', {
+    throw new GraphQLError('No document found', {
       extensions: { code: StatusCodes.NOT_FOUND }
     })
   }
