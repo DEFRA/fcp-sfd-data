@@ -7,6 +7,12 @@ scalar StringOrArray
 
 """ Available query operations """
 type Query {
+ """
+  GET metadata filtered by a specific id
+  """
+  getFileMetadataById(id:String!): FileMetadata
+
+
   """
   GET metadata filtered by a specific property and value
   """

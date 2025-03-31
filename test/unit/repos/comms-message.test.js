@@ -1,6 +1,7 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
-import mockNotification from '../../mocks/comms-message/v1.js'
 import { GraphQLError } from 'graphql'
+
+import mockNotification from '../../mocks/comms-message/v1.js'
 
 const mockSaveEvent = jest.fn()
 jest.unstable_mockModule('../../../src/repos/common/save-event.js', () => ({

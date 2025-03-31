@@ -1,4 +1,6 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { GraphQLError } from 'graphql'
+
 import mockEvent from '../../mocks/file-metadata/v1.js'
 
 const mockSaveEvent = jest.fn()
@@ -11,10 +13,16 @@ jest.unstable_mockModule('../../../src/repos/common/get-by-property.js', () => (
   default: mockGetByProperty
 }))
 
+const mockGetById = jest.fn()
+jest.unstable_mockModule('../../../src/repos/common/get-by-id.js', () => ({
+  default: mockGetById
+}))
+
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'
+const mockId = 'mockId'
 
-const { persistFileMetadata, getMetadataByProperty } = await import('../../../src/repos/file-metadata.js')
+const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await import('../../../src/repos/file-metadata.js')
 
 describe('Persist file metadata', () => {
   beforeEach(() => {
@@ -56,5 +64,27 @@ describe('Get metadata by property', () => {
       .rejects
       .toThrow('Error while persisting file metadata event: Database error')
     expect(mockGetByProperty).toHaveBeenCalledWith('fileMetadataEvents', mockKey, mockValue)
+  })
+})
+
+describe('Get file metadata by id', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  test('should call getById with the correct collection and key-value pair', async () => {
+    await getMetadataById(mockId)
+
+    expect(mockGetById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
+  })
+
+  test('should throw an error if getById fails', async () => {
+    mockGetById.mockRejectedValue(new GraphQLError('No document found'))
+
+    await expect(getMetadataById(mockId))
+      .rejects
+      .toThrowError('Error while fetching comms notifications: No document found')
+
+    expect(mockGetById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
   })
 })
