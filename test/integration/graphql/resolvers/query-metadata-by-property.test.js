@@ -22,7 +22,7 @@ describe('GQL get by property', () => {
     await server.stop()
   })
 
-  test('fetches metadataEvent by property and returns expected structure', async () => {
+  test('returns metadataEvent by correlationId', async () => {
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -47,32 +47,6 @@ describe('GQL get by property', () => {
     expect(result.length).toBeGreaterThan(0)
     expect(result[0].correlationId).toBe(validMetadataMessage.metadata.data.correlationId)
     expect(result[0].events[0].data.correlationId).toStrictEqual(validMetadataMessage.metadata.data.correlationId)
-  })
-
-  test('fetches metadataEvent by single correlationId', async () => {
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...metadataByPropertyQuery,
-        variables: {
-          key: 'CORRELATION_ID',
-          value: validMetadataMessage.metadata.data.correlationId
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-    const result = responseBody.data.getFileMetadataByProperty
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(result).toBeDefined()
-    expect(Array.isArray(result)).toBe(true)
-    expect(result.length).toBeGreaterThan(0)
-    expect(result[0].correlationId).toBe(validMetadataMessage.metadata.data.correlationId)
   })
 
   test('fetches metadataEvent by single sbi', async () => {
@@ -316,7 +290,6 @@ describe('GQL get by property', () => {
   })
 
   test('returns mixed data types correctly', async () => {
-    await db.collection('fileMetadataEvents').deleteMany({})
     const message = {
       ...validMetadataMessage.metadata,
       data: {
@@ -349,51 +322,5 @@ describe('GQL get by property', () => {
     expect(Array.isArray(result)).toBe(true)
     expect(result.length).toBe(1)
     expect(result[0].events[0].data.sbi).toBe('123456789')
-  })
-
-  test.skip('fetches metadataEvent by sbi and returns only matching events', async () => {
-    const messageWithMultipleEvents = {
-      ...validMetadataMessage.metadata,
-      data: {
-        ...validMetadataMessage.metadata.data,
-        correlationId: 'test-correlation-id-3',
-        sbi: '12345'
-      }
-    }
-    await persistFileMetadata(messageWithMultipleEvents)
-
-    const secondEvent = {
-      ...messageWithMultipleEvents,
-      data: {
-        ...messageWithMultipleEvents.data,
-        sbi: '999999999'
-      }
-    }
-    await persistFileMetadata(secondEvent)
-
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...metadataByPropertyQuery,
-        variables: {
-          key: 'SBI',
-          value: '12345'
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-    const result = responseBody.data.getFileMetadataByProperty
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(result).toBeDefined()
-    expect(Array.isArray(result)).toBe(true)
-    expect(result.length).toBe(1)
-    expect(result[0].events.length).toBe(1)
-    expect(result[0].events[0].data.sbi).toBe('12345')
   })
 })

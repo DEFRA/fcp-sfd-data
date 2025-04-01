@@ -13,6 +13,7 @@ export default {
           sourceSystem
           emailReplyToId
           statusDetails
+          correlationId
           personalisation
           notifyTemplateId
           oneClickUnsubscribeUrl

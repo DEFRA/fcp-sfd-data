@@ -1,7 +1,7 @@
 import { describe, beforeAll, beforeEach, afterAll, test, expect } from '@jest/globals'
-import validCommsMessage from '../../../mocks/comms-message/v1.js'
-import commsEventByIdQuery from '../queries/comms-by-id.js'
-import { persistCommsNotification } from '../../../../src/repos/comms-message.js'
+import validMetadataMessage from '../../../mocks/file-metadata/v1.js'
+import metadataEventByIdQuery from '../queries/metadata-by-id.js'
+import { persistFileMetadata } from '../../../../src/repos/file-metadata.js'
 import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import db from '../../../../src/data/db.js'
 
@@ -13,16 +13,16 @@ describe('GQL get by ID', () => {
   })
 
   beforeEach(async () => {
-    await db.collection('notificationEvents').deleteMany({})
-    await persistCommsNotification(validCommsMessage.commsMessage)
+    await db.collection('fileMetadataEvents').deleteMany({})
+    await persistFileMetadata(validMetadataMessage.metadata)
   })
 
   afterAll(async () => {
-    await db.collection('notificationEvents').deleteMany({})
+    await db.collection('fileMetadataEvents').deleteMany({})
     await server.stop()
   })
 
-  test('returns single commsEvent by id', async () => {
+  test('returns single metadataEvent by id', async () => {
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -30,23 +30,23 @@ describe('GQL get by ID', () => {
         'Content-Type': 'application/json'
       },
       payload: JSON.stringify({
-        ...commsEventByIdQuery,
+        ...metadataEventByIdQuery,
         variables: {
-          commsEventByPKId: validCommsMessage.commsMessage.data.correlationId
+          metadataByPKId: validMetadataMessage.metadata.data.correlationId
         }
       })
     }
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
-    const result = responseBody.data.getCommsEventById
+    const result = responseBody.data.getFileMetadataById
 
     expect(responseBody.errors).toBeUndefined()
     expect(result).toBeDefined()
     expect(Array.isArray(result)).toBe(false)
-    expect(result.correlationId).toBe(validCommsMessage.commsMessage.data.correlationId)
+    expect(result.correlationId).toBe(validMetadataMessage.metadata.data.correlationId)
     expect(Array.isArray(result.events)).toBe(true)
     expect(result.events.length).toBeGreaterThan(0)
-    expect(result.events[0].data.commsAddresses).toStrictEqual(validCommsMessage.commsMessage.data.commsAddresses)
+    expect(result.events[0].data.correlationId).toStrictEqual(validMetadataMessage.metadata.data.correlationId)
   })
 
   test('returns error for null id', async () => {
@@ -57,9 +57,9 @@ describe('GQL get by ID', () => {
         'Content-Type': 'application/json'
       },
       payload: JSON.stringify({
-        ...commsEventByIdQuery,
+        ...metadataEventByIdQuery,
         variables: {
-          commsEventByPKId: null
+          metadataByPKId: null
         }
       })
     }
@@ -67,7 +67,7 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
 
     expect(responseBody.errors).toBeDefined()
-    expect(responseBody.errors[0].message).toBe('Variable "$commsEventByPKId" of non-null type "String!" must not be null.')
+    expect(responseBody.errors[0].message).toBe('Variable "$metadataByPKId" of non-null type "String!" must not be null.')
   })
 
   test('returns error for missing id', async () => {
@@ -78,7 +78,7 @@ describe('GQL get by ID', () => {
         'Content-Type': 'application/json'
       },
       payload: JSON.stringify({
-        ...commsEventByIdQuery,
+        ...metadataEventByIdQuery,
         variables: {}
       })
     }
@@ -86,6 +86,6 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
 
     expect(responseBody.errors).toBeDefined()
-    expect(responseBody.errors[0].message).toBe('Variable "$commsEventByPKId" of required type "String!" was not provided.')
+    expect(responseBody.errors[0].message).toBe('Variable "$metadataByPKId" of required type "String!" was not provided.')
   })
 })
