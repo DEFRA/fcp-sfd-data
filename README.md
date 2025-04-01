@@ -1,3 +1,10 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-data&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-data)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-data&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-data)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-data&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-data)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-data&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-data)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-data&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-data)
+
+
 # fcp-sfd-data
 
 Data integration layer for the Single Front Door.
@@ -32,6 +39,8 @@ If you wish to run this service independently, you can do so by executing the fo
 docker compose up
 ```
 
+When running in local dev mode the graphql explorer will be available on http://localhost:3000/graphql
+
 ## Tests
 The tests have been structured into subfolders of `./test` as per the
 [Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
@@ -43,9 +52,10 @@ npm run docker:test
 ```
 
 To run the tests in watch mode, use the following command:
-```bash
-npm run docker:test:watch
-```
+`npm run docker:test:watch`
+
+## Debug mode
+The service can be ran in debug mode when using VS Code. Use the following npm script to start the service in debug mode: `npm run docker:debug`
 
 ## Licence
 
