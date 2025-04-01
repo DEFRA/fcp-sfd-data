@@ -2,9 +2,7 @@ import { config } from '../../../config/index.js'
 import { createServer } from '../../index.js'
 import { createLogger } from '../../../logging/logger.js'
 import { apolloServer } from '../../../graphql/apollo-server.js'
-import { CommsDataSource } from '../../../graphql/datasources/comms-event.js'
-import { MetadataDataSource } from '../../../graphql/datasources/file-metadata.js'
-import hapiApollo from '@as-integrations/hapi'
+import { graphqlPlugin } from '../../../graphql/graphql-plugin.js'
 
 const startServer = async () => {
   let server
@@ -13,19 +11,7 @@ const startServer = async () => {
     await apolloServer.start()
     server = await createServer()
 
-    await server.register({
-      plugin: hapiApollo.default,
-      options: {
-        apolloServer,
-        path: '/graphql',
-        context: async (request) => ({
-          dataSources: {
-            commsEvent: new CommsDataSource({ request }),
-            fileMetadata: new MetadataDataSource({ request })
-          }
-        })
-      }
-    })
+    await server.register(graphqlPlugin)
 
     await server.start()
 

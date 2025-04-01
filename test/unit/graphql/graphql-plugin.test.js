@@ -21,7 +21,8 @@ describe('GraphQL Plugin', () => {
       plugin: hapiApollo.default,
       options: {
         apolloServer,
-        path: '/graphql'
+        path: '/graphql',
+        context: expect.any(Function)
       }
     })
   })
