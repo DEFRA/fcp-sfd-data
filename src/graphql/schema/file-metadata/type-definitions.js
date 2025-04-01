@@ -66,6 +66,24 @@ type metadata {
 
 """ Enumeration for file metadata """
 enum fileMetadataEnum {
+  """ Unique identifier for the metadata """
+  ID
+
+  """ Time metadata event was sent """
+  TIME
+
+  """ Type of metadata event in reverse dns format """
+  TYPE
+
+  """ Service that generated the event """
+  SOURCE
+
+  """ Specification version of the metadata """
+  SPECVERSION
+
+  """ Content type of the metadata data """
+  DATACONTENTTYPE
+
   """ Single Business Identifier """
   SBI
 

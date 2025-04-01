@@ -4,7 +4,8 @@ import { StatusCodes } from 'http-status-codes'
 import db from '../../data/db.js'
 
 const getByProperty = async (collection, key, value) => {
-  const query = { [key]: value }
+  const values = Array.isArray(value) ? value.map(String) : [String(value)]
+  const query = { [key]: { $in: values } }
   const documents = await db.collection(collection).find(query).toArray()
 
   if (!documents.length) {
