@@ -5,7 +5,6 @@ const enumMap = {
   SOURCE: 'events.source',
   SPECVERSION: 'events.specversion',
   DATACONTENTTYPE: 'events.datacontenttype',
-
   SBI: 'events.data.sbi',
   BLOB_REFERENCE: 'events.data.blobReference',
   CORRELATION_ID: 'events.data.correlationId'
