@@ -1,6 +1,6 @@
 import hapiApollo from '@as-integrations/hapi'
 import { apolloServer } from './apollo-server.js'
-import { CommsDataSource } from '../graphql/datasources/comms-event.js'
+import { CommsEventDataSource } from '../graphql/datasources/comms-event.js'
 import { MetadataDataSource } from '../graphql/datasources/file-metadata.js'
 
 const graphqlPlugin = {
@@ -14,7 +14,7 @@ const graphqlPlugin = {
           path: '/graphql',
           context: async (request) => ({
             dataSources: {
-              commsEvent: new CommsDataSource({ request }),
+              commsEvent: new CommsEventDataSource({ request }),
               fileMetadata: new MetadataDataSource({ request })
             }
           })
