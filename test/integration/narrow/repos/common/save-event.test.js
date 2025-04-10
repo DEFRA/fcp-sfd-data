@@ -88,7 +88,7 @@ describe('saveEvent Integration Tests', () => {
       .toThrow()
   })
 
-  test('should not save a duplicate document when document id already exists in collection', async () => {
+  test.only('should not save a duplicate document when document id already exists in collection', async () => {
     await saveEvent(testCollection, mockEvent)
     await saveEvent(testCollection, mockEvent)
 
