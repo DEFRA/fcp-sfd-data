@@ -87,4 +87,30 @@ describe('saveEvent Integration Tests', () => {
       .rejects
       .toThrow()
   })
+
+  test('should not save a duplicate document when document id already exists in collection', async () => {
+    await saveEvent(testCollection, mockEvent)
+    await saveEvent(testCollection, mockEvent)
+
+    const result = await db.collection(testCollection).find().toArray()
+    console.log(result)
+
+    expect(result[0].events).toHaveLength(1)
+  })
+
+  test('should not save a duplicate document when document id already exists in collection with seperate correlation ids', async () => {
+    const newEvent = { ...mockEvent }
+    const secondEvent = {
+      ...mockEvent,
+      data: {
+        correlationId: 'different-correlation-id'
+      }
+    }
+
+    await saveEvent(testCollection, newEvent)
+    await saveEvent(testCollection, secondEvent)
+
+    const result = await db.collection(testCollection).find().toArray()
+    expect(result).toHaveLength(1)
+  })
 })
