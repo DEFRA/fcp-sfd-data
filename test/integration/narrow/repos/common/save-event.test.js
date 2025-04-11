@@ -63,6 +63,7 @@ describe('saveEvent Integration Tests', () => {
     const firstEvent = { ...mockEvent }
     const secondEvent = {
       ...mockEvent,
+      id: 'different-id',
       data: {
         ...mockEvent.data,
         correlationId: 'new-correlation-id',
@@ -88,7 +89,7 @@ describe('saveEvent Integration Tests', () => {
       .toThrow()
   })
 
-  test.only('should not save a duplicate document when document id already exists in collection', async () => {
+  test('should not save a duplicate document when document id already exists in collection', async () => {
     await saveEvent(testCollection, mockEvent)
     await saveEvent(testCollection, mockEvent)
 
