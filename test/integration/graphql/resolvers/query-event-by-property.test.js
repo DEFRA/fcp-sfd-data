@@ -168,7 +168,7 @@ describe('GQL: Submit commsEvent by property query via endpoint', () => {
     test('returns all records with same REFERENCE when CRNs are different', async () => {
       const secondMessage = {
         ...validCommsMessage.commsMessage,
-      id: 'different-id',
+        id: 'different-id',
         data: {
           ...validCommsMessage.commsMessage.data,
           correlationId: 'b058de5b-42ad-473c-91e7-0797a43fda31',
@@ -283,7 +283,7 @@ describe('GQL: Submit commsEvent by property query via endpoint', () => {
     test('returns mixed commsAddresses types correctly', async () => {
       const secondMessage = {
         ...validCommsMessage.commsMessage,
-      id: 'different-id',
+        id: 'different-id',
         data: {
           ...validCommsMessage.commsMessage.data,
           crn: '1050000001',
@@ -294,7 +294,7 @@ describe('GQL: Submit commsEvent by property query via endpoint', () => {
 
       const thirdMessage = {
         ...validCommsMessage.commsMessage,
-      id: 'different-id-1',
+        id: 'different-id-1',
         data: {
           ...validCommsMessage.commsMessage.data,
           crn: '1050000002',
