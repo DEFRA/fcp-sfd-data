@@ -32,8 +32,9 @@ const saveEvent = async (collection, event) => {
     { _id: correlationId },
     { $push: { events: event } },
     { upsert: true }
-
   )
+
+  return logger.info(`Comms notification processed successfully, eventId ${event.id}`)
 }
 
 export default saveEvent
