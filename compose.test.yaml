@@ -8,6 +8,9 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      DOCKER_TEST: true
+      MONGO_URI_LOCAL: mongodb://mongodb:27017/
     volumes:
       - ./src:/home/node/src
       - ./test/:/home/node/test
