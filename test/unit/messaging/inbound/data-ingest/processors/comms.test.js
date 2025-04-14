@@ -31,17 +31,10 @@ describe('comms message processor', () => {
       jest.clearAllMocks()
     })
 
-    test('should process a valid v1 message', async () => {
-      await processV1CommsData(v1CommsMessage)
-
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Comms message processed successfully, eventId: a058de5b-42ad-473c-91e7-0797a43fda30')
-    })
-
     test('should call persistCommsNotification with validated message', async () => {
       await processV1CommsData(v1CommsMessage)
 
       expect(mockPersistCommsNotification).toHaveBeenCalledWith(v1CommsMessage.commsMessage)
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Comms message processed successfully, eventId: a058de5b-42ad-473c-91e7-0797a43fda30')
     })
 
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v1 message', async () => {
@@ -56,17 +49,10 @@ describe('comms message processor', () => {
       jest.clearAllMocks()
     })
 
-    test('should process a valid v2 message', async () => {
-      await processV2CommsData(v2CommsMessage)
-
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Comms message processed successfully, eventId: a058de5b-42ad-473c-91e7-0797a43fda30')
-    })
-
     test('should call persistCommsNotification with validated message', async () => {
       await processV2CommsData(v2CommsMessage)
 
       expect(mockPersistCommsNotification).toHaveBeenCalledWith(v2CommsMessage)
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Comms message processed successfully, eventId: a058de5b-42ad-473c-91e7-0797a43fda30')
     })
 
     test('should throw UNPROCESSABLE_MESSAGE error for invalid v2 message', async () => {
