@@ -34,7 +34,7 @@ const saveEvent = async (collection, event) => {
     { upsert: true }
   )
 
-  return logger.info(`Comms notification processed successfully, eventId ${event.id}`)
+  return logger.info(`Event processed successfully, eventId ${event.id}`)
 }
 
 export default saveEvent
