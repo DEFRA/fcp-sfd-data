@@ -1,5 +1,6 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 import { GraphQLError } from 'graphql'
+import { UnprocessableMessageError } from '../../../src/errors/message-errors.js'
 
 import mockEvent from '../../mocks/file-metadata/v1.js'
 
@@ -41,6 +42,16 @@ describe('Persist file metadata', () => {
     await expect(persistFileMetadata(mockEvent))
       .rejects
       .toThrowError('Error while persisting file metadata event: Database error')
+
+    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
+  })
+
+  test('should rethrow unprocessable Error when Unprocessable error is caught', async () => {
+    mockSaveEvent.mockRejectedValue(new UnprocessableMessageError('unprocessable-message'))
+
+    await expect(persistFileMetadata(mockEvent))
+      .rejects
+      .toThrowError(new UnprocessableMessageError('Error: unprocessable-message'))
 
     expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
   })

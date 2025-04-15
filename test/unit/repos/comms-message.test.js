@@ -1,5 +1,6 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 import { GraphQLError } from 'graphql'
+import { UnprocessableMessageError } from '../../../src/errors/message-errors.js'
 
 import mockNotification from '../../mocks/comms-message/v1.js'
 
@@ -41,6 +42,16 @@ describe('Persist comms notification', () => {
     await expect(persistCommsNotification(mockNotification))
       .rejects
       .toThrowError('Error while persisting comms notification: Database error')
+
+    expect(mockSaveEvent).toHaveBeenCalledWith('notificationEvents', mockNotification)
+  })
+
+  test('should rethrow unprocessable Error when Unprocessable error is caught', async () => {
+    mockSaveEvent.mockRejectedValue(new UnprocessableMessageError('unprocessable-message'))
+
+    await expect(persistCommsNotification(mockNotification))
+      .rejects
+      .toThrowError(new UnprocessableMessageError('Error: unprocessable-message'))
 
     expect(mockSaveEvent).toHaveBeenCalledWith('notificationEvents', mockNotification)
   })
