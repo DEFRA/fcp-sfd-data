@@ -294,6 +294,7 @@ describe('GQL get by property', () => {
   test('returns mixed data types correctly', async () => {
     const message = {
       ...validMetadataMessage.metadata,
+      id: 'just-another-id',
       data: {
         ...validMetadataMessage.metadata.data,
         sbi: '123456789'

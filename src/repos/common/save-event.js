@@ -1,8 +1,4 @@
 import db from '../../data/db.js'
-import { createLogger } from '../../logging/logger.js'
-
-const logger = createLogger()
-
 const checkIdempotency = async (collection, event) => {
   try {
     const notification = await db.collection(collection).findOne({
@@ -25,7 +21,7 @@ const saveEvent = async (collection, event) => {
   }
 
   if (await checkIdempotency(collection, event)) {
-    return logger.warn(`Idempotency check failed, event not saved ${event.id}`)
+    throw new Error(`Idempotency check failed, event not saved ${event.id}`)
   }
 
   await db.collection(collection).updateOne(
@@ -33,8 +29,6 @@ const saveEvent = async (collection, event) => {
     { $push: { events: event } },
     { upsert: true }
   )
-
-  return logger.info(`Event processed successfully, eventId ${event.id}`)
 }
 
 export default saveEvent

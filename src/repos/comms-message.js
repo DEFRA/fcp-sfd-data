@@ -1,11 +1,15 @@
 import { config } from '../config/index.js'
 import { saveEvent, getByProperty, getById } from './common/index.js'
+import { createLogger } from '../logging/logger.js'
+
+const logger = createLogger()
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
 const persistCommsNotification = async (notification) => {
   try {
     await saveEvent(notificationsCollection, notification)
+    logger.info(`Comms message processed successfully, eventId: ${notification.id}`)
   } catch (error) {
     throw new Error(`Error while persisting comms notification: ${error.message}`,
       { cause: error })

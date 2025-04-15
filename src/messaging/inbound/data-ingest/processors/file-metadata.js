@@ -20,7 +20,7 @@ const processV1FileMetadata = async (message) => {
       cause: err
     })
   }
-  await persistFileMetadata(validated.metadata)
+  persistFileMetadata(validated.metadata)
 }
 
 const processV2FileMetadata = async (message) => {
@@ -33,7 +33,7 @@ const processV2FileMetadata = async (message) => {
       cause: err
     })
   }
-  await persistFileMetadata(validated)
+  persistFileMetadata(validated)
 }
 
 export { processV1FileMetadata, processV2FileMetadata }

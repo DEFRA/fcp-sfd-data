@@ -61,6 +61,7 @@ describe('GQL: Submit commsEvent by property query via endpoint', () => {
   test('returns a single commsEvent by CRN when multiple records in database', async () => {
     const secondMessage = {
       ...validCommsMessage.commsMessage,
+      id: 'not-the-same-id',
       data: {
         ...validCommsMessage.commsMessage.data,
         crn: '1234567890'

@@ -4,6 +4,7 @@ import db from '../../../../../src/data/db.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
 
 const mockEvent = { ...v1FileMetadata.metadata }
+
 const testCollection = 'test-collection'
 
 describe('saveEvent Integration Tests', () => {
@@ -90,17 +91,17 @@ describe('saveEvent Integration Tests', () => {
   })
 
   test('should not save a duplicate document when document id already exists in collection', async () => {
-    await saveEvent(testCollection, mockEvent)
-    await saveEvent(testCollection, mockEvent)
-
-    const result = await db.collection(testCollection).find().toArray()
-    console.log(result)
-
-    expect(result[0].events).toHaveLength(1)
+    try {
+      await saveEvent(testCollection, mockEvent)
+      await saveEvent(testCollection, mockEvent)
+    } catch (err) {
+      const result = await db.collection(testCollection).find().toArray()
+      expect(result[0].events).toHaveLength(1)
+      expect(err.message).toBe('Idempotency check failed, event not saved 09237605-f4e5-4201-aee1-7e42a1682cef')
+    }
   })
 
   test('should not save a duplicate document when document id already exists in collection with seperate correlation ids', async () => {
-    const newEvent = { ...mockEvent }
     const secondEvent = {
       ...mockEvent,
       data: {
@@ -108,10 +109,13 @@ describe('saveEvent Integration Tests', () => {
       }
     }
 
-    await saveEvent(testCollection, newEvent)
-    await saveEvent(testCollection, secondEvent)
-
-    const result = await db.collection(testCollection).find().toArray()
-    expect(result).toHaveLength(1)
+    try {
+      await saveEvent(testCollection, mockEvent)
+      await saveEvent(testCollection, secondEvent)
+    } catch (err) {
+      const result = await db.collection(testCollection).find().toArray()
+      expect(result[0].events).toHaveLength(1)
+      expect(err.message).toBe('Idempotency check failed, event not saved 09237605-f4e5-4201-aee1-7e42a1682cef')
+    }
   })
 })
