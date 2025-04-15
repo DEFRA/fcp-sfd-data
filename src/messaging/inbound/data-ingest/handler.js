@@ -29,7 +29,7 @@ const handleIngestionMessages = async (sqsClient, messages) => {
       if (err instanceof UnprocessableMessageError) {
         logger.info('Moving unprocessable message to dead letter queue')
 
-        completed.Ìpush(message)
+        completed.push(message)
 
         await sendMessage(
           sqsClient,
