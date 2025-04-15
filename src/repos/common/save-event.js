@@ -1,4 +1,6 @@
 import db from '../../data/db.js'
+import { UnprocessableMessageError } from '../../errors/message-errors.js'
+
 const checkIdempotency = async (collection, event) => {
   try {
     const notification = await db.collection(collection).findOne({
@@ -21,7 +23,7 @@ const saveEvent = async (collection, event) => {
   }
 
   if (await checkIdempotency(collection, event)) {
-    throw new Error(`Idempotency check failed, event not saved ${event.id}`)
+    throw new UnprocessableMessageError(`Idempotency check failed, event not saved ${event.id}`)
   }
 
   await db.collection(collection).updateOne(

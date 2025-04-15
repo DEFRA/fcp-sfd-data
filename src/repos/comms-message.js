@@ -1,6 +1,7 @@
 import { config } from '../config/index.js'
 import { saveEvent, getByProperty, getById } from './common/index.js'
 import { createLogger } from '../logging/logger.js'
+import { UnprocessableMessageError } from '../errors/message-errors.js'
 
 const logger = createLogger()
 
@@ -11,6 +12,9 @@ const persistCommsNotification = async (notification) => {
     await saveEvent(notificationsCollection, notification)
     logger.info(`Comms message processed successfully, eventId: ${notification.id}`)
   } catch (error) {
+    if (error instanceof UnprocessableMessageError) {
+      throw new UnprocessableMessageError(error)
+    }
     throw new Error(`Error while persisting comms notification: ${error.message}`,
       { cause: error })
   }
