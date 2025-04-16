@@ -1,23 +1,18 @@
 import { config } from '../config/index.js'
 import { saveEvent, getByProperty, getById } from './common/index.js'
 import { createLogger } from '../logging/logger.js'
-import { UnprocessableMessageError } from '../errors/message-errors.js'
+import checkIdempotency from './common/check-idempotency.js'
 
 const logger = createLogger()
 
 const fileMetadataCollection = config.get('mongo.collections.fileMetadata')
 
 const persistFileMetadata = async (event) => {
-  try {
-    await saveEvent(fileMetadataCollection, event)
-    logger.info(`File metadata message processed successfully, eventId: ${event.id}`)
-  } catch (error) {
-    if (error instanceof UnprocessableMessageError) {
-      throw new UnprocessableMessageError(error)
-    }
-    throw new Error(`Error while persisting file metadata event: ${error.message}`,
-      { cause: error })
+  if (await checkIdempotency(fileMetadataCollection, event)) {
+    return logger.info(`File metadata message already processed, eventId: ${event.id}`)
   }
+  await saveEvent(fileMetadataCollection, event)
+  return logger.info(`File metadata message processed successfully, eventId: ${event.id}`)
 }
 
 const getMetadataByProperty = async (key, value) => {

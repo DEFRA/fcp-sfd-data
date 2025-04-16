@@ -1,23 +1,20 @@
 import { config } from '../config/index.js'
 import { saveEvent, getByProperty, getById } from './common/index.js'
 import { createLogger } from '../logging/logger.js'
-import { UnprocessableMessageError } from '../errors/message-errors.js'
+import checkIdempotency from './common/check-idempotency.js'
 
 const logger = createLogger()
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
 const persistCommsNotification = async (notification) => {
-  try {
-    await saveEvent(notificationsCollection, notification)
-    logger.info(`Comms message processed successfully, eventId: ${notification.id}`)
-  } catch (error) {
-    if (error instanceof UnprocessableMessageError) {
-      throw new UnprocessableMessageError(error)
-    }
-    throw new Error(`Error while persisting comms notification: ${error.message}`,
-      { cause: error })
+  if (await checkIdempotency(notificationsCollection, notification)) {
+    return logger.info(`Notification already processed, eventId: ${notification.id}`)
   }
+
+  await saveEvent(notificationsCollection, notification)
+
+  return logger.info(`Comms message processed successfully, eventId: ${notification.id}`)
 }
 
 const getCommsEventById = async (id) => {

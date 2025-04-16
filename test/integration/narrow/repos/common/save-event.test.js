@@ -89,33 +89,4 @@ describe('saveEvent Integration Tests', () => {
       .rejects
       .toThrow()
   })
-
-  test('should not save a duplicate document when document id already exists in collection', async () => {
-    try {
-      await saveEvent(testCollection, mockEvent)
-      await saveEvent(testCollection, mockEvent)
-    } catch (err) {
-      const result = await db.collection(testCollection).find().toArray()
-      expect(result[0].events).toHaveLength(1)
-      expect(err.message).toBe('Idempotency check failed, event not saved 09237605-f4e5-4201-aee1-7e42a1682cef')
-    }
-  })
-
-  test('should not save a duplicate document when document id already exists in collection with seperate correlation ids', async () => {
-    const secondEvent = {
-      ...mockEvent,
-      data: {
-        correlationId: 'different-correlation-id'
-      }
-    }
-
-    try {
-      await saveEvent(testCollection, mockEvent)
-      await saveEvent(testCollection, secondEvent)
-    } catch (err) {
-      const result = await db.collection(testCollection).find().toArray()
-      expect(result[0].events).toHaveLength(1)
-      expect(err.message).toBe('Idempotency check failed, event not saved 09237605-f4e5-4201-aee1-7e42a1682cef')
-    }
-  })
 })

@@ -1,29 +1,10 @@
 import db from '../../data/db.js'
-import { UnprocessableMessageError } from '../../errors/message-errors.js'
-
-const checkIdempotency = async (collection, event) => {
-  try {
-    const notification = await db.collection(collection).findOne({
-      'events.id': event.id,
-      'events.source': event.source
-    })
-    return notification != null
-  } catch (err) {
-    throw new Error(`Error checking idempotency token: ${err.message}`, {
-      cause: err
-    })
-  }
-}
 
 const saveEvent = async (collection, event) => {
   const correlationId = event.data.correlationId
 
   if (!correlationId) {
     throw new Error('Correlation ID is required')
-  }
-
-  if (await checkIdempotency(collection, event)) {
-    throw new UnprocessableMessageError(`Idempotency check failed, event not saved ${event.id}`)
   }
 
   await db.collection(collection).updateOne(
