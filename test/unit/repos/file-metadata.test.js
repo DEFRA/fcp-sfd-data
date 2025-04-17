@@ -18,6 +18,21 @@ jest.unstable_mockModule('../../../src/repos/common/get-by-id.js', () => ({
   default: mockGetById
 }))
 
+const mockCheckIdempotency = jest.fn()
+jest.unstable_mockModule('../../../src/repos/common/check-idempotency.js', () => ({
+  default: mockCheckIdempotency
+}))
+
+const mockLoggerInfo = jest.fn()
+const mockLoggerError = jest.fn()
+
+jest.unstable_mockModule('../../../src/logging/logger.js', () => ({
+  createLogger: () => ({
+    info: (...args) => mockLoggerInfo(...args),
+    error: (...args) => mockLoggerError(...args)
+  })
+}))
+
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'
 const mockId = 'mockId'
@@ -26,7 +41,7 @@ const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await im
 
 describe('Persist file metadata', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
   })
 
   test('should call saveEvent with the correct collection and event', async () => {
@@ -40,9 +55,25 @@ describe('Persist file metadata', () => {
 
     await expect(persistFileMetadata(mockEvent))
       .rejects
-      .toThrowError('Error while persisting file metadata event: Database error')
+      .toThrowError('Database error')
 
     expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
+  })
+
+  test('should log "File metadata message already processed" when checkIdempotency returns true', async () => {
+    mockCheckIdempotency.mockReturnValue(true)
+
+    await (persistFileMetadata(mockEvent))
+
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message already processed, eventId: ${mockEvent.id}`)
+  })
+
+  test('should log "Comms message processed successfully" when checkIdempotency returns false', async () => {
+    mockCheckIdempotency.mockReturnValue(false)
+
+    await (persistFileMetadata(mockEvent))
+
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message processed successfully, eventId: ${mockEvent.id}`)
   })
 })
 

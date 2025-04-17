@@ -79,6 +79,7 @@ describe('GQL get by property', () => {
   test('fetches metadataEvent by multiple sbi', async () => {
     const secondMessage = {
       ...validMetadataMessage.metadata,
+      id: 'different-id',
       data: {
         ...validMetadataMessage.metadata.data,
         correlationId: 'test-correlation-id-2',
@@ -230,6 +231,7 @@ describe('GQL get by property', () => {
   test('returns all metadataEvents with same TYPE when correlationIds are different', async () => {
     const secondMessage = {
       ...validMetadataMessage.metadata,
+      id: 'different-id',
       data: {
         ...validMetadataMessage.metadata.data,
         correlationId: 'test-correlation-id-2'
@@ -292,6 +294,7 @@ describe('GQL get by property', () => {
   test('returns mixed data types correctly', async () => {
     const message = {
       ...validMetadataMessage.metadata,
+      id: 'just-another-id',
       data: {
         ...validMetadataMessage.metadata.data,
         sbi: '123456789'

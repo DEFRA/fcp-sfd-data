@@ -31,12 +31,6 @@ describe('file metadata message processor', () => {
       jest.clearAllMocks()
     })
 
-    test('should process a valid v1 message', async () => {
-      await processV1FileMetadata(v1FileMetadataMessage)
-
-      expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
-    })
-
     test('should call persistFileMetadata for valid v1 message', async () => {
       await processV1FileMetadata(v1FileMetadataMessage)
       expect(mockPersistFileMetadata).toHaveBeenCalledWith(v1FileMetadataMessage.metadata)
@@ -56,12 +50,6 @@ describe('file metadata message processor', () => {
   describe('v2 message', () => {
     beforeEach(() => {
       jest.clearAllMocks()
-    })
-
-    test('should process a valid v2 message', async () => {
-      await processV2FileMetadata(v2FileMetadataMessage)
-
-      expect(mockLoggerInfo).toHaveBeenCalledWith('File metadata message processed successfully, eventId: 09237605-f4e5-4201-aee1-7e42a1682cef')
     })
 
     test('should call persistFileMetadata for valid v2 message', async () => {

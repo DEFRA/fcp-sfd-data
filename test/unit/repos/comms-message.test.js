@@ -18,15 +18,30 @@ jest.unstable_mockModule('../../../src/repos/common/get-by-id.js', () => ({
   default: mockGetById
 }))
 
+const mockCheckIdempotency = jest.fn()
+jest.unstable_mockModule('../../../src/repos/common/check-idempotency.js', () => ({
+  default: mockCheckIdempotency
+}))
+
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'
 const mockId = 'mockId'
+
+const mockLoggerInfo = jest.fn()
+const mockLoggerError = jest.fn()
+
+jest.unstable_mockModule('../../../src/logging/logger.js', () => ({
+  createLogger: () => ({
+    info: (...args) => mockLoggerInfo(...args),
+    error: (...args) => mockLoggerError(...args)
+  })
+}))
 
 const { persistCommsNotification, getCommsEventByProperty, getCommsEventById } = await import('../../../src/repos/comms-message.js')
 
 describe('Persist comms notification', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
   })
 
   test('should call saveEvent with the correct collection and notification', async () => {
@@ -40,9 +55,25 @@ describe('Persist comms notification', () => {
 
     await expect(persistCommsNotification(mockNotification))
       .rejects
-      .toThrowError('Error while persisting comms notification: Database error')
+      .toThrowError('Database error')
 
     expect(mockSaveEvent).toHaveBeenCalledWith('notificationEvents', mockNotification)
+  })
+
+  test('should log "notification already processed" when checkIdempotency returns true', async () => {
+    mockCheckIdempotency.mockReturnValue(true)
+
+    await persistCommsNotification(mockNotification)
+
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`Notification already processed, eventId: ${mockNotification.id}`)
+  })
+
+  test('should log "Comms message processed successfully" when checkIdempotency returns false', async () => {
+    mockCheckIdempotency.mockReturnValue(false)
+
+    await persistCommsNotification(mockNotification)
+
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`Comms message processed successfully, eventId: ${mockNotification.id}`)
   })
 })
 

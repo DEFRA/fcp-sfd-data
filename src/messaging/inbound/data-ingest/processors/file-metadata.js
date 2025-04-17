@@ -21,7 +21,6 @@ const processV1FileMetadata = async (message) => {
     })
   }
   await persistFileMetadata(validated.metadata)
-  logger.info(`File metadata message processed successfully, eventId: ${validated.metadata.id}`)
 }
 
 const processV2FileMetadata = async (message) => {
@@ -35,7 +34,6 @@ const processV2FileMetadata = async (message) => {
     })
   }
   await persistFileMetadata(validated)
-  logger.info(`File metadata message processed successfully, eventId: ${validated.id}`)
 }
 
 export { processV1FileMetadata, processV2FileMetadata }

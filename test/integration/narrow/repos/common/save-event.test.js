@@ -4,6 +4,7 @@ import db from '../../../../../src/data/db.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
 
 const mockEvent = { ...v1FileMetadata.metadata }
+
 const testCollection = 'test-collection'
 
 describe('saveEvent Integration Tests', () => {
@@ -63,6 +64,7 @@ describe('saveEvent Integration Tests', () => {
     const firstEvent = { ...mockEvent }
     const secondEvent = {
       ...mockEvent,
+      id: 'different-id',
       data: {
         ...mockEvent.data,
         correlationId: 'new-correlation-id',

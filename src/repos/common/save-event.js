@@ -4,14 +4,13 @@ const saveEvent = async (collection, event) => {
   const correlationId = event.data.correlationId
 
   if (!correlationId) {
-    throw new Error('Correlation ID is required')
+    throw new Error(`Correlation ID is required for event: ${event.id}`)
   }
 
   await db.collection(collection).updateOne(
     { _id: correlationId },
     { $push: { events: event } },
     { upsert: true }
-
   )
 }
 
