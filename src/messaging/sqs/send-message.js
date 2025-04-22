@@ -7,9 +7,7 @@ const logger = createLogger()
 const sendMessage = async (sqsClient, queueUrl, message) => {
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
-    MessageBody: message,
-    MessageGroupId: crypto.randomUUID(),
-    MessageDeduplicationId: crypto.randomUUID()
+    MessageBody: message
   })
 
   try {

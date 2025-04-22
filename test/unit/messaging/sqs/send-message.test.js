@@ -36,9 +36,7 @@ describe('send message', () => {
 
     expect(mockSendMessageCommand).toHaveBeenCalledWith({
       QueueUrl: mockQueueUrl,
-      MessageBody: mockMessage,
-      MessageGroupId: mockUUID,
-      MessageDeduplicationId: mockUUID
+      MessageBody: mockMessage
     })
     expect(mockSend).toHaveBeenCalled()
     expect(mockLoggerError).not.toHaveBeenCalled()
@@ -53,9 +51,7 @@ describe('send message', () => {
 
     expect(mockSendMessageCommand).toHaveBeenCalledWith({
       QueueUrl: mockQueueUrl,
-      MessageBody: mockMessage,
-      MessageGroupId: mockUUID,
-      MessageDeduplicationId: mockUUID
+      MessageBody: mockMessage
     })
     expect(mockSend).toHaveBeenCalled()
     expect(mockLoggerError).toHaveBeenCalledWith(mockError)

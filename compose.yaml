@@ -25,8 +25,8 @@ services:
       NODE_ENV: development
       SQS_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
-      DATA_INGEST_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest.fifo
-      DATA_INGEST_DEAD_LETTER_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter.fifo
+      DATA_INGEST_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest
+      DATA_INGEST_DEAD_LETTER_QUEUE_URL: http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter
       AWS_REGION: ${AWS_REGION:-eu-west-2}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-eu-west-2}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
