@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach } from 'vitest'
 import saveEvent from '../../../../../src/repos/common/save-event.js'
 import db from '../../../../../src/data/db.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'

@@ -1,4 +1,4 @@
-import { describe, test, expect, afterEach } from '@jest/globals'
+import { describe, test, expect, afterEach } from 'vitest'
 
 import { config } from '../../../../../../src/config/index.js'
 import { getGlobalDispatcher, ProxyAgent } from 'undici'

@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterAll } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterAll } from 'vitest'
 import db from '../../../../../src/data/db.js'
 import checkIdempotency from '../../../../../src/repos/common/check-idempotency.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'

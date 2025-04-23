@@ -1,10 +1,10 @@
-import { expect, jest, describe, afterEach, test } from '@jest/globals'
+import { expect, describe, afterEach, test, vi } from 'vitest'
 import { DEVELOPMENT, TEST, PRODUCTION } from '../../src/constants/environments.js'
 
 describe('GraphQL Config', () => {
   afterEach(() => {
     delete process.env.ENVIRONMENT_CODE
-    jest.resetModules()
+    vi.resetModules()
   })
 
   test('should return true for test environment', async () => {

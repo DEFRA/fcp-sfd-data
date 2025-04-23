@@ -1,106 +1,120 @@
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach, it } from 'vitest'
 import { GraphQLError } from 'graphql'
 
-import mockEvent from '../../mocks/file-metadata/v1.js'
+import mockMetadata from '../../mocks/file-metadata/v1.js'
 
-const mockSaveEvent = jest.fn()
-jest.unstable_mockModule('../../../src/repos/common/save-event.js', () => ({
+const mockSaveEvent = vi.fn()
+const mockGetByProperty = vi.fn()
+const mockGetById = vi.fn()
+const mockCheckIdempotency = vi.fn()
+const mockLoggerInfo = vi.fn()
+const mockLoggerError = vi.fn()
+
+vi.mock('../../../src/repos/common/save-event.js', () => ({
   default: mockSaveEvent
 }))
 
-const mockGetByProperty = jest.fn()
-jest.unstable_mockModule('../../../src/repos/common/get-by-property.js', () => ({
+vi.mock('../../../src/repos/common/get-by-property.js', () => ({
   default: mockGetByProperty
 }))
 
-const mockGetById = jest.fn()
-jest.unstable_mockModule('../../../src/repos/common/get-by-id.js', () => ({
+vi.mock('../../../src/repos/common/get-by-id.js', () => ({
   default: mockGetById
 }))
 
-const mockCheckIdempotency = jest.fn()
-jest.unstable_mockModule('../../../src/repos/common/check-idempotency.js', () => ({
+vi.mock('../../../src/repos/common/check-idempotency.js', () => ({
   default: mockCheckIdempotency
 }))
 
-const mockLoggerInfo = jest.fn()
-const mockLoggerError = jest.fn()
-
-jest.unstable_mockModule('../../../src/logging/logger.js', () => ({
+vi.mock('../../../src/logging/logger.js', () => ({
   createLogger: () => ({
     info: (...args) => mockLoggerInfo(...args),
     error: (...args) => mockLoggerError(...args)
   })
 }))
 
-const mockKey = 'mockKey'
-const mockValue = 'mockValue'
 const mockId = 'mockId'
 
 const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await import('../../../src/repos/file-metadata.js')
 
 describe('Persist file metadata', () => {
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test('should call saveEvent with the correct collection and event', async () => {
-    await persistFileMetadata(mockEvent)
+    await persistFileMetadata(mockMetadata)
 
-    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
+    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockMetadata)
   })
 
   test('should throw an error if saveEvent fails', async () => {
     mockSaveEvent.mockRejectedValue(new Error('Database error'))
 
-    await expect(persistFileMetadata(mockEvent))
+    await expect(persistFileMetadata(mockMetadata))
       .rejects
       .toThrowError('Database error')
 
-    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
+    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockMetadata)
   })
 
   test('should log "File metadata message already processed" when checkIdempotency returns true', async () => {
     mockCheckIdempotency.mockReturnValue(true)
 
-    await (persistFileMetadata(mockEvent))
+    await (persistFileMetadata(mockMetadata))
 
-    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message already processed, eventId: ${mockEvent.id}`)
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message already processed, eventId: ${mockMetadata.id}`)
   })
 
   test('should log "Comms message processed successfully" when checkIdempotency returns false', async () => {
     mockCheckIdempotency.mockReturnValue(false)
 
-    await (persistFileMetadata(mockEvent))
+    await (persistFileMetadata(mockMetadata))
 
-    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message processed successfully, eventId: ${mockEvent.id}`)
+    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message processed successfully, eventId: ${mockMetadata.id}`)
   })
 })
 
 describe('Get metadata by property', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
-  test('should call mockGetByProperty with the correct collection and event', async () => {
-    await getMetadataByProperty(mockKey, mockValue)
+  it('should call getByProperty with the correct mapped path', async () => {
+    const mockKey = 'SBI'
+    const mockValue = 'mockValue'
+    const mockResult = [{ metadataId: 'mockMetadataId' }]
+    mockGetByProperty.mockResolvedValue(mockResult)
 
-    expect(mockGetByProperty).toHaveBeenCalledWith('fileMetadataEvents', mockKey, mockValue)
+    const result = await getMetadataByProperty(mockKey, mockValue)
+
+    expect(mockGetByProperty).toHaveBeenCalledWith(
+      'fileMetadataEvents',
+      'events.data.sbi',
+      mockValue
+    )
+    expect(result).toBe(mockResult)
   })
 
-  test('should throw an error if saveEvent fails', async () => {
-    mockGetByProperty.mockRejectedValue(new Error('Error while persisting file metadata event: Database error'))
+  it('should resolve with an empty array if getByProperty returns no documents', async () => {
+    const mockKey = 'SBI'
+    const mockValue = 'mockValue'
 
-    await expect(getMetadataByProperty(mockKey, mockValue))
-      .rejects
-      .toThrow('Error while persisting file metadata event: Database error')
-    expect(mockGetByProperty).toHaveBeenCalledWith('fileMetadataEvents', mockKey, mockValue)
+    mockGetByProperty.mockResolvedValue([])
+
+    await expect(getMetadataByProperty(mockKey, mockValue)).resolves.toEqual([])
+
+    expect(mockGetByProperty).toHaveBeenCalledWith(
+      'fileMetadataEvents',
+      'events.data.sbi',
+      mockValue
+    )
   })
 })
 
 describe('Get file metadata by id', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should call getById with the correct collection and key-value pair', async () => {

@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach } from 'vitest'
 import getByProperty from '../../../../../src/repos/common/get-by-property.js'
 import db from '../../../../../src/data/db.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'

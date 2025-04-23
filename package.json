@@ -8,12 +8,12 @@
     "node": ">=22"
   },
   "scripts": {
+    "pretest": "npm run test:lint",
     "docker:debug": "docker compose -f compose.yaml -f compose.debug.yaml -p \"fcp-sfd-data\" up",
     "docker:test": "docker compose -f compose.yaml -f compose.test.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
     "docker:test:watch": "docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -p \"fcp-sfd-data\" run --rm fcp-sfd-data",
-    "pretest": "npm run test:lint",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --coverage --verbose --runInBand --silent=false --forceExit",
-    "test:watch": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules --no-experimental-require-module\" npx jest --coverage --verbose --runInBand --watch",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch",
     "test:lint": "standard",
     "start:watch": "nodemon --watch src --exec 'node --experimental-vm-modules src/index.js'",
     "start:debug": "nodemon --watch src --exec 'node --experimental-vm-modules --inspect-brk=0.0.0.0 src/index.js'",
@@ -54,14 +54,13 @@
   },
   "devDependencies": {
     "@types/convict": "6.1.6",
-    "@types/jest": "29.5.14",
     "@types/lodash": "4.17.13",
     "@types/node": "22.13.4",
     "@types/webpack-assets-manifest": "5.1.4",
+    "@vitest/coverage-v8": "3.1.1",
     "autoprefixer": "10.4.20",
-    "jest": "29.7.0",
-    "jest-fetch-mock": "3.0.3",
     "nodemon": "3.1.7",
-    "standard": "17.1.2"
+    "standard": "17.1.2",
+    "vitest": "3.1.1"
   }
 }
