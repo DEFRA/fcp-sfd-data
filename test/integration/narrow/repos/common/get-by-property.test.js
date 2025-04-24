@@ -67,6 +67,15 @@ describe('getByProperty Integration Tests', () => {
   })
 
   test('should return multiple events in a single document', async () => {
+    const firstEvent = {
+      ...mockEvent,
+      id: 'first-id',
+      data: {
+        ...mockEvent.data,
+        blobReference: 'different-blob-reference'
+      }
+    }
+
     const secondEvent = {
       ...mockEvent,
       id: 'different-id',
@@ -77,17 +86,17 @@ describe('getByProperty Integration Tests', () => {
     }
 
     await db.collection(testCollection).insertOne({
-      _id: mockEvent.data.correlationId,
-      events: [mockEvent, secondEvent]
+      _id: firstEvent.data.correlationId,
+      events: [firstEvent, secondEvent]
     })
 
-    const result = await getByProperty(testCollection, 'events.data.sbi', mockEvent.data.sbi)
+    const result = await getByProperty(testCollection, 'events.data.sbi', firstEvent.data.sbi)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)
-    expect(result[0].correlationId).toBe(mockEvent.data.correlationId)
+    expect(result[0].correlationId).toBe(firstEvent.data.correlationId)
     expect(result[0].events).toHaveLength(2)
-    expect(result[0].events[0]).toMatchObject(mockEvent)
+    expect(result[0].events[0]).toMatchObject(firstEvent)
     expect(result[0].events[1]).toMatchObject(secondEvent)
   })
 })
