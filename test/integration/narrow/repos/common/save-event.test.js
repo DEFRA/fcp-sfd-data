@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 import saveEvent from '../../../../../src/repos/common/save-event.js'
 import db from '../../../../../src/data/db.js'
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
@@ -9,6 +9,7 @@ const testCollection = 'test-collection'
 
 describe('saveEvent Integration Tests', () => {
   beforeEach(async () => {
+    vi.clearAllMocks()
     if (!db.client.topology?.isConnected()) {
       await db.client.connect()
     }
