@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi, it } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { GraphQLError } from 'graphql'
 
 import { createLogger } from '../../../src/logging/logger.js'
@@ -36,6 +36,8 @@ vi.mock('../../../src/logging/logger.js', () => ({
 
 const { persistCommsNotification, getCommsEventByProperty, getCommsEventById } = await import('../../../src/repos/comms-message.js')
 
+const mockKey = 'mockKey'
+const mockValue = 'mockValue'
 const mockId = 'mockId'
 
 const mockLogger = createLogger()
@@ -105,34 +107,19 @@ describe('Get comms event by property', () => {
     vi.clearAllMocks()
   })
 
-  it('should call getByProperty with the correct mapped path', async () => {
-    const mockKey = 'CRN'
-    const mockValue = 'mockValue'
-    const mockResult = [{ eventId: 'mockEventId' }]
-    getByProperty.mockResolvedValue(mockResult)
+  test('should call getByProperty with the correct collection and key-value pair', async () => {
+    await getCommsEventByProperty(mockKey, mockValue)
 
-    const result = await getCommsEventByProperty(mockKey, mockValue)
-
-    expect(getByProperty).toHaveBeenCalledWith(
-      'notificationEvents',
-      'events.data.crn',
-      mockValue
-    )
-    expect(result).toBe(mockResult)
+    expect(getByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })
 
-  it('should resolve with an empty array if getByProperty returns no documents', async () => {
-    const mockKey = 'CRN'
-    const mockValue = 'mockValue'
+  test('should throw an error if getCommsEventByProperty returns no documents', async () => {
+    getByProperty.mockRejectedValue(new GraphQLError('No document found'))
 
-    getByProperty.mockResolvedValue([])
+    await expect(getCommsEventByProperty(mockKey, mockValue))
+      .rejects
+      .toThrowError('Error while fetching comms notifications: No document found')
 
-    await expect(getCommsEventByProperty(mockKey, mockValue)).resolves.toEqual([])
-
-    expect(getByProperty).toHaveBeenCalledWith(
-      'notificationEvents',
-      'events.data.crn',
-      mockValue
-    )
+    expect(getByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })
 })

@@ -1,41 +1,46 @@
-import { vi, describe, test, expect, beforeEach, it } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { GraphQLError } from 'graphql'
 
-import mockMetadata from '../../mocks/file-metadata/v1.js'
+import { createLogger } from '../../../src/logging/logger.js'
 
-const mockSaveEvent = vi.fn()
-const mockGetByProperty = vi.fn()
-const mockGetById = vi.fn()
-const mockCheckIdempotency = vi.fn()
-const mockLoggerInfo = vi.fn()
-const mockLoggerError = vi.fn()
+import mockEvent from '../../mocks/file-metadata/v1.js'
+
+const saveEvent = vi.fn()
+const getByProperty = vi.fn()
+const getById = vi.fn()
+const checkIdempotency = vi.fn()
 
 vi.mock('../../../src/repos/common/save-event.js', () => ({
-  default: mockSaveEvent
+  default: saveEvent
 }))
 
 vi.mock('../../../src/repos/common/get-by-property.js', () => ({
-  default: mockGetByProperty
+  default: getByProperty
 }))
 
 vi.mock('../../../src/repos/common/get-by-id.js', () => ({
-  default: mockGetById
+  default: getById
 }))
 
 vi.mock('../../../src/repos/common/check-idempotency.js', () => ({
-  default: mockCheckIdempotency
+  default: checkIdempotency
 }))
 
 vi.mock('../../../src/logging/logger.js', () => ({
-  createLogger: () => ({
-    info: (...args) => mockLoggerInfo(...args),
-    error: (...args) => mockLoggerError(...args)
+  createLogger: vi.fn().mockReturnValue({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn()
   })
 }))
 
+const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await import('../../../src/repos/file-metadata.js')
+
+const mockKey = 'mockKey'
+const mockValue = 'mockValue'
 const mockId = 'mockId'
 
-const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await import('../../../src/repos/file-metadata.js')
+const mockLogger = createLogger()
 
 describe('Persist file metadata', () => {
   beforeEach(() => {
@@ -43,35 +48,35 @@ describe('Persist file metadata', () => {
   })
 
   test('should call saveEvent with the correct collection and event', async () => {
-    await persistFileMetadata(mockMetadata)
+    await persistFileMetadata(mockEvent)
 
-    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockMetadata)
+    expect(saveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
   })
 
   test('should throw an error if saveEvent fails', async () => {
-    mockSaveEvent.mockRejectedValue(new Error('Database error'))
+    saveEvent.mockRejectedValue(new Error('Database error'))
 
-    await expect(persistFileMetadata(mockMetadata))
+    await expect(persistFileMetadata(mockEvent))
       .rejects
       .toThrowError('Database error')
 
-    expect(mockSaveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockMetadata)
+    expect(saveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
   })
 
   test('should log "File metadata message already processed" when checkIdempotency returns true', async () => {
-    mockCheckIdempotency.mockReturnValue(true)
+    checkIdempotency.mockReturnValue(true)
 
-    await (persistFileMetadata(mockMetadata))
+    await (persistFileMetadata(mockEvent))
 
-    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message already processed, eventId: ${mockMetadata.id}`)
+    expect(mockLogger.info).toHaveBeenCalledWith(`File metadata message already processed, eventId: ${mockEvent.id}`)
   })
 
   test('should log "Comms message processed successfully" when checkIdempotency returns false', async () => {
-    mockCheckIdempotency.mockReturnValue(false)
+    checkIdempotency.mockReturnValue(false)
 
-    await (persistFileMetadata(mockMetadata))
+    await (persistFileMetadata(mockEvent))
 
-    expect(mockLoggerInfo).toHaveBeenCalledWith(`File metadata message processed successfully, eventId: ${mockMetadata.id}`)
+    expect(mockLogger.info).toHaveBeenCalledWith(`File metadata message processed successfully, eventId: ${mockEvent.id}`)
   })
 })
 
@@ -80,35 +85,19 @@ describe('Get metadata by property', () => {
     vi.clearAllMocks()
   })
 
-  it('should call getByProperty with the correct mapped path', async () => {
-    const mockKey = 'SBI'
-    const mockValue = 'mockValue'
-    const mockResult = [{ metadataId: 'mockMetadataId' }]
-    mockGetByProperty.mockResolvedValue(mockResult)
+  test('should call getByProperty with the correct collection and event', async () => {
+    await getMetadataByProperty(mockKey, mockValue)
 
-    const result = await getMetadataByProperty(mockKey, mockValue)
-
-    expect(mockGetByProperty).toHaveBeenCalledWith(
-      'fileMetadataEvents',
-      'events.data.sbi',
-      mockValue
-    )
-    expect(result).toBe(mockResult)
+    expect(getByProperty).toHaveBeenCalledWith('fileMetadataEvents', mockKey, mockValue)
   })
 
-  it('should resolve with an empty array if getByProperty returns no documents', async () => {
-    const mockKey = 'SBI'
-    const mockValue = 'mockValue'
+  test('should throw an error if saveEvent fails', async () => {
+    getByProperty.mockRejectedValue(new Error('Error while persisting file metadata event: Database error'))
 
-    mockGetByProperty.mockResolvedValue([])
-
-    await expect(getMetadataByProperty(mockKey, mockValue)).resolves.toEqual([])
-
-    expect(mockGetByProperty).toHaveBeenCalledWith(
-      'fileMetadataEvents',
-      'events.data.sbi',
-      mockValue
-    )
+    await expect(getMetadataByProperty(mockKey, mockValue))
+      .rejects
+      .toThrow('Error while persisting file metadata event: Database error')
+    expect(getByProperty).toHaveBeenCalledWith('fileMetadataEvents', mockKey, mockValue)
   })
 })
 
@@ -120,16 +109,16 @@ describe('Get file metadata by id', () => {
   test('should call getById with the correct collection and key-value pair', async () => {
     await getMetadataById(mockId)
 
-    expect(mockGetById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
+    expect(getById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
   })
 
   test('should throw an error if getById fails', async () => {
-    mockGetById.mockRejectedValue(new GraphQLError('No document found'))
+    getById.mockRejectedValue(new GraphQLError('No document found'))
 
     await expect(getMetadataById(mockId))
       .rejects
       .toThrowError('Error while fetching comms notifications: No document found')
 
-    expect(mockGetById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
+    expect(getById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
   })
 })
