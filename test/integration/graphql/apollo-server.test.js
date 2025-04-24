@@ -1,4 +1,4 @@
-import { afterEach, describe, test, expect, vi } from 'vitest'
+import { vi, afterEach, describe, test, expect } from 'vitest'
 import { DEVELOPMENT, TEST, PRODUCTION } from '../../../src/constants/environments.js'
 
 afterEach(() => {

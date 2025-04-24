@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest'
+import { vi, describe, test, expect } from 'vitest'
 import { graphqlPlugin } from '../../../src/graphql/graphql-plugin.js'
 import hapiApollo from '@as-integrations/hapi'
 import { apolloServer } from '../../../src/graphql/apollo-server.js'

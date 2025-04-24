@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 import { createLogger } from '../../../../src/logging/logger.js'
 
@@ -17,7 +17,7 @@ vi.mock('../../../../src/logging/logger.js', () => ({
   })
 }))
 
-const logger = createLogger() // move this underneath the logger mock?
+const logger = createLogger()
 
 const { sendMessage } = await import('../../../../src/messaging/sqs/send-message.js')
 

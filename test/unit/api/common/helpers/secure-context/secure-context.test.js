@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, beforeAll, afterEach, afterAll, vi } from 'vitest'
+import { vi, describe, test, expect, beforeEach, beforeAll, afterEach, afterAll } from 'vitest'
 
 import hapi from '@hapi/hapi'
 import tls from 'node:tls'

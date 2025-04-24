@@ -1,4 +1,4 @@
-import { expect, describe, afterEach, test, vi } from 'vitest'
+import { vi, expect, describe, afterEach, test } from 'vitest'
 import { DEVELOPMENT, TEST, PRODUCTION } from '../../src/constants/environments.js'
 
 describe('GraphQL Config', () => {

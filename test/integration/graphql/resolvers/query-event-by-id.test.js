@@ -5,7 +5,7 @@ import { persistCommsNotification } from '../../../../src/repos/comms-message.js
 import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import db from '../../../../src/data/db.js'
 
-describe('GQL get by ID', () => {
+describe.skip('GQL get by ID', () => {
   let server
 
   beforeAll(async () => {

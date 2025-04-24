@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 import { createLogger } from '../../../../../../src/logging/logger.js'
 import { UnprocessableMessageError } from '../../../../../../src/errors/message-errors.js'
