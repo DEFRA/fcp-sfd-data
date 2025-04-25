@@ -6,6 +6,7 @@ export default defineConfig({
     coverage: {
       reportOnFailure: true,
       clean: false,
+      reporter: ['lcov'],
       include: ['src/**/*.js'],
       exclude: [
         '**/node_modules/**',
