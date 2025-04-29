@@ -5,26 +5,34 @@ import { createLogger } from '../../../src/logging/logger.js'
 
 import mockEvent from '../../mocks/file-metadata/v1.js'
 
-const saveEvent = vi.fn()
-const getByProperty = vi.fn()
-const getById = vi.fn()
-const checkIdempotency = vi.fn()
+import saveEvent from '../../../src/repos/common/save-event.js'
+import getByProperty from '../../../src/repos/common/get-by-property.js'
+import getById from '../../../src/repos/common/get-by-id.js'
+import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
-vi.mock('../../../src/repos/common/save-event.js', () => ({
-  default: saveEvent
-}))
+vi.mock('../../../src/repos/common/save-event.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/get-by-property.js', () => ({
-  default: getByProperty
-}))
+vi.mock('../../../src/repos/common/get-by-property.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/get-by-id.js', () => ({
-  default: getById
-}))
+vi.mock('../../../src/repos/common/get-by-id.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/check-idempotency.js', () => ({
-  default: checkIdempotency
-}))
+vi.mock('../../../src/repos/common/check-idempotency.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
 vi.mock('../../../src/logging/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
@@ -48,6 +56,7 @@ describe('Persist file metadata', () => {
   })
 
   test('should call saveEvent with the correct collection and event', async () => {
+    console.log('saveEvent', saveEvent)
     await persistFileMetadata(mockEvent)
 
     expect(saveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
