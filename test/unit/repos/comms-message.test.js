@@ -4,27 +4,36 @@ import { GraphQLError } from 'graphql'
 import { createLogger } from '../../../src/logging/logger.js'
 
 import mockNotification from '../../mocks/comms-message/v1.js'
+import saveEvent from '../../../src/repos/common/save-event.js'
+import getByProperty from '../../../src/repos/common/get-by-property.js'
+import getById from '../../../src/repos/common/get-by-id.js'
+import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
-const saveEvent = vi.fn()
-const getByProperty = vi.fn()
-const getById = vi.fn()
-const checkIdempotency = vi.fn()
+import { persistCommsNotification, getCommsEventByProperty, getCommsEventById } from '../../../src/repos/comms-message.js'
 
-vi.mock('../../../src/repos/common/save-event.js', () => ({
-  default: saveEvent
-}))
+vi.mock('../../../src/repos/common/save-event.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/get-by-property.js', () => ({
-  default: getByProperty
-}))
+vi.mock('../../../src/repos/common/get-by-property.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/get-by-id.js', () => ({
-  default: getById
-}))
+vi.mock('../../../src/repos/common/get-by-id.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
-vi.mock('../../../src/repos/common/check-idempotency.js', () => ({
-  default: checkIdempotency
-}))
+vi.mock('../../../src/repos/common/check-idempotency.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
 
 vi.mock('../../../src/logging/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
@@ -33,8 +42,6 @@ vi.mock('../../../src/logging/logger.js', () => ({
     error: vi.fn()
   })
 }))
-
-const { persistCommsNotification, getCommsEventByProperty, getCommsEventById } = await import('../../../src/repos/comms-message.js')
 
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'

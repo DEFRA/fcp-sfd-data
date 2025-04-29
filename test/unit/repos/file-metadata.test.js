@@ -10,6 +10,8 @@ import getByProperty from '../../../src/repos/common/get-by-property.js'
 import getById from '../../../src/repos/common/get-by-id.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
+import { persistFileMetadata, getMetadataByProperty, getMetadataById } from '../../../src/repos/file-metadata.js'
+
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
     default: vi.fn()
@@ -41,8 +43,6 @@ vi.mock('../../../src/logging/logger.js', () => ({
     error: vi.fn()
   })
 }))
-
-const { persistFileMetadata, getMetadataByProperty, getMetadataById } = await import('../../../src/repos/file-metadata.js')
 
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'
