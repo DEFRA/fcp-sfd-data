@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 
 import { failAction } from '../../../../../src/api/common/helpers/fail-action.js'
 

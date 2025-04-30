@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 
 import { UnprocessableMessageError } from '../../../../src/errors/message-errors.js'
 

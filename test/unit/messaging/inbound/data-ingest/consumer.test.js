@@ -1,23 +1,24 @@
-import { jest, describe, test, expect, beforeEach, afterAll } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach, afterAll } from 'vitest'
 
 import * as sqsConsumer from 'sqs-consumer'
 
-const mockLoggerInfo = jest.fn()
-const mockLoggerError = jest.fn()
+import { createLogger } from '../../../../../src/logging/logger.js'
 
-jest.unstable_mockModule('../../../../../src/logging/logger.js', () => ({
-  createLogger: () => ({
-    info: (...args) => mockLoggerInfo(...args),
-    error: (...args) => mockLoggerError(...args)
+vi.mock('../../../../../src/logging/logger.js', () => ({
+  createLogger: vi.fn().mockReturnValue({
+    info: vi.fn(),
+    error: vi.fn()
   })
 }))
 
-const mockStart = jest.fn()
-const mockStop = jest.fn()
+const mockLogger = createLogger()
+
+const mockStart = vi.fn()
+const mockStop = vi.fn()
 
 let mockConsumer
 
-const consumerSpy = jest.spyOn(sqsConsumer.Consumer, 'create').mockImplementation((config) => {
+const consumerSpy = vi.spyOn(sqsConsumer.Consumer, 'create').mockImplementation((config) => {
   mockConsumer = new sqsConsumer.Consumer(config)
 
   mockConsumer.start = mockStart
@@ -43,37 +44,37 @@ describe('data ingestion sqs consumer', () => {
 
   describe('event listeners', () => {
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
     })
 
     test('should log consumer start', () => {
       mockConsumer.emit('started')
 
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Data ingestion consumer started')
+      expect(mockLogger.info).toHaveBeenCalledWith('Data ingestion consumer started')
     })
 
     test('should log consumer stop', () => {
       mockConsumer.emit('stopped')
 
-      expect(mockLoggerInfo).toHaveBeenCalledWith('Data ingestion consumer stopped')
+      expect(mockLogger.info).toHaveBeenCalledWith('Data ingestion consumer stopped')
     })
 
     test('should log consumer error', () => {
       mockConsumer.emit('error', new Error('Consumer error'))
 
-      expect(mockLoggerError).toHaveBeenCalledWith('Error during data ingestion message handling: Consumer error')
+      expect(mockLogger.error).toHaveBeenCalledWith('Error during data ingestion message handling: Consumer error')
     })
 
     test('should log consumer processing_error', () => {
       mockConsumer.emit('processing_error', new Error('Consumer error'))
 
-      expect(mockLoggerError).toHaveBeenCalledWith('Error during data ingestion message processing: Consumer error')
+      expect(mockLogger.error).toHaveBeenCalledWith('Error during data ingestion message processing: Consumer error')
     })
 
     test('should log consumer timeout_error', () => {
       mockConsumer.emit('timeout_error', new Error('Consumer error'))
 
-      expect(mockLoggerError).toHaveBeenCalledWith('Timeout error during data ingestion message handling: Consumer error')
+      expect(mockLogger.error).toHaveBeenCalledWith('Timeout error during data ingestion message handling: Consumer error')
     })
   })
 

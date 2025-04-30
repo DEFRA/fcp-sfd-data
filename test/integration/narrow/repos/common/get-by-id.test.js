@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach } from 'vitest'
 import getById from '../../../../../src/repos/common/get-by-id.js'
 import db from '../../../../../src/data/db.js'
 import v1CommsMessage from '../../../../mocks/comms-message/v1.js'
@@ -7,7 +7,7 @@ const mockEvent = { ...v1CommsMessage.commsMessage }
 
 const testCollection = 'test'
 
-describe('getByProperty Integration Tests', () => {
+describe('getById Integration Tests', () => {
   beforeEach(async () => {
     if (!db.client.topology?.isConnected()) {
       await db.client.connect()

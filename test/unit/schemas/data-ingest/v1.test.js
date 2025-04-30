@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach } from 'vitest'
 
 import dataIngestMessage from '../../../mocks/data-ingest/v1CommsMessage.js'
 

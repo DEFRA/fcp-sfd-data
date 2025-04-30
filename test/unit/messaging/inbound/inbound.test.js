@@ -1,31 +1,31 @@
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 import { sqsClient } from '../../../../src/messaging/sqs/client.js'
 
-const mockStartIngestion = jest.fn()
-const mockStopIngestion = jest.fn()
+const startIngestion = vi.fn()
+const stopIngestion = vi.fn()
 
-jest.unstable_mockModule('../../../../src/messaging/inbound/data-ingest/consumer.js', () => ({
-  startIngestion: mockStartIngestion,
-  stopIngestion: mockStopIngestion
+vi.mock('../../../../src/messaging/inbound/data-ingest/consumer.js', () => ({
+  startIngestion,
+  stopIngestion
 }))
 
 const { startMessaging, stopMessaging } = await import('../../../../src/messaging/inbound/inbound.js')
 
 describe('inbound messaging setup', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should start message consumers', () => {
     startMessaging()
 
-    expect(mockStartIngestion).toHaveBeenCalledWith(sqsClient)
+    expect(startIngestion).toHaveBeenCalledWith(sqsClient)
   })
 
   test('should stop message consumers', () => {
     stopMessaging()
 
-    expect(mockStopIngestion).toHaveBeenCalled()
+    expect(stopIngestion).toHaveBeenCalled()
   })
 })

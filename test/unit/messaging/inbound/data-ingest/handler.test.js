@@ -1,35 +1,34 @@
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 import snsSqsMessage from '../../../../mocks/aws/sns-sqs-message'
 
 import { UnprocessableMessageError } from '../../../../../src/errors/message-errors.js'
+import { handleIngestionMessages } from '../../../../../src/messaging/inbound/data-ingest/handler.js'
+import { sendMessage } from '../../../../../src/messaging/sqs/send-message.js'
 
-const mockLoggerInfo = jest.fn()
-const mockLoggerError = jest.fn()
+const mockLoggerInfo = vi.fn()
+const mockLoggerError = vi.fn()
 
-jest.unstable_mockModule('../../../../../src/logging/logger.js', () => ({
+vi.mock('../../../../../src/logging/logger.js', () => ({
   createLogger: () => ({
     info: (...args) => mockLoggerInfo(...args),
     error: (...args) => mockLoggerError(...args)
   })
 }))
 
-const mockSendMessage = jest.fn()
-const mockProcessor = jest.fn()
+const mockProcessor = vi.fn()
 
-jest.unstable_mockModule('../../../../../src/messaging/inbound/data-ingest/processors/processor.js', () => ({
-  getProcessor: jest.fn(() => mockProcessor)
+vi.mock('../../../../../src/messaging/inbound/data-ingest/processors/processor.js', () => ({
+  getProcessor: vi.fn(() => mockProcessor)
 }))
 
-jest.unstable_mockModule('../../../../../src/messaging/sqs/send-message', () => ({
-  sendMessage: mockSendMessage
+vi.mock('../../../../../src/messaging/sqs/send-message.js', () => ({
+  sendMessage: vi.fn()
 }))
-
-const { handleIngestionMessages } = await import('../../../../../src/messaging/inbound/data-ingest/handler.js')
 
 describe('data ingest handler', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should return completed messages', async () => {
@@ -53,7 +52,7 @@ describe('data ingest handler', () => {
     const completed = await handleIngestionMessages({}, messages)
 
     expect(mockLoggerInfo).toHaveBeenCalledWith('Moving unprocessable message to dead letter queue')
-    expect(mockSendMessage).toHaveBeenCalledWith(
+    expect(sendMessage).toHaveBeenCalledWith(
       {},
       'http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter',
       snsSqsMessage.Body

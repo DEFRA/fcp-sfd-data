@@ -1,36 +1,40 @@
-import { describe, test, expect, jest, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
-const mockSend = jest.fn()
-const mockSendMessageCommand = jest.fn()
-const mockLoggerError = jest.fn()
-const mockRandomUUID = jest.fn()
+import { createLogger } from '../../../../src/logging/logger.js'
 
-jest.mock('@aws-sdk/client-sqs', () => ({
+const mockSend = vi.fn()
+const mockSendMessageCommand = vi.fn()
+
+vi.mock('@aws-sdk/client-sqs', () => ({
   SendMessageCommand: mockSendMessageCommand
 }))
 
-jest.unstable_mockModule('../../../../src/logging/logger.js', () => ({
-  createLogger: () => ({ error: mockLoggerError })
+vi.mock('../../../../src/logging/logger.js', () => ({
+  createLogger: vi.fn().mockReturnValue({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn()
+  })
 }))
 
-global.crypto = {
-  randomUUID: mockRandomUUID
-}
+const logger = createLogger()
+
+const { sendMessage } = await import('../../../../src/messaging/sqs/send-message.js')
 
 describe('send message', () => {
   const mockQueueUrl = 'http://test-queue-url'
   const mockMessage = 'test-message'
   const mockUUID = '123e4567-e89b-12d3-a456-426614174000'
   const mockSqsClient = { send: mockSend }
+  const cryptoSpy = vi.spyOn(crypto, 'randomUUID')
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    mockRandomUUID.mockReturnValue(mockUUID)
+    vi.clearAllMocks()
+    cryptoSpy.mockReturnValue(mockUUID)
   })
 
   test('should send message with correct parameters', async () => {
     mockSend.mockResolvedValue({})
-    const { sendMessage } = await import('../../../../src/messaging/sqs/send-message.js')
 
     await sendMessage(mockSqsClient, mockQueueUrl, mockMessage)
 
@@ -39,13 +43,12 @@ describe('send message', () => {
       MessageBody: mockMessage
     })
     expect(mockSend).toHaveBeenCalled()
-    expect(mockLoggerError).not.toHaveBeenCalled()
+    expect(logger.error).not.toHaveBeenCalled()
   })
 
   test('should log error when send fails', async () => {
     const mockError = new Error('Send failed')
     mockSend.mockRejectedValue(mockError)
-    const { sendMessage } = await import('../../../../src/messaging/sqs/send-message.js')
 
     await sendMessage(mockSqsClient, mockQueueUrl, mockMessage)
 
@@ -54,6 +57,6 @@ describe('send message', () => {
       MessageBody: mockMessage
     })
     expect(mockSend).toHaveBeenCalled()
-    expect(mockLoggerError).toHaveBeenCalledWith(mockError)
+    expect(logger.error).toHaveBeenCalledWith(mockError)
   })
 })

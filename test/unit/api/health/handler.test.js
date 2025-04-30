@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeAll, afterAll } from '@jest/globals'
+import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 
 import { createServer } from '../../../../src/api/index.js'
 import { StatusCodes } from 'http-status-codes'

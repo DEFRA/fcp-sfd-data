@@ -1,20 +1,22 @@
-import { jest, describe, test, expect, beforeEach, beforeAll, afterEach, afterAll } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach, beforeAll, afterEach, afterAll } from 'vitest'
 
 import hapi from '@hapi/hapi'
 import tls from 'node:tls'
 
-const mockAddCACert = jest.fn()
-const mockTlsCreateSecureContext = jest.fn()
+const mockAddCACert = vi.fn()
+const mockTlsCreateSecureContext = vi.fn()
   .mockReturnValue({ context: { addCACert: mockAddCACert } })
 
-jest.mock('hapi-pino', () => ({
-  register: (server) => {
-    server.decorate('server', 'logger', {
-      info: jest.fn(),
-      error: jest.fn()
-    })
-  },
-  name: 'mock-hapi-pino'
+vi.mock('hapi-pino', () => ({
+  default: {
+    register: (server) => {
+      server.decorate('server', 'logger', {
+        info: vi.fn(),
+        error: vi.fn()
+      })
+    },
+    name: 'mock-hapi-pino'
+  }
 }))
 
 const { config } = await import('../../../../../../src/config/index.js')
@@ -50,7 +52,7 @@ describe('#secureContext', () => {
   describe('When secure context is enabled', () => {
     const PROCESS_ENV = process.env
 
-    const createSecureContextSpy = jest.spyOn(tls, 'createSecureContext')
+    const createSecureContextSpy = vi.spyOn(tls, 'createSecureContext')
       .mockImplementation(mockTlsCreateSecureContext)
 
     beforeAll(() => {

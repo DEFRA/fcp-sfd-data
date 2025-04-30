@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 import enumMap from '../../../../../src/graphql/schema/comms-message/enum-map.js'
 
 describe('Comms Message Enum Map', () => {
