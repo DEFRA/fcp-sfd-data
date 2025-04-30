@@ -10,6 +10,7 @@ const testCollection = 'test-collection'
 describe('saveEvent Integration Tests', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
+    vi.resetModules()
     if (!db.client.topology?.isConnected()) {
       await db.client.connect()
     }
@@ -18,7 +19,6 @@ describe('saveEvent Integration Tests', () => {
 
   test('should insert a new document when no document exists with the same correlationId', async () => {
     await saveEvent(testCollection, mockEvent)
-
     const result = await db.collection(testCollection).findOne({ _id: mockEvent.data.correlationId })
 
     expect(result).toBeDefined()
