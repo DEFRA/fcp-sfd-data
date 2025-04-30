@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 
 import { getTrustStoreCerts } from '../../../../../../src/api/common/helpers/secure-context/get-trust-store-certs.js'
 

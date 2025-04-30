@@ -1,8 +1,8 @@
-import { afterEach, jest, describe, test, expect } from '@jest/globals'
+import { vi, afterEach, describe, test, expect } from 'vitest'
 import { DEVELOPMENT, TEST, PRODUCTION } from '../../../src/constants/environments.js'
 
 afterEach(() => {
-  jest.resetModules()
+  vi.resetModules()
   delete process.env.ENVIRONMENT_CODE
 })
 

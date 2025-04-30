@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach } from 'vitest'
 
 import fileMetadataMessage from '../../../mocks/file-metadata/v1.js'
 

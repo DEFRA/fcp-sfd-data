@@ -1,20 +1,21 @@
-import { describe, test, expect, jest, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
+import { SQSClient } from '@aws-sdk/client-sqs'
+import { config } from '../../../../src/config/index.js'
 
-const mockSQSClient = jest.fn()
-jest.mock('@aws-sdk/client-sqs', () => ({
-  SQSClient: mockSQSClient
+vi.mock('@aws-sdk/client-sqs', () => ({
+  SQSClient: vi.fn()
 }))
 
-const mockGet = jest.fn()
-const config = { get: mockGet }
-
-jest.unstable_mockModule('../../../../src/config/index.js', () => ({
-  config
+vi.mock('../../../../src/config/index.js', () => ({
+  config: {
+    get: vi.fn()
+  }
 }))
 
 describe('sqs client', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
+    vi.resetModules()
   })
 
   test('should create client with correct configuration', async () => {
@@ -24,11 +25,11 @@ describe('sqs client', () => {
       'aws.accessKeyId': 'test-access-key',
       'aws.secretAccessKey': 'test-secret-key'
     }
-    mockGet.mockImplementation(key => mockConfig[key])
+    config.get.mockImplementation(key => mockConfig[key])
 
-    await import('../../../../src/messaging/sqs/client.js')
+    const { sqsClient } = await import('../../../../src/messaging/sqs/client.js')
 
-    expect(mockSQSClient).toHaveBeenCalledWith({
+    expect(SQSClient).toHaveBeenCalledWith({
       endpoint: 'http://localhost:4566',
       region: 'eu-west-2',
       credentials: {
@@ -36,6 +37,7 @@ describe('sqs client', () => {
         secretAccessKey: 'test-secret-key'
       }
     })
+    expect(sqsClient).toBeDefined()
   })
 
   test('should create client without credentials when not provided', async () => {
@@ -43,13 +45,14 @@ describe('sqs client', () => {
       'aws.sqsEndpoint': 'http://localhost:4566',
       'aws.region': 'eu-west-2'
     }
-    mockGet.mockImplementation(key => mockConfig[key])
+    config.get.mockImplementation(key => mockConfig[key])
 
-    await import('../../../../src/messaging/sqs/client.js')
+    const { sqsClient } = await import('../../../../src/messaging/sqs/client.js')
 
-    expect(mockSQSClient).toHaveBeenCalledWith({
+    expect(SQSClient).toHaveBeenCalledWith({
       endpoint: 'http://localhost:4566',
       region: 'eu-west-2'
     })
+    expect(sqsClient).toBeDefined()
   })
 })
