@@ -56,7 +56,6 @@ describe('Persist file metadata', () => {
   })
 
   test('should call saveEvent with the correct collection and event', async () => {
-    console.log('saveEvent', saveEvent)
     await persistFileMetadata(mockEvent)
 
     expect(saveEvent).toHaveBeenCalledWith('fileMetadataEvents', mockEvent)
