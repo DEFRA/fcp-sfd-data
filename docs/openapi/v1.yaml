@@ -1,0 +1,64 @@
+
+openapi: 3.0.0
+info:
+  title: Single Front Door Data Service
+  description: API Description
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001/api/v1/
+    description: Local server
+paths:
+  /comms/id/{id}:
+    get:
+      summary: Retrieve by correlation id
+      description: Retrieve by correlation id
+      parameters:
+        - in: query
+          name: correlationId
+          schema:
+            type: string
+          required: true
+          description: Example parameter
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Hello, World!"
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    internal:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Authorization header using the Bearer scheme using defraId token
+        Example: "Authorization: Bearer {token}"
+    external:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Authorization header using the Bearer scheme using CDP Cognito token
+        Example: "Authorization: Bearer {token}"
+security:
+  - internal: []
+  - external: []
