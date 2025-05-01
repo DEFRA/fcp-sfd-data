@@ -4,6 +4,7 @@ import snsSqsMessage from '../../../../mocks/aws/sns-sqs-message'
 
 import { UnprocessableMessageError } from '../../../../../src/errors/message-errors.js'
 import { handleIngestionMessages } from '../../../../../src/messaging/inbound/data-ingest/handler.js'
+import { sendMessage } from '../../../../../src/messaging/sqs/send-message.js'
 
 const mockLoggerInfo = vi.fn()
 const mockLoggerError = vi.fn()
@@ -51,6 +52,11 @@ describe('data ingest handler', () => {
     const completed = await handleIngestionMessages({}, messages)
 
     expect(mockLoggerInfo).toHaveBeenCalledWith('Moving unprocessable message to dead letter queue')
+    expect(sendMessage).toHaveBeenCalledWith(
+      {},
+      'http://sqs.eu-west-2.127.0.0.1:4566/000000000000/fcp_sfd_data_ingest-deadletter',
+      snsSqsMessage.Body
+    )
     expect(completed).toHaveLength(1)
   })
 
