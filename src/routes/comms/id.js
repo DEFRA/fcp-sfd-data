@@ -1,18 +1,19 @@
 import { getCommsEventById } from '../../repos/comms-message.js'
 
-export default {
+export default [{
   method: 'GET',
-  path: '/v1/comms/events/{eventId}',
+  path: '/api/v1/comms/events/{eventId}',
   options: {
     auth: false
   },
   handler: async (request, h) => {
     try {
-      const { id } = request.params
-      const data = await getCommsEventById(id)
-      return { data }
+      const { eventId } = request.params
+      const data = await getCommsEventById(eventId)
+      return h.response({ data })
     } catch (err) {
       console.error(err)
+      return h.response('error').code(500)
     }
   }
-}
+}]
