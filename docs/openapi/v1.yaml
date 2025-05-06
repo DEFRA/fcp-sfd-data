@@ -1,42 +1,129 @@
-
 openapi: 3.0.0
 info:
   title: Single Front Door Data Service
   description: API Description
   version: 1.0.0
 servers:
-  - url: http://localhost:3001/api/v1/
+  - url: http://localhost:3000/api/v1/
     description: Local server
 paths:
-  /comms/id/{id}:
+  /comms/events/{correlationId}:
     get:
       summary: Retrieve by correlation id
       description: Retrieve by correlation id
       parameters:
-        - in: query
+        - in: path
           name: correlationId
           schema:
             type: string
-          required: true
-          description: Example parameter
+            format: uuid
+          description: The correlation ID to retrieve events for
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                example:
-                  message: "Hello, World!"
+                $ref: '#/components/schemas/EventsResponse'
         '400':
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
+    EventsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            correlationId:
+              type: string
+              example: "a058de5b-42ad-473c-91e7-0797a43fda30"
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "a058de5b-42ad-473c-91e7-0797a43fda30"
+        source:
+          type: string
+          example: "ffc-ahwr-claim"
+        specversion:
+          type: string
+          example: "1.0"
+        type:
+          type: string
+          example: "uk.gov.fcp.sfd.notification.request"
+        datacontenttype:
+          type: string
+          example: "application/json"
+        time:
+          type: string
+          format: date-time
+          example: "2023-10-17T14:48:00.000Z"
+        data:
+          type: object
+          properties:
+            correlationId:
+              type: string
+              example: "a058de5b-42ad-473c-91e7-0797a43fda30"
+            crn:
+              type: string
+              example: "1050000000"
+            sbi:
+              type: string
+              example: "105000000"
+            sourceSystem:
+              type: string
+              example: "AHWP"
+            notifyTemplateId:
+              type: string
+              example: "d8017132-1909-4bee-b604-b07e8081dc82"
+            commsType:
+              type: string
+              example: "email"
+            recipient:
+              type: array
+              items:
+                type: string
+              example: ["jane.doe@defra.gov.uk", "john.doe@defra.gov.uk"]
+            personalisation:
+              type: object
+              properties:
+                reference:
+                  type: string
+                  example: "test-reference"
+                applicationReference:
+                  type: string
+                  example: "test-application-reference"
+                amount:
+                  type: string
+                  example: "100"
+            reference:
+              type: string
+              example: "ffc-ahwr-example-reference"
+            statusDetails:
+              type: string
+              example: "delivered"
+            oneClickUnsubscribeUrl:
+              type: string
+              example: "https://unsubscribe.example.com"
+            emailReplyToId:
+              type: string
+              example: "8e222534-7f05-4972-86e3-17c5d9f894e2"
     Error:
       type: object
       properties:

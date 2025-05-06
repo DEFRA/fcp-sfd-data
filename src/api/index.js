@@ -32,6 +32,13 @@ const createServer = async () => {
         xss: 'enabled',
         noSniff: true,
         xframe: true
+      },
+      // need this config to allow openapi docs to work?
+      cors: {
+        origin: ['*'],
+        additionalHeaders: ['accept', 'authorization', 'content-type', 'if-none-match', 'origin', 'user-agent', 'x-requested-with'],
+        additionalExposedHeaders: ['accept', 'authorization', 'content-type', 'if-none-match', 'origin', 'user-agent', 'x-requested-with'],
+        credentials: true
       }
     },
     router: {
