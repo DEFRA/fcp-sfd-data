@@ -24,6 +24,7 @@ beforeEach(async () => {
 })
 
 afterAll(async () => {
+  await server.stop()
   await db.client.close()
 })
 
@@ -47,6 +48,7 @@ describe('API routes for comms', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('application/json')
       expect(response.payload).toEqual(JSON.stringify({
         data: {
           correlationId: mockEvent.commsMessage.data.correlationId,
