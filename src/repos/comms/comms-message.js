@@ -1,7 +1,7 @@
-import { config } from '../config/index.js'
-import { saveEvent, getByProperty, getById } from './common/index.js'
-import { createLogger } from '../logging/logger.js'
-import checkIdempotency from './common/check-idempotency.js'
+import { config } from '../../config/index.js'
+import { saveEvent, getByProperty, getById, getByReference } from '../common/index.js'
+import { createLogger } from '../../logging/logger.js'
+import checkIdempotency from '../common/check-idempotency.js'
 
 const logger = createLogger()
 
@@ -22,7 +22,7 @@ const getCommsEventById = async (id) => {
     return await getById(notificationsCollection, id)
   } catch (error) {
     throw new Error(`Error while fetching comms notifications: ${error.message}`,
-      { cause: error }
+      { cause: error } // throw custom error here? error.cause
     )
   }
 }
@@ -36,8 +36,18 @@ const getCommsEventByProperty = async (key, value) => {
   }
 }
 
+const getCommsEventByReference = async (reference) => {
+  try {
+    return await getByReference(notificationsCollection, reference)
+  } catch (error) {
+    throw new Error(`Error while fetching comms notifications: ${error.message}`,
+      { cause: error }) // throw custom error here? error.cause
+  }
+}
+
 export {
   persistCommsNotification,
   getCommsEventByProperty,
-  getCommsEventById
+  getCommsEventById,
+  getCommsEventByReference
 }

@@ -1,7 +1,7 @@
 import { describe, beforeAll, beforeEach, afterAll, test, expect } from 'vitest'
 import validCommsMessage from '../../../mocks/comms-message/v1.js'
 import commsEventByIdQuery from '../queries/comms-by-id.js'
-import { persistCommsNotification } from '../../../../src/repos/comms-message.js'
+import { persistCommsNotification } from '../../../../src/repos/comms/comms-message.js'
 import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import db from '../../../../src/data/db.js'
 

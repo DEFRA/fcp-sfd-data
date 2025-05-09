@@ -17,7 +17,7 @@ vi.mock('../../../../../../src/logging/logger.js', () => ({
 const logger = createLogger()
 
 const persistCommsNotification = vi.fn()
-vi.mock('../../../../../../src/repos/comms-message.js', () => ({
+vi.mock('../../../../../../src/repos/comms/comms-message.js', () => ({
   persistCommsNotification
 }))
 
