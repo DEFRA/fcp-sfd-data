@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:3000/api/v1/
     description: Local server
 paths:
-  /comms/events/{correlationId}:
+  /comms/events/id/{correlationId}:
     get:
       summary: Retrieve by correlation id
       description: Retrieve by correlation id

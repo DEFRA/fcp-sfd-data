@@ -2,7 +2,7 @@ import db from '../../data/db.js'
 
 const getByReference = async (collection, reference) => {
   const documents = await db.collection(collection).find({
-    'events.data.personalisation.reference': reference
+    'events.data.reference': reference
   }).toArray()
 
   if (!documents.length) {

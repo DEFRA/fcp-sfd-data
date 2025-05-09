@@ -21,7 +21,7 @@ describe('getByReference Integration Tests', () => {
       events: [mockEvent]
     })
 
-    const result = await getByReference(testCollection, mockEvent.data.personalisation.reference)
+    const result = await getByReference(testCollection, mockEvent.data.reference)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)
@@ -45,7 +45,7 @@ describe('getByReference Integration Tests', () => {
       { _id: secondEvent.data.correlationId, events: [secondEvent] }
     ])
 
-    const result = await getByReference(testCollection, mockEvent.data.personalisation.reference)
+    const result = await getByReference(testCollection, mockEvent.data.reference)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(2)
@@ -68,7 +68,7 @@ describe('getByReference Integration Tests', () => {
   test('should throw an error when database connection fails', async () => {
     await db.client.close()
 
-    await expect(getByReference(testCollection, mockEvent.data.personalisation.reference))
+    await expect(getByReference(testCollection, mockEvent.data.reference))
       .rejects
       .toThrow()
   })
@@ -97,7 +97,7 @@ describe('getByReference Integration Tests', () => {
       events: [firstEvent, secondEvent]
     })
 
-    const result = await getByReference(testCollection, mockEvent.data.personalisation.reference)
+    const result = await getByReference(testCollection, mockEvent.data.reference)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)

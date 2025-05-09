@@ -35,7 +35,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
       events: [mockEvent.commsMessage]
     })
 
-    const reference = mockEvent.commsMessage.data.personalisation.reference
+    const reference = mockEvent.commsMessage.data.reference
 
     const options = {
       method: 'GET',
@@ -69,7 +69,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
       }
     ])
 
-    const reference = mockEvent.commsMessage.data.personalisation.reference
+    const reference = mockEvent.commsMessage.data.reference
 
     const options = {
       method: 'GET',
