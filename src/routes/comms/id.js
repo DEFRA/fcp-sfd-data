@@ -1,22 +1,24 @@
-import { getCommsEventById } from '../../repos/comms-message.js'
+import { getCommsEventById } from '../../repos/comms/comms-message.js'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 export default [{
   method: 'GET',
-  path: '/api/v1/comms/events/{eventId}', // could this path be misleading? looks like the comms service?
+  path: '/api/v1/comms/events/id/{id}',
   options: {
     auth: false,
     validate: {
       params: Joi.object({
-        eventId: Joi.string().guid({ version: 'uuidv4' }).required()
+        id: Joi.string().guid({ version: 'uuidv4' }).required()
       })
     }
   },
   handler: async (request, h) => {
     try {
-      const { eventId } = request.params
-      const data = await getCommsEventById(eventId)
+      const { id } = request.params
+      const data = await getCommsEventById(id)
+      // if (data === null) {
+      //   throw Boom.notFound(err)
       return h.response({ data })
     } catch (err) {
       if (err.message.includes('No document found')) {

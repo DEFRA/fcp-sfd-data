@@ -8,7 +8,7 @@ import { startServer } from '../../../src/api/common/helpers/start-server.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
-const baseUrl = '/api/v1/comms/events'
+const baseUrl = '/api/v1/comms/events/reference'
 
 let server
 
@@ -39,17 +39,13 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
 
     const options = {
       method: 'GET',
-      url: `${baseUrl}/reference/${reference}`,
+      url: `${baseUrl}/${reference}`,
       headers: {
         'Content-Type': 'application/json'
       }
     }
 
-    console.log('options', options)
-
     const response = await server.inject(options)
-
-    console.log('response', response)
 
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain('application/json')
@@ -77,7 +73,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
 
     const options = {
       method: 'GET',
-      url: `${baseUrl}/reference/${reference}`,
+      url: `${baseUrl}/${reference}`,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -104,7 +100,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
 
     const options = {
       method: 'GET',
-      url: `${baseUrl}/reference/${reference}`,
+      url: `${baseUrl}/${reference}`,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -124,7 +120,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
   test('Return 400 when reference is not provided', async () => {
     const options = {
       method: 'GET',
-      url: `${baseUrl}/reference/`,
+      url: `${baseUrl}/%invalid-reference`,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -137,7 +133,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
     expect(response.payload).toEqual(JSON.stringify({
       statusCode: 400,
       error: 'Bad Request',
-      message: 'Invalid request params input'
+      message: 'Bad Request'
     }))
   })
 
@@ -148,7 +144,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
 
     const options = {
       method: 'GET',
-      url: `${baseUrl}/reference/${reference}`,
+      url: `${baseUrl}/${reference}`,
       headers: {
         'Content-Type': 'application/json'
       }

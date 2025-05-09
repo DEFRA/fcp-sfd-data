@@ -8,7 +8,7 @@ import { startServer } from '../../../src/api/common/helpers/start-server.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
-const baseUrl = '/api/v1/comms/events'
+const baseUrl = '/api/v1/comms/events/id'
 
 let server
 
@@ -29,18 +29,18 @@ afterAll(async () => {
 })
 
 describe('API routes for comms', () => {
-  describe('GET /api/v1/comms/events/{eventId}', () => {
+  describe('GET /api/v1/comms/events/id/{id}', () => {
     test('Return 200 when document is found with corresponding ID', async () => {
       await db.collection(notificationsCollection).insertOne({
         _id: mockEvent.commsMessage.data.correlationId,
         events: [mockEvent.commsMessage]
       })
 
-      const eventId = 'a058de5b-42ad-473c-91e7-0797a43fda30'
+      const id = 'a058de5b-42ad-473c-91e7-0797a43fda30'
 
       const options = {
         method: 'GET',
-        url: `${baseUrl}/${eventId}`, // what is the url format?
+        url: `${baseUrl}/${id}`,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -58,11 +58,11 @@ describe('API routes for comms', () => {
     })
 
     test('Return 404 when document is not found with corresponding ID', async () => {
-      const eventId = 'a058de5b-42ad-473c-91e7-0797a43fda30'
+      const id = 'a058de5b-42ad-473c-91e7-0797a43fda30'
 
       const options = {
         method: 'GET',
-        url: `${baseUrl}/${eventId}`,
+        url: `${baseUrl}/${id}`,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -73,16 +73,16 @@ describe('API routes for comms', () => {
       expect(JSON.parse(response.payload)).toMatchObject({
         statusCode: 404,
         error: 'Not Found',
-        message: `Error while fetching comms notifications: No document found with id: ${eventId}`
+        message: `Error while fetching comms notifications: No document found with id: ${id}`
       })
     })
 
-    test('Return 400 when eventId is not a valid UUID', async () => {
-      const invalidEventId = 'not-a-valid-uuid'
+    test('Return 400 when id is not a valid UUID', async () => {
+      const invalidId = 'not-a-valid-uuid'
 
       const options = {
         method: 'GET',
-        url: `${baseUrl}/${invalidEventId}`,
+        url: `${baseUrl}/${invalidId}`,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -100,11 +100,11 @@ describe('API routes for comms', () => {
     test('Return 500 when there is a database error', async () => {
       await db.client.close()
 
-      const eventId = 'a058de5b-42ad-473c-91e7-0797a43fda30'
+      const id = 'a058de5b-42ad-473c-91e7-0797a43fda30'
 
       const options = {
         method: 'GET',
-        url: `${baseUrl}/${eventId}`,
+        url: `${baseUrl}/${id}`,
         headers: {
           'Content-Type': 'application/json'
         }

@@ -9,7 +9,7 @@ export default [{
     auth: false,
     validate: {
       params: Joi.object({
-        reference: Joi.string()
+        reference: Joi.string().required()
       })
     }
   },

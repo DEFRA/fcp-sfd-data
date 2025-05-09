@@ -9,7 +9,7 @@ import getByProperty from '../../../src/repos/common/get-by-property.js'
 import getById from '../../../src/repos/common/get-by-id.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
-import { persistCommsNotification, getCommsEventByProperty, getCommsEventById } from '../../../src/repos/comms-message.js'
+import { persistCommsNotification, getCommsEventByProperty, getCommsEventById } from '../../../src/repos/comms/comms-message.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
