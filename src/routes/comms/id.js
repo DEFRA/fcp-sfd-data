@@ -4,7 +4,7 @@ import Joi from 'joi'
 
 export default [{
   method: 'GET',
-  path: '/api/v1/comms/events/{eventId}',
+  path: '/api/v1/comms/events/id/{id}',
   options: {
     auth: false,
     tags: ['api'],
