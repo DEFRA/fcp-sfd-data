@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest'
-import getByReference from '../../../../../src/repos/common/get-by-reference.js'
+import getByReference from '../../../../../src/repos/comms/get-by-reference.js'
 import db from '../../../../../src/data/db.js'
 import v1CommsMessage from '../../../../mocks/comms-message/v1.js'
 

@@ -1,4 +1,4 @@
-import { getCommsEventByReference } from '../../repos/comms-message.js'
+import { getCommsEventByReference } from '../../repos/comms/comms-message.js'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
