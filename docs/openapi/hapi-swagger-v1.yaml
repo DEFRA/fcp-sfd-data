@@ -1,0 +1,32 @@
+info:
+  title: FCP SFD Data API
+  version: 0.0.1
+servers:
+  - url: http://localhost:3000
+    description: local server
+openapi: 3.0.0
+components:
+  schemas: {}
+tags: []
+paths:
+  /api/v1/comms/events/{eventId}:
+    get:
+      operationId: getApiV1CommsEventsEventid
+      parameters:
+        - name: eventId
+          in: path
+          schema:
+            type: string
+            x-format:
+              guid:
+                version: uuidv4
+          required: true
+      tags:
+        - api
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string

@@ -4,9 +4,10 @@ import Joi from 'joi'
 
 export default [{
   method: 'GET',
-  path: '/api/v1/comms/events/id/{id}',
+  path: '/api/v1/comms/events/{eventId}',
   options: {
     auth: false,
+    tags: ['api'],
     validate: {
       params: Joi.object({
         id: Joi.string().guid({ version: 'uuidv4' }).required()
