@@ -1,5 +1,8 @@
 import path from 'path'
 import hapi from '@hapi/hapi'
+import Inert from '@hapi/inert'
+import Vision from '@hapi/vision'
+import hapiSwagger from 'hapi-swagger'
 
 import { config } from '../config/index.js'
 import { router } from './router.js'
@@ -8,6 +11,23 @@ import { secureContext } from './common/helpers/secure-context/index.js'
 import { pulse } from './common/helpers/pulse.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
+
+const hapiSwaggerOptions = {
+  info: {
+    title: 'FCP SFD Data API',
+    version: '0.0.1'
+  },
+  OAS: 'v3.0',
+  documentationPath: '/documentation',
+  jsonPath: '/documentation.json',
+  cors: false,
+  servers: [
+    {
+      url: 'http://localhost:3000',
+      description: 'local server'
+    }
+  ]
+}
 
 const createServer = async () => {
   setupProxy()
@@ -32,13 +52,6 @@ const createServer = async () => {
         xss: 'enabled',
         noSniff: true,
         xframe: true
-      },
-      // need this config to allow openapi docs to work?
-      cors: {
-        origin: ['*'],
-        additionalHeaders: ['accept', 'authorization', 'content-type', 'if-none-match', 'origin', 'user-agent', 'x-requested-with'],
-        additionalExposedHeaders: ['accept', 'authorization', 'content-type', 'if-none-match', 'origin', 'user-agent', 'x-requested-with'],
-        credentials: true
       }
     },
     router: {
@@ -51,7 +64,13 @@ const createServer = async () => {
     requestTracing,
     secureContext,
     pulse,
-    router
+    router,
+    Inert,
+    Vision,
+    {
+      plugin: hapiSwagger,
+      options: hapiSwaggerOptions
+    }
   ])
 
   return server
