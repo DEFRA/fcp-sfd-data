@@ -93,7 +93,7 @@ describe('API routes for comms', () => {
       expect(JSON.parse(response.payload)).toMatchObject({
         statusCode: 400,
         error: 'Bad Request',
-        message: 'Invalid request params input'
+        message: '"id" must be a valid GUID'
       })
     })
 

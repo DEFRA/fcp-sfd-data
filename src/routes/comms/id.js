@@ -1,17 +1,20 @@
-import { getCommsEventById } from '../../repos/comms/comms-message.js'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
+
+import { getCommsEventById } from '../../repos/comms/comms-message.js'
+import { failAction } from '../../api/common/helpers/fail-action.js'
 
 export default [{
   method: 'GET',
   path: '/api/v1/comms/events/id/{id}',
   options: {
     auth: false,
-    tags: ['api'],
+    tags: ['api', 'comms'],
     validate: {
       params: Joi.object({
         id: Joi.string().guid({ version: 'uuidv4' }).required()
-      })
+      }),
+      failAction
     }
   },
   handler: async (request, h) => {
