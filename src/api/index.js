@@ -3,6 +3,7 @@ import hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import Vision from '@hapi/vision'
 import hapiSwagger from 'hapi-swagger'
+import Joi from 'joi'
 
 import { config } from '../config/index.js'
 import { router } from './router.js'
@@ -42,6 +43,8 @@ const createServer = async () => {
       stripTrailingSlash: true
     }
   })
+
+  await server.validator(Joi)
 
   await server.register([
     requestLogger,

@@ -17,7 +17,136 @@ tags:
     description: Operations supporting the SFD object processing service
 openapi: 3.0.0
 components:
-  schemas: {}
+  schemas:
+    description:
+      type: string
+      enum:
+        - Success
+    commsAddresses:
+      type: array
+      items:
+        type: string
+        x-format:
+          email: true
+    personalisation:
+      type: object
+    statusDetails:
+      type: object
+    data:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid: true
+        crn:
+          type: string
+        sbi:
+          type: string
+        sourceSystem:
+          type: string
+        notifyTemplateId:
+          type: string
+          x-format:
+            guid: true
+        commsType:
+          type: string
+        commsAddresses:
+          $ref: '#/components/schemas/commsAddresses'
+        personalisation:
+          $ref: '#/components/schemas/personalisation'
+        reference:
+          type: string
+        statusDetails:
+          $ref: '#/components/schemas/statusDetails'
+        oneClickUnsubscribeUrl:
+          type: string
+          x-format:
+            uri: true
+        emailReplyToId:
+          type: string
+          x-format:
+            guid: true
+    Model1:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        source:
+          type: string
+        specversion:
+          type: string
+        type:
+          type: string
+        datacontenttype:
+          type: string
+        time:
+          type: string
+          format: date
+        data:
+          $ref: '#/components/schemas/data'
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+    events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model1'
+    Result:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        events:
+          $ref: '#/components/schemas/events'
+      required:
+        - id
+        - events
+    Model2:
+      type: object
+      properties:
+        description:
+          $ref: '#/components/schemas/description'
+        schema:
+          $ref: '#/components/schemas/Result'
+    Model3:
+      type: string
+      enum:
+        - Bad Request
+    Model4:
+      type: object
+      properties:
+        description:
+          $ref: '#/components/schemas/Model3'
+    Model5:
+      type: string
+      enum:
+        - Not found
+    Model6:
+      type: object
+      properties:
+        description:
+          $ref: '#/components/schemas/Model5'
+    Model7:
+      type: string
+      enum:
+        - Internal Server Error
+    Model8:
+      type: object
+      properties:
+        description:
+          $ref: '#/components/schemas/Model7'
 paths:
   /health:
     get:
@@ -33,6 +162,7 @@ paths:
                 type: string
   /comms/events/id/{id}:
     get:
+      summary: Returns a single commsEvent by id
       operationId: getCommsEventsIdId
       parameters:
         - name: id
@@ -46,9 +176,27 @@ paths:
       tags:
         - comms
       responses:
-        default:
+        '200':
           description: Successful
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Model2'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model4'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model6'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model8'
