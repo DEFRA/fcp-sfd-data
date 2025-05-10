@@ -1,19 +1,41 @@
 info:
   title: FCP SFD Data API
   version: 0.0.1
+  description: API for FCP Single Front Door Data service
+  contact:
+    name: SFD Devs
+    url: https://github.com/orgs/DEFRA/teams/fcp-sfd-devs
 servers:
   - url: http://localhost:3000
     description: local server
+tags:
+  - name: health
+    description: Health check endpoint
+  - name: comms
+    description: Operations supporting the SFD communications service
+  - name: object
+    description: Operations supporting the SFD object processing service
 openapi: 3.0.0
 components:
   schemas: {}
-tags: []
 paths:
-  /api/v1/comms/events/{eventId}:
+  /health:
     get:
-      operationId: getApiV1CommsEventsEventid
+      operationId: getHealth
+      tags:
+        - health
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+  /comms/events/id/{id}:
+    get:
+      operationId: getCommsEventsIdId
       parameters:
-        - name: eventId
+        - name: id
           in: path
           schema:
             type: string
@@ -22,7 +44,7 @@ paths:
                 version: uuidv4
           required: true
       tags:
-        - api
+        - comms
       responses:
         default:
           description: Successful
