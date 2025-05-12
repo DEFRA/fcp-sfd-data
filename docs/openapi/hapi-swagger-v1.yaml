@@ -18,11 +18,11 @@ tags:
 openapi: 3.0.0
 components:
   schemas:
-    personalisation:
+    Personalisation:
       type: object
-    statusDetails:
+    Status Details:
       type: object
-    data:
+    Event Payload:
       type: object
       properties:
         correlationId:
@@ -46,11 +46,11 @@ components:
           x-format:
             email: true
         personalisation:
-          $ref: '#/components/schemas/personalisation'
+          $ref: '#/components/schemas/Personalisation'
         reference:
           type: string
         statusDetails:
-          $ref: '#/components/schemas/statusDetails'
+          $ref: '#/components/schemas/Status%20Details'
         oneClickUnsubscribeUrl:
           type: string
           x-format:
@@ -79,7 +79,7 @@ components:
           type: string
           format: date
         data:
-          $ref: '#/components/schemas/data'
+          $ref: '#/components/schemas/Event%20Payload'
       required:
         - id
         - source
@@ -143,6 +143,100 @@ components:
           type: string
         message:
           type: string
+    Model1:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid: true
+        crn:
+          type: string
+        sbi:
+          type: string
+        sourceSystem:
+          type: string
+        notifyTemplateId:
+          type: string
+          x-format:
+            guid: true
+        commsType:
+          type: string
+        recipient:
+          type: string
+          x-format:
+            email: true
+        personalisation:
+          $ref: '#/components/schemas/Personalisation'
+        reference:
+          type: string
+        statusDetails:
+          $ref: '#/components/schemas/Status Details'
+        oneClickUnsubscribeUrl:
+          type: string
+          x-format:
+            uri: true
+        emailReplyToId:
+          type: string
+          x-format:
+            guid: true
+    Cloud Event:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        source:
+          type: string
+        specversion:
+          type: string
+        type:
+          type: string
+        datacontenttype:
+          type: string
+        time:
+          type: string
+          format: date
+        data:
+          $ref: '#/components/schemas/Model1'
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+    Model2:
+      type: array
+      items:
+        $ref: '#/components/schemas/Cloud%20Event'
+    Model3:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        events:
+          $ref: '#/components/schemas/Model2'
+      required:
+        - correlationId
+        - events
+    Notifications List:
+      type: array
+      items:
+        $ref: '#/components/schemas/Model3'
+    Get By Reference Response:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Notifications%20List'
+      required:
+        - data
 paths:
   /health:
     get:
@@ -196,3 +290,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Internal%20Server%20Error'
+  /comms/events/reference/{reference}:
+    get:
+      summary: Returns an array of commsEvents by reference
+      operationId: getCommsEventsReferenceReference
+      parameters:
+        - name: reference
+          in: path
+          schema:
+            type: string
+          required: true
+      tags:
+        - comms
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20By%20Reference%20Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal Server Error'
