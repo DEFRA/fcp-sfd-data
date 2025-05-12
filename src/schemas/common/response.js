@@ -1,13 +1,14 @@
 import Joi from 'joi'
+import { StatusCodes } from 'http-status-codes'
 
 const httpStatusResult = (successModel) => {
   return {
     responses: {
-      200: {
+      [StatusCodes.OK]: {
         description: 'Success',
         schema: successModel
       },
-      400: {
+      [StatusCodes.BAD_REQUEST]: {
         description: 'Bad Request',
         schema: Joi.object({
           statusCode: Joi.number().allow(400),
@@ -15,7 +16,7 @@ const httpStatusResult = (successModel) => {
           message: Joi.string()
         }).label('Bad Request')
       },
-      404: {
+      [StatusCodes.NOT_FOUND]: {
         description: 'Not found',
         schema: Joi.object({
           statusCode: Joi.number().allow(404),
@@ -23,7 +24,7 @@ const httpStatusResult = (successModel) => {
           message: Joi.string()
         }).label('Not Found')
       },
-      500: {
+      [StatusCodes.INTERNAL_SERVER_ERROR]: {
         description: 'Internal Server Error',
         schema: Joi.object({
           statusCode: Joi.number().allow(500),

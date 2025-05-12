@@ -2,7 +2,7 @@ import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { NotFoundError } from '../../errors/not-found-error.js'
-import { resultModel } from '../../schemas/comms/responses/id.js'
+import { successModel } from '../../schemas/comms/responses/id.js'
 import { httpStatusResult } from '../../schemas/common/response.js'
 import { failAction } from '../../api/common/helpers/fail-action.js'
 import { getCommsEventById } from '../../repos/comms/comms-message.js'
@@ -14,7 +14,7 @@ export default [{
     description: 'Returns a single commsEvent by id',
     auth: false,
     tags: ['api', 'comms'],
-    plugins: { 'hapi-swagger': httpStatusResult(resultModel) },
+    plugins: { 'hapi-swagger': httpStatusResult(successModel) },
     validate: {
       params: Joi.object({
         id: Joi.string().guid({ version: 'uuidv4' }).required()
