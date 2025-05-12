@@ -18,16 +18,6 @@ tags:
 openapi: 3.0.0
 components:
   schemas:
-    description:
-      type: string
-      enum:
-        - Success
-    commsAddresses:
-      type: array
-      items:
-        type: string
-        x-format:
-          email: true
     personalisation:
       type: object
     statusDetails:
@@ -51,8 +41,10 @@ components:
             guid: true
         commsType:
           type: string
-        commsAddresses:
-          $ref: '#/components/schemas/commsAddresses'
+        recipient:
+          type: string
+          x-format:
+            email: true
         personalisation:
           $ref: '#/components/schemas/personalisation'
         reference:
@@ -67,7 +59,7 @@ components:
           type: string
           x-format:
             guid: true
-    Model1:
+    Cloud Events:
       type: object
       properties:
         id:
@@ -96,57 +88,61 @@ components:
         - datacontenttype
         - time
         - data
-    events:
+    Events:
       type: array
       items:
-        $ref: '#/components/schemas/Model1'
-    Result:
+        $ref: '#/components/schemas/Cloud%20Events'
+    Comms Notification:
       type: object
       properties:
-        id:
+        correlationId:
           type: string
           x-format:
             guid:
               version: uuidv4
         events:
-          $ref: '#/components/schemas/events'
+          $ref: '#/components/schemas/Events'
       required:
-        - id
+        - correlationId
         - events
-    Model2:
+    Get By ID Response:
       type: object
       properties:
-        description:
-          $ref: '#/components/schemas/description'
-        schema:
-          $ref: '#/components/schemas/Result'
-    Model3:
-      type: string
-      enum:
-        - Bad Request
-    Model4:
+        data:
+          $ref: '#/components/schemas/Comms%20Notification'
+    Bad Request:
       type: object
       properties:
-        description:
-          $ref: '#/components/schemas/Model3'
-    Model5:
-      type: string
-      enum:
-        - Not found
-    Model6:
+        statusCode:
+          type: number
+          enum:
+            - 400
+        error:
+          type: string
+        message:
+          type: string
+    Not Found:
       type: object
       properties:
-        description:
-          $ref: '#/components/schemas/Model5'
-    Model7:
-      type: string
-      enum:
-        - Internal Server Error
-    Model8:
+        statusCode:
+          type: number
+          enum:
+            - 404
+        error:
+          type: string
+        message:
+          type: string
+    Internal Server Error:
       type: object
       properties:
-        description:
-          $ref: '#/components/schemas/Model7'
+        statusCode:
+          type: number
+          enum:
+            - 500
+        error:
+          type: string
+        message:
+          type: string
 paths:
   /health:
     get:
@@ -177,26 +173,26 @@ paths:
         - comms
       responses:
         '200':
-          description: Successful
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model2'
+                $ref: '#/components/schemas/Get%20By%20ID%20Response'
         '400':
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model4'
+                $ref: '#/components/schemas/Bad%20Request'
         '404':
-          description: Not Found
+          description: Not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model6'
+                $ref: '#/components/schemas/Not%20Found'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model8'
+                $ref: '#/components/schemas/Internal%20Server%20Error'

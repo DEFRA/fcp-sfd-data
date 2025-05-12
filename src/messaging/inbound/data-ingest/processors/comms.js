@@ -2,7 +2,7 @@ import { createLogger } from '../../../../logging/logger.js'
 import { validate } from '../../../../schemas/validate.js'
 import { persistCommsNotification } from '../../../../repos/comms/comms-message.js'
 
-import { v1 } from '../../../../schemas/comms/index.js'
+import { v1 } from '../../../../schemas/comms/inbound/index.js'
 import { v1 as dataIngestSchema } from '../../../../schemas/data-ingest/index.js'
 
 import { UnprocessableMessageError } from '../../../../errors/message-errors.js'
