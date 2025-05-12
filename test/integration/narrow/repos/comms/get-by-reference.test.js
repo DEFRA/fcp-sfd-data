@@ -59,12 +59,6 @@ describe('getByReference Integration Tests', () => {
       .toThrow()
   })
 
-  // TODO: add test for this when we've refactored the error handling
-  test.todo('should return null when no documents match the query', async () => {
-    const result = await getByReference(testCollection, 'non-existent-reference')
-    expect(result).toBeNull()
-  })
-
   test('should throw an error when database connection fails', async () => {
     await db.client.close()
 

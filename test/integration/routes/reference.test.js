@@ -113,7 +113,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
     expect(response.payload).toEqual(JSON.stringify({
       statusCode: 404,
       error: 'Not Found',
-      message: `Error while fetching comms notifications: No document found for the provided reference: ${reference}`
+      message: `No document found for the provided reference: ${reference}`
     }))
   })
 

@@ -1,6 +1,8 @@
-import { getCommsEventByReference } from '../../repos/comms/comms-message.js'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
+
+import { getCommsEventByReference } from '../../repos/comms/comms-message.js'
+import { NotFoundError } from '../../errors/not-found-error.js'
 
 export default [{
   method: 'GET',
@@ -19,7 +21,7 @@ export default [{
       const data = await getCommsEventByReference(reference)
       return h.response({ data })
     } catch (err) {
-      if (err.message.includes('No document found')) {
+      if (err instanceof NotFoundError) {
         throw Boom.notFound(err)
       }
       throw Boom.internal(err)

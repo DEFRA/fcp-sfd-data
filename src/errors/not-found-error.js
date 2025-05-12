@@ -1,6 +1,6 @@
 export class NotFoundError extends Error {
-  constructor (id) {
-    super(`No document found with id: ${id}`)
+  constructor (message) {
+    super(message)
     this.name = 'NotFoundError'
   }
 }

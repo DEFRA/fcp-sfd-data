@@ -1,4 +1,5 @@
 import db from '../../data/db.js'
+import { NotFoundError } from '../../errors/not-found-error.js'
 
 const getByReference = async (collection, reference) => {
   const documents = await db.collection(collection).find({
@@ -6,8 +7,7 @@ const getByReference = async (collection, reference) => {
   }).toArray()
 
   if (!documents.length) {
-    throw new Error(`No document found for the provided reference: ${reference}`)
-    // return null?
+    throw new NotFoundError(`No document found for the provided reference: ${reference}`)
   }
 
   return documents.map((document) => ({

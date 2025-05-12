@@ -30,6 +30,7 @@ const getCommsEventById = async (id) => {
   }
 }
 
+// TODO: Remove this
 const getCommsEventByProperty = async (key, value) => {
   try {
     return await getByProperty(notificationsCollection, key, value)
@@ -43,6 +44,9 @@ const getCommsEventByReference = async (reference) => {
   try {
     return await getByReference(notificationsCollection, reference)
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      throw error
+    }
     throw new Error(`Error while fetching comms notifications: ${error.message}`,
       { cause: error })
   }
