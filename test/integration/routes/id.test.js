@@ -73,7 +73,7 @@ describe('API routes for comms', () => {
       expect(JSON.parse(response.payload)).toMatchObject({
         statusCode: 404,
         error: 'Not Found',
-        message: `Error while fetching comms notifications: No document found with id: ${id}`
+        message: `No document found with id: ${id}`
       })
     })
 
