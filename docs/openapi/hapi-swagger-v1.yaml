@@ -88,7 +88,11 @@ components:
         - datacontenttype
         - time
         - data
-    Event:
+    Events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Cloud%20Event'
+    Event Document:
       type: object
       properties:
         correlationId:
@@ -97,14 +101,26 @@ components:
             guid:
               version: uuidv4
         events:
-          $ref: '#/components/schemas/Cloud%20Event'
+          $ref: '#/components/schemas/Events'
       required:
         - correlationId
+        - events
     Get By ID Response:
       type: object
       properties:
         data: &ref_0
-          $ref: '#/components/schemas/Event'
+          $ref: '#/components/schemas/Event%20Document'
+    keys:
+      type: array
+      items:
+        type: string
+    validation:
+      type: object
+      properties:
+        source:
+          type: string
+        keys:
+          $ref: '#/components/schemas/keys'
     Bad Request:
       type: object
       properties:
@@ -116,6 +132,8 @@ components:
           type: string
         message:
           type: string
+        validation:
+          $ref: '#/components/schemas/validation'
     Not Found:
       type: object
       properties:
@@ -138,14 +156,14 @@ components:
           type: string
         message:
           type: string
-    Events:
+    Events Document:
       type: array
       items: *ref_0
     Get By Reference Response:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Events'
+          $ref: '#/components/schemas/Events%20Document'
 paths:
   /health:
     get:

@@ -13,7 +13,11 @@ const httpStatusResult = (successModel) => {
         schema: Joi.object({
           statusCode: Joi.number().allow(400),
           error: Joi.string(),
-          message: Joi.string()
+          message: Joi.string(),
+          validation: Joi.object({
+            source: Joi.string(),
+            keys: Joi.array().items(Joi.string())
+          })
         }).label('Bad Request')
       },
       [StatusCodes.NOT_FOUND]: {

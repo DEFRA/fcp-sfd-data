@@ -27,9 +27,9 @@ const cloudEventSchema = Joi.object({
 
 const eventSchema = Joi.object({
   correlationId: Joi.string().guid({ version: 'uuidv4' }).required().label('Correlation ID'),
-  events: cloudEventSchema
-}).label('Event')
+  events: Joi.array().items(cloudEventSchema).required().label('Events')
+}).label('Event Document')
 
-const eventsArraySchema = Joi.array().items(eventSchema).label('Events')
+const eventsArraySchema = Joi.array().items(eventSchema).label('Events Document')
 
 export { eventSchema, eventsArraySchema }
