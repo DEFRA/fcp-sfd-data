@@ -30,7 +30,6 @@ const getCommsEventById = async (id) => {
   }
 }
 
-// TODO: Remove this
 const getCommsEventByProperty = async (key, value) => {
   try {
     return await getByProperty(notificationsCollection, key, value)

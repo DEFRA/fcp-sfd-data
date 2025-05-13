@@ -2,8 +2,8 @@ import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { NotFoundError } from '../../errors/not-found-error.js'
-import { successModel } from '../../schemas/comms/responses/id.js'
 import { httpStatusResult } from '../../schemas/common/response.js'
+import { successModel } from '../../schemas/comms/responses/id.js'
 import { failAction } from '../../api/common/helpers/fail-action.js'
 import { getCommsEventById } from '../../repos/comms/comms-message.js'
 

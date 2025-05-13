@@ -12,9 +12,9 @@ export default [{
   path: '/api/v1/comms/events/reference/{reference}',
   options: {
     description: 'Returns an array of commsEvents by reference',
+    auth: false,
     tags: ['api', 'comms'],
     plugins: { 'hapi-swagger': httpStatusResult(successModel) },
-    auth: false,
     validate: {
       params: Joi.object({
         reference: Joi.string().required()
