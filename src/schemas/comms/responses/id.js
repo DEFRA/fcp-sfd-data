@@ -3,6 +3,6 @@ import { eventSchema } from '../../common/event.js'
 
 const successModel = Joi.object({
   data: eventSchema
-}).label('Get By ID Response')
+}).label('Get By ID')
 
 export { successModel }

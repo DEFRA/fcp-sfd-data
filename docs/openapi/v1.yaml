@@ -105,7 +105,7 @@ components:
       required:
         - correlationId
         - events
-    Get By ID Response:
+    Get By ID:
       type: object
       properties:
         data: &ref_0
@@ -159,7 +159,7 @@ components:
     Events Document:
       type: array
       items: *ref_0
-    Get By Reference Response:
+    Get By Reference:
       type: object
       properties:
         data:
@@ -198,7 +198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20ID%20Response'
+                $ref: '#/components/schemas/Get%20By%20ID'
         '400':
           description: Bad Request
           content:
@@ -235,7 +235,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20Reference%20Response'
+                $ref: '#/components/schemas/Get%20By%20Reference'
         '400':
           description: Bad Request
           content:
