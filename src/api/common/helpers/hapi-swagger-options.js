@@ -8,7 +8,6 @@ const hapiSwaggerOptions = {
       url: 'https://github.com/orgs/DEFRA/teams/fcp-sfd-devs'
     }
   },
-  basePath: '/api/v1',
   cors: false,
   documentationPath: '/documentation',
   grouping: 'tags',
