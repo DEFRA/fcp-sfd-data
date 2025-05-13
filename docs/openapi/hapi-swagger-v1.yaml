@@ -59,7 +59,7 @@ components:
           type: string
           x-format:
             guid: true
-    Cloud Events:
+    Cloud Event:
       type: object
       properties:
         id:
@@ -88,11 +88,7 @@ components:
         - datacontenttype
         - time
         - data
-    Events:
-      type: array
-      items:
-        $ref: '#/components/schemas/Cloud%20Events'
-    Comms Notification:
+    Event:
       type: object
       properties:
         correlationId:
@@ -101,15 +97,14 @@ components:
             guid:
               version: uuidv4
         events:
-          $ref: '#/components/schemas/Events'
+          $ref: '#/components/schemas/Cloud%20Event'
       required:
         - correlationId
-        - events
     Get By ID Response:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/Comms%20Notification'
+        data: &ref_0
+          $ref: '#/components/schemas/Event'
     Bad Request:
       type: object
       properties:
@@ -143,100 +138,14 @@ components:
           type: string
         message:
           type: string
-    Model1:
-      type: object
-      properties:
-        correlationId:
-          type: string
-          x-format:
-            guid: true
-        crn:
-          type: string
-        sbi:
-          type: string
-        sourceSystem:
-          type: string
-        notifyTemplateId:
-          type: string
-          x-format:
-            guid: true
-        commsType:
-          type: string
-        recipient:
-          type: string
-          x-format:
-            email: true
-        personalisation:
-          $ref: '#/components/schemas/Personalisation'
-        reference:
-          type: string
-        statusDetails:
-          $ref: '#/components/schemas/Status Details'
-        oneClickUnsubscribeUrl:
-          type: string
-          x-format:
-            uri: true
-        emailReplyToId:
-          type: string
-          x-format:
-            guid: true
-    Cloud Event:
-      type: object
-      properties:
-        id:
-          type: string
-          x-format:
-            guid:
-              version: uuidv4
-        source:
-          type: string
-        specversion:
-          type: string
-        type:
-          type: string
-        datacontenttype:
-          type: string
-        time:
-          type: string
-          format: date
-        data:
-          $ref: '#/components/schemas/Model1'
-      required:
-        - id
-        - source
-        - specversion
-        - type
-        - datacontenttype
-        - time
-        - data
-    Model2:
+    Events:
       type: array
-      items:
-        $ref: '#/components/schemas/Cloud%20Event'
-    Model3:
-      type: object
-      properties:
-        correlationId:
-          type: string
-          x-format:
-            guid:
-              version: uuidv4
-        events:
-          $ref: '#/components/schemas/Model2'
-      required:
-        - correlationId
-        - events
-    Notifications List:
-      type: array
-      items:
-        $ref: '#/components/schemas/Model3'
+      items: *ref_0
     Get By Reference Response:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Notifications%20List'
-      required:
-        - data
+          $ref: '#/components/schemas/Events'
 paths:
   /health:
     get:
