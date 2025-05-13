@@ -11,7 +11,7 @@ const httpStatusResult = (successModel) => {
       [StatusCodes.BAD_REQUEST]: {
         description: 'Bad Request',
         schema: Joi.object({
-          statusCode: Joi.number().allow(400),
+          statusCode: Joi.number().allow(StatusCodes.BAD_REQUEST),
           error: Joi.string(),
           message: Joi.string(),
           validation: Joi.object({
@@ -23,7 +23,7 @@ const httpStatusResult = (successModel) => {
       [StatusCodes.NOT_FOUND]: {
         description: 'Not found',
         schema: Joi.object({
-          statusCode: Joi.number().allow(404),
+          statusCode: Joi.number().allow(StatusCodes.NOT_FOUND),
           error: Joi.string(),
           message: Joi.string()
         }).label('Not Found')
@@ -31,7 +31,7 @@ const httpStatusResult = (successModel) => {
       [StatusCodes.INTERNAL_SERVER_ERROR]: {
         description: 'Internal Server Error',
         schema: Joi.object({
-          statusCode: Joi.number().allow(500),
+          statusCode: Joi.number().allow(StatusCodes.INTERNAL_SERVER_ERROR),
           error: Joi.string(),
           message: Joi.string()
         }).label('Internal Server Error')
