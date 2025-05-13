@@ -1,152 +1,256 @@
-# replace this with the auto generated one once we're happy with itÌ
-openapi: 3.0.0
 info:
-  title: Single Front Door Data Service
-  description: API Description
-  version: 1.0.0
+  title: FCP SFD Data API
+  version: 0.0.1
+  description: API for FCP Single Front Door Data service
+  contact:
+    name: SFD Devs
+    url: https://github.com/orgs/DEFRA/teams/fcp-sfd-devs
 servers:
-  - url: http://localhost:3000/api/v1/
-    description: Local server
-paths:
-  /comms/events/id/{correlationId}:
-    get:
-      summary: Retrieve by correlation id
-      description: Retrieve by correlation id
-      parameters:
-        - in: path
-          name: correlationId
-          schema:
-            type: string
-            format: uuid
-          description: The correlation ID to retrieve events for
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EventsResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+  - url: http://localhost:3000
+    description: local server
+tags:
+  - name: health
+    description: Health check endpoint
+  - name: comms
+    description: Operations supporting the SFD communications service
+  - name: object
+    description: Operations supporting the SFD object processing service
+openapi: 3.0.0
 components:
   schemas:
-    EventsResponse:
+    Personalisation:
+      type: object
+    Status Details:
+      type: object
+    Event Payload:
       type: object
       properties:
-        data:
-          type: object
-          properties:
-            correlationId:
-              type: string
-              example: "a058de5b-42ad-473c-91e7-0797a43fda30"
-            events:
-              type: array
-              items:
-                $ref: '#/components/schemas/Event'
-    Event:
+        correlationId:
+          type: string
+          x-format:
+            guid: true
+        crn:
+          type: string
+        sbi:
+          type: string
+        sourceSystem:
+          type: string
+        notifyTemplateId:
+          type: string
+          x-format:
+            guid: true
+        commsType:
+          type: string
+        recipient:
+          type: string
+          x-format:
+            email: true
+        personalisation:
+          $ref: '#/components/schemas/Personalisation'
+        reference:
+          type: string
+        statusDetails:
+          $ref: '#/components/schemas/Status%20Details'
+        oneClickUnsubscribeUrl:
+          type: string
+          x-format:
+            uri: true
+        emailReplyToId:
+          type: string
+          x-format:
+            guid: true
+    Cloud Event:
       type: object
       properties:
         id:
           type: string
-          example: "a058de5b-42ad-473c-91e7-0797a43fda30"
+          x-format:
+            guid:
+              version: uuidv4
         source:
           type: string
-          example: "ffc-ahwr-claim"
         specversion:
           type: string
-          example: "1.0"
         type:
           type: string
-          example: "uk.gov.fcp.sfd.notification.request"
         datacontenttype:
           type: string
-          example: "application/json"
         time:
           type: string
-          format: date-time
-          example: "2023-10-17T14:48:00.000Z"
+          format: date
         data:
-          type: object
-          properties:
-            correlationId:
-              type: string
-              example: "a058de5b-42ad-473c-91e7-0797a43fda30"
-            crn:
-              type: string
-              example: "1050000000"
-            sbi:
-              type: string
-              example: "105000000"
-            sourceSystem:
-              type: string
-              example: "AHWP"
-            notifyTemplateId:
-              type: string
-              example: "d8017132-1909-4bee-b604-b07e8081dc82"
-            commsType:
-              type: string
-              example: "email"
-            recipient:
-              type: array
-              items:
-                type: string
-              example: ["jane.doe@defra.gov.uk", "john.doe@defra.gov.uk"]
-            personalisation:
-              type: object
-              properties:
-                reference:
-                  type: string
-                  example: "test-reference"
-                applicationReference:
-                  type: string
-                  example: "test-application-reference"
-                amount:
-                  type: string
-                  example: "100"
-            reference:
-              type: string
-              example: "ffc-ahwr-example-reference"
-            statusDetails:
-              type: string
-              example: "delivered"
-            oneClickUnsubscribeUrl:
-              type: string
-              example: "https://unsubscribe.example.com"
-            emailReplyToId:
-              type: string
-              example: "8e222534-7f05-4972-86e3-17c5d9f894e2"
-    Error:
+          $ref: '#/components/schemas/Event%20Payload'
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+    Events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Cloud%20Event'
+    Event Document:
       type: object
       properties:
-        code:
-          type: integer
+        correlationId:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        events:
+          $ref: '#/components/schemas/Events'
+      required:
+        - correlationId
+        - events
+    Get By ID Response:
+      type: object
+      properties:
+        data: &ref_0
+          $ref: '#/components/schemas/Event%20Document'
+    keys:
+      type: array
+      items:
+        type: string
+    validation:
+      type: object
+      properties:
+        source:
+          type: string
+        keys:
+          $ref: '#/components/schemas/keys'
+    Bad Request:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 400
+        error:
+          type: string
         message:
           type: string
-  securitySchemes:
-    internal:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: |
-        JWT Authorization header using the Bearer scheme using defraId token
-        Example: "Authorization: Bearer {token}"
-    external:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: |
-        JWT Authorization header using the Bearer scheme using CDP Cognito token
-        Example: "Authorization: Bearer {token}"
-security:
-  - internal: []
-  - external: []
+        validation:
+          $ref: '#/components/schemas/validation'
+    Not Found:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 404
+        error:
+          type: string
+        message:
+          type: string
+    Internal Server Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 500
+        error:
+          type: string
+        message:
+          type: string
+    Events Document:
+      type: array
+      items: *ref_0
+    Get By Reference Response:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Events%20Document'
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - health
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/comms/events/id/{id}:
+    get:
+      summary: Returns a single commsEvent by id
+      operationId: getApiV1CommsEventsIdId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            x-format:
+              guid:
+                version: uuidv4
+          required: true
+      tags:
+        - comms
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20By%20ID%20Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad%20Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not%20Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal%20Server%20Error'
+  /api/v1/comms/events/reference/{reference}:
+    get:
+      summary: Returns an array of commsEvents by reference
+      operationId: getApiV1CommsEventsReferenceReference
+      parameters:
+        - name: reference
+          in: path
+          schema:
+            type: string
+          required: true
+      tags:
+        - comms
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20By%20Reference%20Response'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal Server Error'

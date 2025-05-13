@@ -7,7 +7,7 @@ const generateOpenapi = async (server) => {
     url: '/documentation.json'
   })
   const openApiYaml = yaml.dump(openApiJson.result)
-  await writeFile('./docs/openapi/hapi-swagger-v1.yaml', openApiYaml)
+  await writeFile('./docs/openapi/v1.yaml', openApiYaml)
 }
 
 export { generateOpenapi }
