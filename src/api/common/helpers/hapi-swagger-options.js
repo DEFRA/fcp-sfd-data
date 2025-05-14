@@ -17,6 +17,14 @@ const hapiSwaggerOptions = {
     {
       url: 'http://localhost:3000',
       description: 'local server'
+    },
+    {
+      url: 'https://fcp-sfd-data.dev.cdp-int.defra.cloud',
+      description: 'CDP Dev environment'
+    },
+    {
+      url: 'https://fcp-sfd-data.test.cdp-int.defra.cloud',
+      description: 'CDP Test environment'
     }
   ],
   tags: [
