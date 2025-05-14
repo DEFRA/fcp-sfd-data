@@ -1,5 +1,6 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { GraphQLError } from 'graphql'
+import { NotFoundError } from '../../../src/errors/not-found-error.js'
 
 import { createLogger } from '../../../src/logging/logger.js'
 
@@ -7,9 +8,10 @@ import mockNotification from '../../mocks/comms-message/v1.js'
 import saveEvent from '../../../src/repos/common/save-event.js'
 import getByProperty from '../../../src/repos/common/get-by-property.js'
 import getById from '../../../src/repos/common/get-by-id.js'
+import getByReference from '../../../src/repos/comms/get-by-reference.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
-import { persistCommsNotification, getCommsEventByProperty, getCommsEventById } from '../../../src/repos/comms/comms-message.js'
+import { persistCommsNotification, getCommsEventByProperty, getCommsEventById, getCommsEventByReference } from '../../../src/repos/comms/comms-message.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
@@ -35,6 +37,12 @@ vi.mock('../../../src/repos/common/check-idempotency.js', () => {
   }
 })
 
+vi.mock('../../../src/repos/comms/get-by-reference.js', () => {
+  return {
+    default: vi.fn()
+  }
+})
+
 vi.mock('../../../src/logging/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
     info: vi.fn(),
@@ -46,6 +54,7 @@ vi.mock('../../../src/logging/logger.js', () => ({
 const mockKey = 'mockKey'
 const mockValue = 'mockValue'
 const mockId = 'mockId'
+const mockReference = 'mockReference'
 
 const mockLogger = createLogger()
 
@@ -128,5 +137,27 @@ describe('Get comms event by property', () => {
       .toThrowError('Error while fetching comms notifications: No document found')
 
     expect(getByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
+  })
+})
+
+describe('Get comms event by reference', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  test('should call getByReference with the correct collection and reference', async () => {
+    await getCommsEventByReference(mockReference)
+
+    expect(getByReference).toHaveBeenCalledWith('notificationEvents', mockReference)
+  })
+
+  test('should throw an error if getCommsEventByReference returns no documents', async () => {
+    getByReference.mockRejectedValue(new NotFoundError('No document found'))
+
+    await expect(getCommsEventByReference(mockReference))
+      .rejects
+      .toThrowError('No document found')
+
+    expect(getByReference).toHaveBeenCalledWith('notificationEvents', mockReference)
   })
 })
