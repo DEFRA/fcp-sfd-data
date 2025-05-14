@@ -17,21 +17,21 @@ export default [{
     plugins: { 'hapi-swagger': httpStatusResult(successModel) },
     validate: {
       params: Joi.object({
-        reference: Joi.string().required()
+        reference: Joi.string().required().min(3)
       }),
       failAction
-    },
-    handler: async (request, h) => {
-      try {
-        const { reference } = request.params
-        const data = await getCommsEventByReference(reference)
-        return h.response({ data })
-      } catch (err) {
-        if (err instanceof NotFoundError) {
-          throw Boom.notFound(err)
-        }
-        throw Boom.internal(err)
+    }
+  },
+  handler: async (request, h) => {
+    try {
+      const { reference } = request.params
+      const data = await getCommsEventByReference(reference)
+      return h.response({ data })
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        throw Boom.notFound(err)
       }
+      throw Boom.internal(err)
     }
   }
 }]
