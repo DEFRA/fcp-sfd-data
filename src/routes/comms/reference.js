@@ -17,7 +17,7 @@ export default [{
     plugins: { 'hapi-swagger': httpStatusResult(successModel) },
     validate: {
       params: Joi.object({
-        reference: Joi.string().required().min(3)
+        reference: Joi.string().required()
       }),
       failAction
     }
