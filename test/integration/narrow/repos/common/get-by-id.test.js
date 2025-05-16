@@ -2,6 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import getById from '../../../../../src/repos/common/get-by-id.js'
 import db from '../../../../../src/data/db.js'
 import v1CommsMessage from '../../../../mocks/comms-message/v1.js'
+import { NotFoundError } from '../../../../../src/errors/not-found-error.js'
 
 const mockEvent = { ...v1CommsMessage.commsMessage }
 
@@ -31,7 +32,7 @@ describe('getById Integration Tests', () => {
   test('should throw an error when no documents match the query', async () => {
     await expect(getById(testCollection, 'non-existent-id'))
       .rejects
-      .toThrow('No document found')
+      .toThrow(NotFoundError)
   })
 
   test('should throw an error when database connection fails', async () => {

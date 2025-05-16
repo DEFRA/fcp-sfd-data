@@ -1,0 +1,261 @@
+info:
+  title: FCP SFD Data API
+  version: 0.0.1
+  description: API for FCP Single Front Door Data service
+  contact:
+    name: SFD Devs
+    url: https://github.com/orgs/DEFRA/teams/fcp-sfd-devs
+servers:
+  - url: http://localhost:3000
+    description: local server
+  - url: https://fcp-sfd-data.dev.cdp-int.defra.cloud
+    description: CDP Dev environment
+  - url: https://fcp-sfd-data.test.cdp-int.defra.cloud
+    description: CDP Test environment
+tags:
+  - name: health
+    description: Health check endpoint
+  - name: comms
+    description: Operations supporting the SFD communications service
+  - name: object
+    description: Operations supporting the SFD object processing service
+openapi: 3.0.0
+components:
+  schemas:
+    Personalisation:
+      type: object
+    Status Details:
+      type: object
+    Event Payload:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid: true
+        crn:
+          type: string
+        sbi:
+          type: string
+        sourceSystem:
+          type: string
+        notifyTemplateId:
+          type: string
+          x-format:
+            guid: true
+        commsType:
+          type: string
+        recipient:
+          type: string
+          x-format:
+            email: true
+        personalisation:
+          $ref: '#/components/schemas/Personalisation'
+        reference:
+          type: string
+        statusDetails:
+          $ref: '#/components/schemas/Status%20Details'
+        oneClickUnsubscribeUrl:
+          type: string
+          x-format:
+            uri: true
+        emailReplyToId:
+          type: string
+          x-format:
+            guid: true
+    Cloud Event:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        source:
+          type: string
+        specversion:
+          type: string
+        type:
+          type: string
+        datacontenttype:
+          type: string
+        time:
+          type: string
+          format: date
+        data:
+          $ref: '#/components/schemas/Event%20Payload'
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+    Events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Cloud%20Event'
+    Event Document:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        events:
+          $ref: '#/components/schemas/Events'
+      required:
+        - correlationId
+        - events
+    Get By ID:
+      type: object
+      properties:
+        data: &ref_0
+          $ref: '#/components/schemas/Event%20Document'
+    keys:
+      type: array
+      items:
+        type: string
+    validation:
+      type: object
+      properties:
+        source:
+          type: string
+        keys:
+          $ref: '#/components/schemas/keys'
+    Bad Request:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 400
+        error:
+          type: string
+        message:
+          type: string
+        validation:
+          $ref: '#/components/schemas/validation'
+    Not Found:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 404
+        error:
+          type: string
+        message:
+          type: string
+    Internal Server Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 500
+        error:
+          type: string
+        message:
+          type: string
+    Events Document:
+      type: array
+      items: *ref_0
+    Get By Reference:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Events%20Document'
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - health
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/comms/events/id/{id}:
+    get:
+      summary: Returns a single commsEvent by id
+      operationId: getApiV1CommsEventsIdId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            x-format:
+              guid:
+                version: uuidv4
+          required: true
+      tags:
+        - comms
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20By%20ID'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad%20Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not%20Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal%20Server%20Error'
+  /api/v1/comms/events/reference/{reference}:
+    get:
+      summary: Returns an array of commsEvents by reference
+      operationId: getApiV1CommsEventsReferenceReference
+      parameters:
+        - name: reference
+          in: path
+          schema:
+            type: string
+            minLength: 3
+          required: true
+      tags:
+        - comms
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20By%20Reference'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal Server Error'

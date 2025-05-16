@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import commsDataMessage from '../../../mocks/comms-message/v1.js'
 
 import { validate } from '../../../../src/schemas/validate.js'
-import { v1 } from '../../../../src/schemas/comms/index.js'
+import { v1 } from '../../../../src/schemas/comms/inbound/index.js'
 
 describe('comms data event v1 schema validation', () => {
   let mockV1Message
