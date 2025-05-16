@@ -12,7 +12,7 @@ import { secureContext } from './common/helpers/secure-context/index.js'
 import { pulse } from './common/helpers/pulse.js'
 import { requestTracing } from './common/helpers/request-tracing.js'
 import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
-import { hapiSwaggerOptions } from './common/helpers/hapi-swagger-options.js'
+import { hapiSwaggerOptions } from '../config/hapi-swagger-options.js'
 
 const createServer = async () => {
   setupProxy()
