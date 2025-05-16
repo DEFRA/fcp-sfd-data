@@ -7,6 +7,9 @@ const health = {
       server.route({
         method: 'GET',
         path: '/health',
+        options: {
+          tags: ['api', 'health']
+        },
         ...healthHandler
       })
     }

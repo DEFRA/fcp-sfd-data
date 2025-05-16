@@ -1,4 +1,4 @@
-import { getCommsEventById, getCommsEventByProperty } from '../../repos/comms-message.js'
+import { getCommsEventById, getCommsEventByProperty } from '../../repos/comms/comms-message.js'
 import enumMap from '../schema/comms-message/enum-map.js'
 
 export class CommsEventDataSource {
