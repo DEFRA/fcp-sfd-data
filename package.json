@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-data",
-  "version": "0.7.0",
+  "version": "0.9.0",
   "description": "Data integration for Single Front Door",
   "main": "src/index.js",
   "type": "module",
