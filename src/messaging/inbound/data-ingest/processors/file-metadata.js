@@ -6,7 +6,7 @@ import { v1 as dataIngestSchema } from '../../../../schemas/data-ingest/index.js
 
 import { UnprocessableMessageError } from '../../../../errors/message-errors.js'
 
-import { persistFileMetadata } from '../../../../repos/file-metadata.js'
+import { persistFileMetadata } from '../../../../repos/metadata/file-metadata.js'
 
 const logger = createLogger()
 

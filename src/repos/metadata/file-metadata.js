@@ -1,7 +1,8 @@
-import { config } from '../config/index.js'
-import { saveEvent, getByProperty, getById } from './common/index.js'
-import { createLogger } from '../logging/logger.js'
-import checkIdempotency from './common/check-idempotency.js'
+import { config } from '../../config/index.js'
+import { saveEvent, getByProperty, getById } from '../common/index.js'
+import { createLogger } from '../../logging/logger.js'
+import checkIdempotency from '../common/check-idempotency.js'
+import { NotFoundError } from '../../errors/not-found-error.js'
 
 const logger = createLogger()
 
@@ -15,18 +16,21 @@ const persistFileMetadata = async (event) => {
   return logger.info(`File metadata message processed successfully, eventId: ${event.id}`)
 }
 
-const getMetadataByProperty = async (key, value) => {
+const getMetadataById = async (id) => {
   try {
-    return await getByProperty(fileMetadataCollection, key, value)
+    return await getById(fileMetadataCollection, id)
   } catch (error) {
-    throw new Error(`Error while fetching comms notifications: ${error.message}`,
+    if (error instanceof NotFoundError) {
+      throw error
+    }
+    throw new Error(`Error while fetching metadata notifications: ${error.message}`,
       { cause: error })
   }
 }
 
-const getMetadataById = async (id) => {
+const getMetadataByProperty = async (key, value) => {
   try {
-    return await getById(fileMetadataCollection, id)
+    return await getByProperty(fileMetadataCollection, key, value)
   } catch (error) {
     throw new Error(`Error while fetching comms notifications: ${error.message}`,
       { cause: error })

@@ -10,7 +10,7 @@ import getByProperty from '../../../src/repos/common/get-by-property.js'
 import getById from '../../../src/repos/common/get-by-id.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
 
-import { persistFileMetadata, getMetadataByProperty, getMetadataById } from '../../../src/repos/file-metadata.js'
+import { persistFileMetadata, getMetadataByProperty, getMetadataById } from '../../../src/repos/metadata/file-metadata.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
@@ -125,7 +125,7 @@ describe('Get file metadata by id', () => {
 
     await expect(getMetadataById(mockId))
       .rejects
-      .toThrowError('Error while fetching comms notifications: No document found')
+      .toThrowError('Error while fetching metadata notifications: No document found')
 
     expect(getById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
   })
