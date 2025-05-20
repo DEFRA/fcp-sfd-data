@@ -1,5 +1,6 @@
 import { config } from '../../config/index.js'
 import { saveEvent, getByProperty, getById } from '../common/index.js'
+import getByBlobReference from './get-by-blob-reference.js'
 import { createLogger } from '../../logging/logger.js'
 import checkIdempotency from '../common/check-idempotency.js'
 import { NotFoundError } from '../../errors/not-found-error.js'
@@ -37,8 +38,21 @@ const getMetadataByProperty = async (key, value) => {
   }
 }
 
+const getMetadataByBlobReference = async (blobReference) => {
+  try {
+    return await getByBlobReference(fileMetadataCollection, blobReference)
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      throw error
+    }
+    throw new Error(`Error while fetching metadata notifications: ${error.message}`,
+      { cause: error })
+  }
+}
+
 export {
   persistFileMetadata,
   getMetadataByProperty,
-  getMetadataById
+  getMetadataById,
+  getMetadataByBlobReference
 }

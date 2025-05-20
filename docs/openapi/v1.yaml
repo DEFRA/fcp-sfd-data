@@ -230,7 +230,6 @@ paths:
           in: path
           schema:
             type: string
-            minLength: 3
           required: true
       tags:
         - comms
@@ -259,3 +258,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Internal Server Error'
+  /api/v1/metadata/events/blob-reference/{blobReference}:
+    get:
+      summary: Returns an array of metadata events by blobReference
+      operationId: getApiV1MetadataEventsBlobreferenceBlobreference
+      parameters:
+        - name: blobReference
+          in: path
+          schema:
+            type: string
+          required: true
+      tags:
+        - metadata
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/metadata/events/id/{id}:
+    get:
+      summary: Returns a single metadata event by id
+      operationId: getApiV1MetadataEventsIdId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            x-format:
+              guid:
+                version: uuidv4
+          required: true
+      tags:
+        - metadata
+      responses:
+        default:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
