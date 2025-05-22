@@ -1,5 +1,6 @@
 import { config } from '../../config/index.js'
-import { saveEvent, getByProperty, getById, getByReference } from '../common/index.js'
+import { saveEvent, getByProperty, getById } from '../common/index.js'
+import getByReference from './get-by-reference.js'
 import { createLogger } from '../../logging/logger.js'
 import checkIdempotency from '../common/check-idempotency.js'
 import { NotFoundError } from '../../errors/not-found-error.js'

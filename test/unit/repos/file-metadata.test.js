@@ -6,11 +6,14 @@ import { createLogger } from '../../../src/logging/logger.js'
 import mockEvent from '../../mocks/file-metadata/v1.js'
 
 import saveEvent from '../../../src/repos/common/save-event.js'
-import getByProperty from '../../../src/repos/common/get-by-property.js'
-import getById from '../../../src/repos/common/get-by-id.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
+import { getById, getByProperty } from '../../../src/repos/common/index.js'
 
-import { persistFileMetadata, getMetadataByProperty, getMetadataById } from '../../../src/repos/metadata/file-metadata.js'
+import {
+  persistFileMetadata,
+  getMetadataByProperty,
+  getMetadataById
+} from '../../../src/repos/metadata/file-metadata.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
