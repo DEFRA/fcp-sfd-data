@@ -2,8 +2,8 @@ import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { NotFoundError } from '../../errors/not-found-error.js'
-// import { httpStatusResult } from '../../schemas/common/response.js'
-// import { successModel } from '../../schemas/comms/responses/reference.js'
+import { httpStatusResult } from '../../schemas/common/response.js'
+import { successModel } from '../../schemas/file-metadata/responses/blob-reference.js'
 import { failAction } from '../../api/common/helpers/fail-action.js'
 import { getMetadataByBlobReference } from '../../repos/metadata/file-metadata.js'
 
@@ -14,7 +14,7 @@ export default [{
     description: 'Returns an array of metadata events by blobReference',
     auth: false,
     tags: ['api', 'metadata'],
-    //   plugins: { 'hapi-swagger': httpStatusResult(successModel) },
+    plugins: { 'hapi-swagger': httpStatusResult(successModel) },
     validate: {
       params: Joi.object({
         blobReference: Joi.string().required()

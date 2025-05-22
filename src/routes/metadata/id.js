@@ -2,8 +2,8 @@ import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { NotFoundError } from '../../errors/not-found-error.js'
-// todo: import { httpStatusResult } from '../../schemas/common/response.js'
-// todo: import { successModel } from '../../schemas/metadata/responses/id.js'
+import { httpStatusResult } from '../../schemas/common/response.js'
+import { successModel } from '../../schemas/file-metadata/responses/id.js'
 import { failAction } from '../../api/common/helpers/fail-action.js'
 import { getMetadataById } from '../../repos/metadata/file-metadata.js'
 
@@ -14,7 +14,7 @@ export default [{
     description: 'Returns a single metadata event by id',
     auth: false,
     tags: ['api', 'metadata'],
-    // todo: plugins: { 'hapi-swagger': httpStatusResult(successModel) },
+    plugins: { 'hapi-swagger': httpStatusResult(successModel) },
     validate: {
       params: Joi.object({
         id: Joi.string().guid({ version: 'uuidv4' }).required()

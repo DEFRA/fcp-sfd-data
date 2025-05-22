@@ -37,6 +37,10 @@ const hapiSwaggerOptions = {
       description: 'Operations supporting the SFD communications service'
     },
     {
+      name: 'metadata',
+      description: 'Operations supporting the SFD metadata service'
+    },
+    {
       name: 'object',
       description: 'Operations supporting the SFD object processing service'
     }
