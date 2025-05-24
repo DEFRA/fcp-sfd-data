@@ -1,9 +1,9 @@
 import db from '../../src/data/db.js'
 
-const insertMockEventToDb = async (collection, id, mockEvent) => {
+const insertMockEventToDb = async (collection, id, mockEvents) => {
   await db.collection(collection).insertOne({
     _id: id,
-    events: [mockEvent]
+    events: Array.isArray(mockEvents) ? mockEvents : [mockEvents]
   })
 }
 

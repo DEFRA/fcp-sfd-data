@@ -3,17 +3,17 @@ import { GraphQLError } from 'graphql'
 
 import { createLogger } from '../../../src/logging/logger.js'
 
-import mockEvent from '../../mocks/file-metadata/v1.js'
-
+import { getById, getByProperty } from '../../../src/repos/common/index.js'
 import saveEvent from '../../../src/repos/common/save-event.js'
 import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
-import { getById, getByProperty } from '../../../src/repos/common/index.js'
 
 import {
   persistFileMetadata,
   getMetadataByProperty,
   getMetadataById
 } from '../../../src/repos/metadata/file-metadata.js'
+
+import mockEvent from '../../mocks/file-metadata/v1.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {

@@ -1,51 +1,52 @@
 import { describe, test, expect, beforeEach } from 'vitest'
-import getByBlobReference from '../../../../../src/repos/metadata/get-by-blob-reference.js'
+
 import db from '../../../../../src/data/db.js'
+import getByBlobReference from '../../../../../src/repos/metadata/get-by-blob-reference.js'
+
+import { insertMockEventToDb } from '../../../../helpers/mongo.js'
 import v1Metadata from '../../../../mocks/file-metadata/v1.js'
 
-const mockEvent = { ...v1Metadata.metadata }
+const TEST_COLLECTION = 'test'
 
-const testCollection = 'test'
+const MOCK_ID = v1Metadata.metadata.data.correlationId
+const ANOTHER_MOCK_CORRELATION_ID = 'another-mock-correlation-id'
+const MOCK_BLOB_REFERENCE = v1Metadata.metadata.data.blobReference
+const MOCK_EVENT = { ...v1Metadata.metadata }
 
 describe('getByBlobReference Integration Tests', () => {
   beforeEach(async () => {
     if (!db.client.topology?.isConnected()) {
       await db.client.connect()
     }
-    await db.collection(testCollection).deleteMany({})
+    await db.collection(TEST_COLLECTION).deleteMany({})
   })
 
   test('should return one document matching the query', async () => {
-    await db.collection(testCollection).insertOne({
-      _id: mockEvent.data.correlationId,
-      events: [mockEvent]
-    })
+    await insertMockEventToDb(TEST_COLLECTION, MOCK_ID, MOCK_EVENT)
 
-    const result = await getByBlobReference(testCollection, mockEvent.data.blobReference)
+    const result = await getByBlobReference(TEST_COLLECTION, MOCK_BLOB_REFERENCE)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)
-    expect(result[0].correlationId).toBe(mockEvent.data.correlationId)
-    expect(result[0].events[0]).toMatchObject(mockEvent)
+    expect(result[0].correlationId).toBe(MOCK_EVENT.data.correlationId)
+    expect(result[0].events[0]).toMatchObject(MOCK_EVENT)
   })
 
   test('should return multiple documents matching the query', async () => {
     const firstEvent = {
-      ...mockEvent,
-      id: 'first-id'
+      ...MOCK_EVENT,
+      id: MOCK_ID
     }
 
     const secondEvent = {
-      ...mockEvent,
-      id: 'different-id'
+      ...MOCK_EVENT,
+      id: ANOTHER_MOCK_CORRELATION_ID
     }
 
-    await db.collection(testCollection).insertMany([
-      { _id: 'e7b8c6d4-3f2a-4c5e-8b9f-1a2d3e4f5g6h', events: [firstEvent] },
-      { _id: secondEvent.data.correlationId, events: [secondEvent] }
-    ])
+    await insertMockEventToDb(TEST_COLLECTION, MOCK_ID, firstEvent)
+    await insertMockEventToDb(TEST_COLLECTION, ANOTHER_MOCK_CORRELATION_ID, secondEvent)
 
-    const result = await getByBlobReference(testCollection, mockEvent.data.blobReference)
+    const result = await getByBlobReference(TEST_COLLECTION, MOCK_BLOB_REFERENCE)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(2)
@@ -54,7 +55,7 @@ describe('getByBlobReference Integration Tests', () => {
   })
 
   test('should throw an error when no documents match the query', async () => {
-    await expect(getByBlobReference(testCollection, 'non-existent-blob-reference'))
+    await expect(getByBlobReference(TEST_COLLECTION, 'non-existent-blob-reference'))
       .rejects
       .toThrow()
   })
@@ -62,29 +63,26 @@ describe('getByBlobReference Integration Tests', () => {
   test('should throw an error when database connection fails', async () => {
     await db.client.close()
 
-    await expect(getByBlobReference(testCollection, mockEvent.data.blobReference))
+    await expect(getByBlobReference(TEST_COLLECTION, MOCK_BLOB_REFERENCE))
       .rejects
       .toThrow()
   })
   test('should return multiple events in a single document', async () => {
     const firstEvent = {
-      ...mockEvent,
-      id: 'first-id',
-      data: { ...mockEvent.data }
+      ...MOCK_EVENT,
+      id: MOCK_ID,
+      data: { ...MOCK_EVENT.data }
     }
 
     const secondEvent = {
-      ...mockEvent,
-      id: 'second-id',
-      data: { ...mockEvent.data }
+      ...MOCK_EVENT,
+      id: ANOTHER_MOCK_CORRELATION_ID,
+      data: { ...MOCK_EVENT.data }
     }
 
-    await db.collection(testCollection).insertOne({
-      _id: firstEvent.data.correlationId,
-      events: [firstEvent, secondEvent]
-    })
+    await insertMockEventToDb(TEST_COLLECTION, MOCK_ID, [firstEvent, secondEvent])
 
-    const result = await getByBlobReference(testCollection, mockEvent.data.blobReference)
+    const result = await getByBlobReference(TEST_COLLECTION, MOCK_BLOB_REFERENCE)
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)

@@ -1,12 +1,12 @@
 import { describe, test, expect, beforeEach, afterAll, beforeAll } from 'vitest'
 
+import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import { config } from '../../../../src/config/index.js'
 import db from '../../../../src/data/db.js'
-import mockEvent from '../../../mocks/file-metadata/v1.js'
 
-import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import { makeApiRequest } from '../../../helpers/makeApiRequest.js'
-import { insertMockEventToDb, clearCollection } from '../../../helpers/mongo.js'
+import { clearCollection, insertMockEventToDb } from '../../../helpers/mongo.js'
+import mockEvent from '../../../mocks/file-metadata/v1.js'
 
 const metadataCollection = config.get('mongo.collections.fileMetadata')
 const baseUrl = '/api/v1/metadata/events/id'
@@ -43,7 +43,7 @@ describe('API routes for metadata', () => {
       expect(response.payload).toEqual(JSON.stringify({
         data: {
           correlationId: MOCK_CORRELATION_ID,
-          events: [mockEvent.metadata]
+          events: [MOCK_EVENT]
         }
       }))
     })
