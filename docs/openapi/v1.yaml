@@ -28,7 +28,7 @@ components:
       type: object
     Status Details:
       type: object
-    Event Payload:
+    Comms Event Payload:
       type: object
       properties:
         correlationId:
@@ -65,7 +65,7 @@ components:
           type: string
           x-format:
             guid: true
-    Cloud Event:
+    Comms Notification Cloud Event Schema:
       type: object
       properties:
         id:
@@ -85,7 +85,7 @@ components:
           type: string
           format: date
         data:
-          $ref: '#/components/schemas/Event%20Payload'
+          $ref: '#/components/schemas/Comms%20Event%20Payload'
       required:
         - id
         - source
@@ -97,8 +97,8 @@ components:
     Events:
       type: array
       items:
-        $ref: '#/components/schemas/Cloud%20Event'
-    Event Document:
+        $ref: '#/components/schemas/Comms%20Notification%20Cloud%20Event%20Schema'
+    Comms Notification Event Schema:
       type: object
       properties:
         correlationId:
@@ -111,11 +111,11 @@ components:
       required:
         - correlationId
         - events
-    Get By ID:
+    Get Comms Event By ID:
       type: object
       properties:
         data: &ref_0
-          $ref: '#/components/schemas/Event%20Document'
+          $ref: '#/components/schemas/Comms%20Notification%20Event%20Schema'
     keys:
       type: array
       items:
@@ -162,15 +162,15 @@ components:
           type: string
         message:
           type: string
-    Events Document:
+    Comms Notification Events Array Schema:
       type: array
       items: *ref_0
-    Get By Reference:
+    Get Comms Events By Reference:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Events%20Document'
-    Model1:
+          $ref: '#/components/schemas/Comms%20Notification%20Events%20Array%20Schema'
+    File Metadata Event Payload:
       type: object
       properties:
         sbi:
@@ -181,7 +181,7 @@ components:
           type: string
           x-format:
             guid: true
-    Model2:
+    File Metadata Cloud Event Schema:
       type: object
       properties:
         id:
@@ -201,7 +201,7 @@ components:
           type: string
           format: date
         data:
-          $ref: '#/components/schemas/Model1'
+          $ref: '#/components/schemas/File%20Metadata%20Event%20Payload'
       required:
         - id
         - source
@@ -210,11 +210,11 @@ components:
         - datacontenttype
         - time
         - data
-    Model3:
+    Model1:
       type: array
       items:
-        $ref: '#/components/schemas/Model2'
-    Model4:
+        $ref: '#/components/schemas/File%20Metadata%20Cloud%20Event%20Schema'
+    File Metadata Event Schema:
       type: object
       properties:
         correlationId:
@@ -223,16 +223,16 @@ components:
             guid:
               version: uuidv4
         events:
-          $ref: '#/components/schemas/Model3'
+          $ref: '#/components/schemas/Model1'
       required:
         - correlationId
         - events
-    Get By Blob Reference:
+    Get File Metadata Events By Blob Reference:
       type: object
       properties:
         data: &ref_1
-          $ref: '#/components/schemas/Model4'
-    Model5:
+          $ref: '#/components/schemas/File%20Metadata%20Event%20Schema'
+    Get File Metadata By ID:
       type: object
       properties:
         data: *ref_1
@@ -270,7 +270,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20ID'
+                $ref: '#/components/schemas/Get%20Comms%20Event%20By%20ID'
         '400':
           description: Bad Request
           content:
@@ -307,7 +307,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20Reference'
+                $ref: '#/components/schemas/Get%20Comms%20Events%20By%20Reference'
         '400':
           description: Bad Request
           content:
@@ -344,7 +344,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20Blob%20Reference'
+                $ref: >-
+                  #/components/schemas/Get%20File%20Metadata%20Events%20By%20Blob%20Reference
         '400':
           description: Bad Request
           content:
@@ -384,7 +385,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model5'
+                $ref: '#/components/schemas/Get%20File%20Metadata%20By%20ID'
         '400':
           description: Bad Request
           content:

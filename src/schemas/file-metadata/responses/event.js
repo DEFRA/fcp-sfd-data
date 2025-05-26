@@ -1,26 +1,23 @@
 import Joi from 'joi'
+import { createCloudEventSchema } from '../../common/cloud-event.js'
+import { createEventDocumentSchema, createEventDocumentsArraySchema } from '../../common/event-document.js'
 
 const metadataPayloadSchema = Joi.object({
   sbi: Joi.string().optional().label('Single Business Identifier'),
   blobReference: Joi.string().optional().label('Blob Reference'),
   correlationId: Joi.string().uuid().optional().label('Event Correlation ID')
-}).required().label('Event Payload')
+}).required().label('File Metadata Event Payload')
 
-const cloudEventSchema = Joi.object({
-  id: Joi.string().guid({ version: 'uuidv4' }).required().label('Event ID'),
-  source: Joi.string().required().label('Source'),
-  specversion: Joi.string().required().label('Spec Version'),
-  type: Joi.string().required().label('Event Type'),
-  datacontenttype: Joi.string().required().label('Content Type'),
-  time: Joi.date().required().label('Timestamp'),
-  data: metadataPayloadSchema
-}).label('Cloud Event')
+const fileMetadataCloudEventSchema = createCloudEventSchema(metadataPayloadSchema)
+  .label('File Metadata Cloud Event Schema')
 
-const eventSchema = Joi.object({
-  correlationId: Joi.string().guid({ version: 'uuidv4' }).required().label('Correlation ID'),
-  events: Joi.array().items(cloudEventSchema).required().label('Events')
-}).label('Event Document')
+const eventSchema = createEventDocumentSchema(fileMetadataCloudEventSchema)
+  .label('File Metadata Event Schema')
 
-const eventsArraySchema = Joi.array().items(eventSchema).label('Events Document')
+const eventsArraySchema = createEventDocumentsArraySchema(eventSchema)
+  .label('File Metadata Events Array Schema')
 
-export { eventSchema, eventsArraySchema }
+export {
+  eventSchema,
+  eventsArraySchema
+}

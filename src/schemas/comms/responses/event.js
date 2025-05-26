@@ -1,6 +1,8 @@
 import Joi from 'joi'
+import { createCloudEventSchema } from '../../common/cloud-event.js'
+import { createEventDocumentSchema, createEventDocumentsArraySchema } from '../../common/event-document.js'
 
-const eventPayloadSchema = Joi.object({
+const commsEventPayloadSchema = Joi.object({
   correlationId: Joi.string().uuid().optional().label('Event Correlation ID'),
   crn: Joi.string().optional().label('Customer Reference Number'),
   sbi: Joi.string().optional().label('Single Business Identifier'),
@@ -13,23 +15,18 @@ const eventPayloadSchema = Joi.object({
   statusDetails: Joi.object({}).optional().label('Status Details'),
   oneClickUnsubscribeUrl: Joi.string().uri().optional().label('Unsubscribe URL'),
   emailReplyToId: Joi.string().uuid().optional().label('Email Reply To ID')
-}).required().label('Event Payload')
+}).required().label('Comms Event Payload')
 
-const cloudEventSchema = Joi.object({
-  id: Joi.string().guid({ version: 'uuidv4' }).required().label('Event ID'),
-  source: Joi.string().required().label('Source'),
-  specversion: Joi.string().required().label('Spec Version'),
-  type: Joi.string().required().label('Event Type'),
-  datacontenttype: Joi.string().required().label('Content Type'),
-  time: Joi.date().required().label('Timestamp'),
-  data: eventPayloadSchema
-}).label('Cloud Event')
+const commsCloudEventSchema = createCloudEventSchema(commsEventPayloadSchema)
+  .label('Comms Notification Cloud Event Schema')
 
-const eventSchema = Joi.object({
-  correlationId: Joi.string().guid({ version: 'uuidv4' }).required().label('Correlation ID'),
-  events: Joi.array().items(cloudEventSchema).required().label('Events')
-}).label('Event Document')
+const eventSchema = createEventDocumentSchema(commsCloudEventSchema)
+  .label('Comms Notification Event Schema')
 
-const eventsArraySchema = Joi.array().items(eventSchema).label('Events Document')
+const eventsArraySchema = createEventDocumentsArraySchema(eventSchema)
+  .label('Comms Notification Events Array Schema')
 
-export { eventSchema, eventsArraySchema }
+export {
+  eventSchema,
+  eventsArraySchema
+}
