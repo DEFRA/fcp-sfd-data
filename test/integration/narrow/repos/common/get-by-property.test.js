@@ -1,10 +1,12 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import getByProperty from '../../../../../src/repos/common/get-by-property.js'
+
 import db from '../../../../../src/data/db.js'
+
+import { getByProperty } from '../../../../../src/repos/common/index.js'
+
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
 
 const mockEvent = { ...v1FileMetadata.metadata }
-
 const testCollection = 'test-collection'
 
 describe('getByProperty Integration Tests', () => {

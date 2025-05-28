@@ -1,12 +1,17 @@
 import { config } from '../../config/index.js'
-import { saveEvent, getByProperty, getById } from '../common/index.js'
-import getByBlobReference from './get-by-blob-reference.js'
 import { createLogger } from '../../logging/logger.js'
-import checkIdempotency from '../common/check-idempotency.js'
 import { NotFoundError } from '../../errors/not-found-error.js'
 
-const logger = createLogger()
+import {
+  checkIdempotency,
+  getById,
+  getByProperty,
+  saveEvent
+} from '../common/index.js'
 
+import getByBlobReference from './get-by-blob-reference.js'
+
+const logger = createLogger()
 const fileMetadataCollection = config.get('mongo.collections.fileMetadata')
 
 const persistFileMetadata = async (event) => {

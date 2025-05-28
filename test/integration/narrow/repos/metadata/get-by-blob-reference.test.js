@@ -1,9 +1,11 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 import db from '../../../../../src/data/db.js'
+
 import getByBlobReference from '../../../../../src/repos/metadata/get-by-blob-reference.js'
 
-import { insertMockEventToDb } from '../../../../helpers/mongo.js'
+import { clearCollection, insertMockEventToDb } from '../../../../helpers/mongo.js'
+
 import v1Metadata from '../../../../mocks/file-metadata/v1.js'
 
 const TEST_COLLECTION = 'test'
@@ -18,7 +20,7 @@ describe('getByBlobReference Integration Tests', () => {
     if (!db.client.topology?.isConnected()) {
       await db.client.connect()
     }
-    await db.collection(TEST_COLLECTION).deleteMany({})
+    await clearCollection(TEST_COLLECTION)
   })
 
   test('should return one document matching the query', async () => {
@@ -28,7 +30,7 @@ describe('getByBlobReference Integration Tests', () => {
 
     expect(result).toBeDefined()
     expect(result).toHaveLength(1)
-    expect(result[0].correlationId).toBe(MOCK_EVENT.data.correlationId)
+    expect(result[0].correlationId).toBe(MOCK_ID)
     expect(result[0].events[0]).toMatchObject(MOCK_EVENT)
   })
 
@@ -67,6 +69,7 @@ describe('getByBlobReference Integration Tests', () => {
       .rejects
       .toThrow()
   })
+
   test('should return multiple events in a single document', async () => {
     const firstEvent = {
       ...MOCK_EVENT,

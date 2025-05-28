@@ -1,10 +1,11 @@
 import { describe, test, expect, beforeEach, afterAll } from 'vitest'
+
 import db from '../../../../../src/data/db.js'
-import checkIdempotency from '../../../../../src/repos/common/check-idempotency.js'
+import { checkIdempotency } from '../../../../../src/repos/common/index.js'
+
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
 
 const mockEvent = { ...v1FileMetadata.metadata }
-
 const testCollection = 'test-collection'
 
 beforeEach(async () => {

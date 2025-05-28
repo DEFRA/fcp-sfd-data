@@ -49,6 +49,7 @@ describe('GET /api/v1/metadata/events/blob-reference/{blobReference}', () => {
       }]
     }))
   })
+
   test('Return 200 when multiple documents are found with corresponding blobReference', async () => {
     await insertMockEventToDb(METADATA_COLLECTION, MOCK_CORRELATION_ID, MOCK_EVENT)
     await insertMockEventToDb(METADATA_COLLECTION, ANOTHER_MOCK_CORRELATION_ID, MOCK_EVENT)
@@ -82,6 +83,7 @@ describe('GET /api/v1/metadata/events/blob-reference/{blobReference}', () => {
       message: `No document found for the provided blob reference: ${nonExistingBlobReference}`
     }))
   })
+
   test('Return 400 when blobReference is not provided', async () => {
     const invalidBlobReference = '%invalid-reference'
 

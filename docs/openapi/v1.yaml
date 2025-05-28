@@ -18,7 +18,7 @@ tags:
   - name: comms
     description: Operations supporting the SFD communications service
   - name: metadata
-    description: Operations supporting the SFD metadata service
+    description: Operations initially supporting the object processor service
   - name: object
     description: Operations supporting the SFD object processing service
 openapi: 3.0.0
