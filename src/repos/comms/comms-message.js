@@ -1,11 +1,17 @@
 import { config } from '../../config/index.js'
-import { saveEvent, getByProperty, getById, getByReference } from '../common/index.js'
 import { createLogger } from '../../logging/logger.js'
-import checkIdempotency from '../common/check-idempotency.js'
 import { NotFoundError } from '../../errors/not-found-error.js'
 
-const logger = createLogger()
+import {
+  checkIdempotency,
+  getByProperty,
+  getById,
+  saveEvent
+} from '../common/index.js'
 
+import getByReference from './get-by-reference.js'
+
+const logger = createLogger()
 const notificationsCollection = config.get('mongo.collections.notifications')
 
 const persistCommsNotification = async (notification) => {

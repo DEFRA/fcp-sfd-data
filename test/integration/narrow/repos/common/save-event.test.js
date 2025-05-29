@@ -1,10 +1,11 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import saveEvent from '../../../../../src/repos/common/save-event.js'
+
 import db from '../../../../../src/data/db.js'
+import { saveEvent } from '../../../../../src/repos/common/index.js'
+
 import v1FileMetadata from '../../../../mocks/file-metadata/v1.js'
 
 const mockEvent = { ...v1FileMetadata.metadata }
-
 const testCollection = 'test-collection'
 
 describe('saveEvent Integration Tests', () => {

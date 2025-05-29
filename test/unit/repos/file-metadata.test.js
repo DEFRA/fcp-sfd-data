@@ -1,16 +1,23 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
+
 import { GraphQLError } from 'graphql'
 
 import { createLogger } from '../../../src/logging/logger.js'
 
+import {
+  checkIdempotency,
+  getById,
+  getByProperty,
+  saveEvent
+} from '../../../src/repos/common/index.js'
+
+import {
+  persistFileMetadata,
+  getMetadataByProperty,
+  getMetadataById
+} from '../../../src/repos/metadata/file-metadata.js'
+
 import mockEvent from '../../mocks/file-metadata/v1.js'
-
-import saveEvent from '../../../src/repos/common/save-event.js'
-import getByProperty from '../../../src/repos/common/get-by-property.js'
-import getById from '../../../src/repos/common/get-by-id.js'
-import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
-
-import { persistFileMetadata, getMetadataByProperty, getMetadataById } from '../../../src/repos/file-metadata.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {
@@ -125,7 +132,7 @@ describe('Get file metadata by id', () => {
 
     await expect(getMetadataById(mockId))
       .rejects
-      .toThrowError('Error while fetching comms notifications: No document found')
+      .toThrowError('Error while fetching metadata notifications: No document found')
 
     expect(getById).toHaveBeenCalledWith('fileMetadataEvents', mockId)
   })

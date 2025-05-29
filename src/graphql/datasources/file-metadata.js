@@ -1,4 +1,4 @@
-import { getMetadataByProperty, getMetadataById } from '../../repos/file-metadata.js'
+import { getMetadataByProperty, getMetadataById } from '../../repos/metadata/file-metadata.js'
 import enumMap from '../schema/file-metadata/enum-map.js'
 
 export class MetadataDataSource {

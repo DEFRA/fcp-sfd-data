@@ -17,6 +17,8 @@ tags:
     description: Health check endpoint
   - name: comms
     description: Operations supporting the SFD communications service
+  - name: metadata
+    description: Operations supporting object processor metadata
   - name: object
     description: Operations supporting the SFD object processing service
 openapi: 3.0.0
@@ -26,7 +28,7 @@ components:
       type: object
     Status Details:
       type: object
-    Event Payload:
+    Comms Event Payload:
       type: object
       properties:
         correlationId:
@@ -63,7 +65,7 @@ components:
           type: string
           x-format:
             guid: true
-    Cloud Event:
+    Comms Notification Cloud Event Schema:
       type: object
       properties:
         id:
@@ -83,7 +85,7 @@ components:
           type: string
           format: date
         data:
-          $ref: '#/components/schemas/Event%20Payload'
+          $ref: '#/components/schemas/Comms%20Event%20Payload'
       required:
         - id
         - source
@@ -95,8 +97,8 @@ components:
     Events:
       type: array
       items:
-        $ref: '#/components/schemas/Cloud%20Event'
-    Event Document:
+        $ref: '#/components/schemas/Comms%20Notification%20Cloud%20Event%20Schema'
+    Comms Notification Event Schema:
       type: object
       properties:
         correlationId:
@@ -109,11 +111,11 @@ components:
       required:
         - correlationId
         - events
-    Get By ID:
+    Get Comms Event By ID:
       type: object
       properties:
         data: &ref_0
-          $ref: '#/components/schemas/Event%20Document'
+          $ref: '#/components/schemas/Comms%20Notification%20Event%20Schema'
     keys:
       type: array
       items:
@@ -160,14 +162,80 @@ components:
           type: string
         message:
           type: string
-    Events Document:
+    Comms Notification Events Array Schema:
       type: array
       items: *ref_0
-    Get By Reference:
+    Get Comms Events By Reference:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Events%20Document'
+          $ref: '#/components/schemas/Comms%20Notification%20Events%20Array%20Schema'
+    File Metadata Event Payload:
+      type: object
+      properties:
+        sbi:
+          type: string
+        blobReference:
+          type: string
+        correlationId:
+          type: string
+          x-format:
+            guid: true
+    File Metadata Cloud Event Schema:
+      type: object
+      properties:
+        id:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        source:
+          type: string
+        specversion:
+          type: string
+        type:
+          type: string
+        datacontenttype:
+          type: string
+        time:
+          type: string
+          format: date
+        data:
+          $ref: '#/components/schemas/File%20Metadata%20Event%20Payload'
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - datacontenttype
+        - time
+        - data
+    Model1:
+      type: array
+      items:
+        $ref: '#/components/schemas/File%20Metadata%20Cloud%20Event%20Schema'
+    File Metadata Event Schema:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          x-format:
+            guid:
+              version: uuidv4
+        events:
+          $ref: '#/components/schemas/Model1'
+      required:
+        - correlationId
+        - events
+    Get File Metadata Events By Blob Reference:
+      type: object
+      properties:
+        data: &ref_1
+          $ref: '#/components/schemas/File%20Metadata%20Event%20Schema'
+    Get File Metadata By ID:
+      type: object
+      properties:
+        data: *ref_1
 paths:
   /health:
     get:
@@ -202,7 +270,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20ID'
+                $ref: '#/components/schemas/Get%20Comms%20Event%20By%20ID'
         '400':
           description: Bad Request
           content:
@@ -230,7 +298,6 @@ paths:
           in: path
           schema:
             type: string
-            minLength: 3
           required: true
       tags:
         - comms
@@ -240,7 +307,85 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Get%20By%20Reference'
+                $ref: '#/components/schemas/Get%20Comms%20Events%20By%20Reference'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal Server Error'
+  /api/v1/metadata/events/blob-reference/{blobReference}:
+    get:
+      summary: Returns an array of metadata events by blobReference
+      operationId: getApiV1MetadataEventsBlobreferenceBlobreference
+      parameters:
+        - name: blobReference
+          in: path
+          schema:
+            type: string
+          required: true
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Get%20File%20Metadata%20Events%20By%20Blob%20Reference
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bad Request'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Not Found'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal Server Error'
+  /api/v1/metadata/events/id/{id}:
+    get:
+      summary: Returns a single metadata event by id
+      operationId: getApiV1MetadataEventsIdId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            x-format:
+              guid:
+                version: uuidv4
+          required: true
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Get%20File%20Metadata%20By%20ID'
         '400':
           description: Bad Request
           content:

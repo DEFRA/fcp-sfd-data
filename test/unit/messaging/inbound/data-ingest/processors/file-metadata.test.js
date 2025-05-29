@@ -17,7 +17,7 @@ vi.mock('../../../../../../src/logging/logger.js', () => ({
 const logger = createLogger()
 
 const persistFileMetadata = vi.fn()
-vi.mock('../../../../../../src/repos/file-metadata.js', () => ({
+vi.mock('../../../../../../src/repos/metadata/file-metadata.js', () => ({
   persistFileMetadata
 }))
 

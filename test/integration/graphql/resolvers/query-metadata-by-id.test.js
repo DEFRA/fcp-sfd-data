@@ -1,7 +1,7 @@
 import { describe, beforeAll, beforeEach, afterAll, test, expect } from 'vitest'
 import validMetadataMessage from '../../../mocks/file-metadata/v1.js'
 import metadataEventByIdQuery from '../queries/metadata-by-id.js'
-import { persistFileMetadata } from '../../../../src/repos/file-metadata.js'
+import { persistFileMetadata } from '../../../../src/repos/metadata/file-metadata.js'
 import { startServer } from '../../../../src/api/common/helpers/start-server.js'
 import db from '../../../../src/data/db.js'
 

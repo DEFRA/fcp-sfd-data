@@ -1,17 +1,26 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import { GraphQLError } from 'graphql'
-import { NotFoundError } from '../../../src/errors/not-found-error.js'
 
+import { GraphQLError } from 'graphql'
+
+import { NotFoundError } from '../../../src/errors/not-found-error.js'
 import { createLogger } from '../../../src/logging/logger.js'
 
-import mockNotification from '../../mocks/comms-message/v1.js'
-import saveEvent from '../../../src/repos/common/save-event.js'
-import getByProperty from '../../../src/repos/common/get-by-property.js'
-import getById from '../../../src/repos/common/get-by-id.js'
-import getByReference from '../../../src/repos/comms/get-by-reference.js'
-import checkIdempotency from '../../../src/repos/common/check-idempotency.js'
+import {
+  checkIdempotency,
+  getById,
+  getByProperty,
+  saveEvent
+} from '../../../src/repos/common/index.js'
 
-import { persistCommsNotification, getCommsEventByProperty, getCommsEventById, getCommsEventByReference } from '../../../src/repos/comms/comms-message.js'
+import {
+  persistCommsNotification,
+  getCommsEventByProperty,
+  getCommsEventById,
+  getCommsEventByReference
+} from '../../../src/repos/comms/comms-message.js'
+import getByReference from '../../../src/repos/comms/get-by-reference.js'
+
+import mockNotification from '../../mocks/comms-message/v1.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
   return {

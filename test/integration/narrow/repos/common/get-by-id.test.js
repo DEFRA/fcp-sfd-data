@@ -1,11 +1,13 @@
 import { describe, test, expect, beforeEach } from 'vitest'
-import getById from '../../../../../src/repos/common/get-by-id.js'
+
 import db from '../../../../../src/data/db.js'
-import v1CommsMessage from '../../../../mocks/comms-message/v1.js'
 import { NotFoundError } from '../../../../../src/errors/not-found-error.js'
 
-const mockEvent = { ...v1CommsMessage.commsMessage }
+import { getById } from '../../../../../src/repos/common/index.js'
 
+import v1CommsMessage from '../../../../mocks/comms-message/v1.js'
+
+const mockEvent = { ...v1CommsMessage.commsMessage }
 const testCollection = 'test'
 
 describe('getById Integration Tests', () => {
