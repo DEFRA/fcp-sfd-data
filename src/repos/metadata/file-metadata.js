@@ -5,7 +5,6 @@ import { NotFoundError } from '../../errors/not-found-error.js'
 import {
   checkIdempotency,
   getById,
-  getByProperty,
   saveEvent
 } from '../common/index.js'
 
@@ -34,15 +33,6 @@ const getMetadataById = async (id) => {
   }
 }
 
-const getMetadataByProperty = async (key, value) => {
-  try {
-    return await getByProperty(fileMetadataCollection, key, value)
-  } catch (error) {
-    throw new Error(`Error while fetching comms notifications: ${error.message}`,
-      { cause: error })
-  }
-}
-
 const getMetadataByBlobReference = async (blobReference) => {
   try {
     return await getByBlobReference(fileMetadataCollection, blobReference)
@@ -57,7 +47,6 @@ const getMetadataByBlobReference = async (blobReference) => {
 
 export {
   persistFileMetadata,
-  getMetadataByProperty,
   getMetadataById,
   getMetadataByBlobReference
 }

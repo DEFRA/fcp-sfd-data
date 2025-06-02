@@ -4,7 +4,6 @@ import { NotFoundError } from '../../errors/not-found-error.js'
 
 import {
   checkIdempotency,
-  getByProperty,
   getById,
   saveEvent
 } from '../common/index.js'
@@ -36,15 +35,6 @@ const getCommsEventById = async (id) => {
   }
 }
 
-const getCommsEventByProperty = async (key, value) => {
-  try {
-    return await getByProperty(notificationsCollection, key, value)
-  } catch (error) {
-    throw new Error(`Error while fetching comms notifications: ${error.message}`,
-      { cause: error })
-  }
-}
-
 const getCommsEventByReference = async (reference) => {
   try {
     return await getByReference(notificationsCollection, reference)
@@ -59,7 +49,6 @@ const getCommsEventByReference = async (reference) => {
 
 export {
   persistCommsNotification,
-  getCommsEventByProperty,
   getCommsEventById,
   getCommsEventByReference
 }

@@ -1,20 +1,16 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 
-import { GraphQLError } from 'graphql'
-
 import { NotFoundError } from '../../../src/errors/not-found-error.js'
 import { createLogger } from '../../../src/logging/logger.js'
 
 import {
   checkIdempotency,
   getById,
-  getByProperty,
   saveEvent
 } from '../../../src/repos/common/index.js'
 
 import {
   persistCommsNotification,
-  getCommsEventByProperty,
   getCommsEventById,
   getCommsEventByReference
 } from '../../../src/repos/comms/comms-message.js'
@@ -23,12 +19,6 @@ import getByReference from '../../../src/repos/comms/get-by-reference.js'
 import mockNotification from '../../mocks/comms-message/v1.js'
 
 vi.mock('../../../src/repos/common/save-event.js', () => {
-  return {
-    default: vi.fn()
-  }
-})
-
-vi.mock('../../../src/repos/common/get-by-property.js', () => {
   return {
     default: vi.fn()
   }
@@ -60,8 +50,6 @@ vi.mock('../../../src/logging/logger.js', () => ({
   })
 }))
 
-const mockKey = 'mockKey'
-const mockValue = 'mockValue'
 const mockId = 'mockId'
 const mockReference = 'mockReference'
 
@@ -117,35 +105,13 @@ describe('Get comms event by id', () => {
   })
 
   test('should throw an error if getById fails', async () => {
-    getById.mockRejectedValue(new GraphQLError('No document found'))
+    getById.mockRejectedValue(new NotFoundError('No document found'))
 
     await expect(getCommsEventById(mockId))
       .rejects
-      .toThrowError('Error while fetching comms notifications: No document found')
+      .toThrowError('No document found')
 
     expect(getById).toHaveBeenCalledWith('notificationEvents', mockId)
-  })
-})
-
-describe('Get comms event by property', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  test('should call getByProperty with the correct collection and key-value pair', async () => {
-    await getCommsEventByProperty(mockKey, mockValue)
-
-    expect(getByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
-  })
-
-  test('should throw an error if getCommsEventByProperty returns no documents', async () => {
-    getByProperty.mockRejectedValue(new GraphQLError('No document found'))
-
-    await expect(getCommsEventByProperty(mockKey, mockValue))
-      .rejects
-      .toThrowError('Error while fetching comms notifications: No document found')
-
-    expect(getByProperty).toHaveBeenCalledWith('notificationEvents', mockKey, mockValue)
   })
 })
 
