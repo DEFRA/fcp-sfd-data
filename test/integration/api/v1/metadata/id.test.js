@@ -1,12 +1,12 @@
 import { describe, test, expect, beforeEach, afterAll, beforeAll } from 'vitest'
 
-import { startServer } from '../../../../src/api/common/helpers/start-server.js'
-import { config } from '../../../../src/config/index.js'
-import db from '../../../../src/data/db.js'
+import { startServer } from '../../../../../src/api/common/helpers/start-server.js'
+import { config } from '../../../../../src/config/index.js'
+import db from '../../../../../src/data/db.js'
 
-import { makeApiRequest } from '../../../helpers/makeApiRequest.js'
-import { clearCollection, insertMockEventToDb } from '../../../helpers/mongo.js'
-import mockEvent from '../../../mocks/file-metadata/v1.js'
+import { makeApiRequest } from '../../../../helpers/makeApiRequest.js'
+import { clearCollection, insertMockEventToDb } from '../../../../helpers/mongo.js'
+import mockEvent from '../../../../mocks/file-metadata/v1.js'
 
 const metadataCollection = config.get('mongo.collections.fileMetadata')
 const baseUrl = '/api/v1/metadata/events/id'

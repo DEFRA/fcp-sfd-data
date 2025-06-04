@@ -1,10 +1,10 @@
 import { describe, test, expect, beforeEach, afterAll, beforeAll } from 'vitest'
 
-import { config } from '../../../../src/config/index.js'
-import db from '../../../../src/data/db.js'
-import mockEvent from '../../../mocks/comms-message/v1.js'
+import { config } from '../../../../../src/config/index.js'
+import db from '../../../../../src/data/db.js'
+import mockEvent from '../../../../mocks/comms-message/v1.js'
 
-import { startServer } from '../../../../src/api/common/helpers/start-server.js'
+import { startServer } from '../../../../../src/api/common/helpers/start-server.js'
 
 const notificationsCollection = config.get('mongo.collections.notifications')
 
