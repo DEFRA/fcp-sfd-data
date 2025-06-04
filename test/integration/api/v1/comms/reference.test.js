@@ -1,14 +1,20 @@
 import { describe, test, expect, beforeEach, afterAll, beforeAll } from 'vitest'
 
+import { startServer } from '../../../../../src/api/common/helpers/start-server.js'
 import { config } from '../../../../../src/config/index.js'
 import db from '../../../../../src/data/db.js'
+
+import { makeApiRequest } from '../../../../helpers/makeApiRequest.js'
+import { clearCollection, insertMockEventToDb } from '../../../../helpers/mongo.js'
 import mockEvent from '../../../../mocks/comms-message/v1.js'
 
-import { startServer } from '../../../../../src/api/common/helpers/start-server.js'
+const NOTIFICATIONS_COLLECTION = config.get('mongo.collections.notifications')
+const BASE_URL = '/api/v1/comms/events/reference'
 
-const notificationsCollection = config.get('mongo.collections.notifications')
-
-const baseUrl = '/api/v1/comms/events/reference'
+const MOCK_CORRELATION_ID = mockEvent.commsMessage.data.correlationId
+const ANOTHER_MOCK_CORRELATION_ID = 'another-mock-correlation-id'
+const MOCK_EVENT = mockEvent.commsMessage
+const MOCK_REFERENCE = mockEvent.commsMessage.data.reference
 
 let server
 
@@ -20,7 +26,7 @@ beforeEach(async () => {
   if (!db.client.topology?.isConnected()) {
     await db.client.connect()
   }
-  await db.collection(notificationsCollection).deleteMany({})
+  await clearCollection(NOTIFICATIONS_COLLECTION)
 })
 
 afterAll(async () => {
@@ -30,103 +36,58 @@ afterAll(async () => {
 
 describe('GET /api/v1/comms/events/reference/{reference}', () => {
   test('Return 200 when single document is found with corresponding reference', async () => {
-    await db.collection(notificationsCollection).insertOne({
-      _id: mockEvent.commsMessage.data.correlationId,
-      events: [mockEvent.commsMessage]
-    })
+    await insertMockEventToDb(NOTIFICATIONS_COLLECTION, MOCK_CORRELATION_ID, MOCK_EVENT)
 
-    const reference = mockEvent.commsMessage.data.reference
-
-    const options = {
-      method: 'GET',
-      url: `${baseUrl}/${reference}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
-    const response = await server.inject(options)
+    const response = await makeApiRequest(server, BASE_URL, MOCK_REFERENCE)
 
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain('application/json')
     expect(response.payload).toEqual(JSON.stringify({
       data: [{
-        correlationId: mockEvent.commsMessage.data.correlationId,
-        events: [mockEvent.commsMessage]
+        correlationId: MOCK_CORRELATION_ID,
+        events: [MOCK_EVENT]
       }]
     }))
   })
 
   test('Return 200 when multiple documents are found with corresponding reference', async () => {
-    await db.collection(notificationsCollection).insertMany([
-      {
-        _id: 'a058de5b-42ad-473c-81e7-0797a43fda31',
-        events: [mockEvent.commsMessage]
-      },
-      {
-        _id: mockEvent.commsMessage.data.correlationId,
-        events: [mockEvent.commsMessage]
-      }
-    ])
+    await insertMockEventToDb(NOTIFICATIONS_COLLECTION, MOCK_CORRELATION_ID, MOCK_EVENT)
+    await insertMockEventToDb(NOTIFICATIONS_COLLECTION, ANOTHER_MOCK_CORRELATION_ID, MOCK_EVENT)
 
-    const reference = mockEvent.commsMessage.data.reference
-
-    const options = {
-      method: 'GET',
-      url: `${baseUrl}/${reference}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
-    const response = await server.inject(options)
+    const response = await makeApiRequest(server, BASE_URL, MOCK_REFERENCE)
 
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain('application/json')
     expect(response.payload).toEqual(JSON.stringify({
       data: [{
-        correlationId: 'a058de5b-42ad-473c-81e7-0797a43fda31',
-        events: [mockEvent.commsMessage]
+        correlationId: MOCK_CORRELATION_ID,
+        events: [MOCK_EVENT]
       },
       {
-        correlationId: mockEvent.commsMessage.data.correlationId,
-        events: [mockEvent.commsMessage]
+        correlationId: ANOTHER_MOCK_CORRELATION_ID,
+        events: [MOCK_EVENT]
       }]
     }))
   })
 
   test('Return 404 when no documents are found with corresponding reference', async () => {
-    const reference = 'not-found-reference'
+    const nonExistingReference = 'not-found-reference'
 
-    const options = {
-      method: 'GET',
-      url: `${baseUrl}/${reference}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
-    const response = await server.inject(options)
+    const response = await makeApiRequest(server, BASE_URL, nonExistingReference)
 
     expect(response.statusCode).toBe(404)
     expect(response.headers['content-type']).toContain('application/json')
     expect(response.payload).toEqual(JSON.stringify({
       statusCode: 404,
       error: 'Not Found',
-      message: `No document found for the provided reference: ${reference}`
+      message: `No document found for the provided reference: ${nonExistingReference}`
     }))
   })
 
   test('Return 400 when reference is not provided', async () => {
-    const options = {
-      method: 'GET',
-      url: `${baseUrl}/%invalid-reference`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+    const invalidReference = '%invalid-reference'
 
-    const response = await server.inject(options)
+    const response = await makeApiRequest(server, BASE_URL, invalidReference)
 
     expect(response.statusCode).toBe(400)
     expect(response.headers['content-type']).toContain('application/json')
@@ -140,17 +101,7 @@ describe('GET /api/v1/comms/events/reference/{reference}', () => {
   test('Return 500 when there is a database error', async () => {
     await db.client.close()
 
-    const reference = 'test-reference'
-
-    const options = {
-      method: 'GET',
-      url: `${baseUrl}/${reference}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
-    const response = await server.inject(options)
+    const response = await makeApiRequest(server, BASE_URL, MOCK_REFERENCE)
 
     expect(response.statusCode).toBe(500)
     expect(response.headers['content-type']).toContain('application/json')
