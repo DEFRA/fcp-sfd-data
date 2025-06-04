@@ -39,7 +39,7 @@ If you wish to run this service independently, you can do so by executing the fo
 docker compose up
 ```
 
-When running in local dev mode the graphql explorer will be available on http://localhost:3000/graphql
+When running in local dev mode the OpenApi documentation will be available on http://localhost:3000/documentation
 
 ## Tests
 The tests have been structured into subfolders of `./test` as per the

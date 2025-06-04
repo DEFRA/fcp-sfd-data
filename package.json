@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-data",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Data integration for Single Front Door",
   "main": "src/index.js",
   "type": "module",
@@ -28,7 +28,6 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@as-integrations/hapi": "2.0.1",
     "@aws-sdk/client-sqs": "3.749.0",
     "@defra/hapi-tracing": "1.0.0",
     "@elastic/ecs-pino-format": "1.5.0",
