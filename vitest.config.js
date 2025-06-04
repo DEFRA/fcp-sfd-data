@@ -12,8 +12,7 @@ export default defineConfig({
         '**/node_modules/**',
         '**/test/**',
         '.server',
-        'src/index.js',
-        'src/graphql/**'
+        'src/index.js'
       ]
     }
   }

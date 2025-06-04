@@ -17,16 +17,6 @@ vi.mock('../../../../../src/api/index.js', () => ({
   createServer: vi.fn()
 }))
 
-vi.mock('../../../../../src/graphql/apollo-server.js', () => ({
-  apolloServer: {
-    start: vi.fn()
-  }
-}))
-
-vi.mock('../../../../../src/graphql/graphql-plugin.js', () => ({
-  graphqlPlugin: {}
-}))
-
 const mockLogger = createLogger()
 
 const mockServer = {
