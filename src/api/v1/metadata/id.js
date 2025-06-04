@@ -1,11 +1,11 @@
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
-import { NotFoundError } from '../../errors/not-found-error.js'
-import { httpStatusResult } from '../../schemas/common/response.js'
-import { successModel } from '../../schemas/file-metadata/responses/id.js'
-import { failAction } from '../../api/common/helpers/fail-action.js'
-import { getMetadataById } from '../../repos/metadata/file-metadata.js'
+import { NotFoundError } from '../../../errors/not-found-error.js'
+import { httpStatusResult } from '../../../schemas/common/response.js'
+import { successModel } from '../../../schemas/file-metadata/responses/id.js'
+import { failAction } from '../../../api/common/helpers/fail-action.js'
+import { getMetadataById } from '../../../repos/metadata/file-metadata.js'
 
 export default [{
   method: 'GET',

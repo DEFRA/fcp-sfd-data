@@ -1,8 +1,8 @@
 import { health } from './health/index.js'
-import comms from '../routes/comms/id.js'
-import commsReference from '../routes/comms/reference.js'
-import metadata from '../routes/metadata/id.js'
-import metadataBlobReference from '../routes/metadata/blob-reference.js'
+import comms from '../api/v1/comms/id.js'
+import commsReference from '../api/v1/comms/reference.js'
+import metadata from '../api/v1/metadata/id.js'
+import metadataBlobReference from '../api/v1/metadata/blob-reference.js'
 
 const router = {
   plugin: {
