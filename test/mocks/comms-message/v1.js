@@ -14,10 +14,7 @@ export default {
       sourceSystem: 'AHWP',
       notifyTemplateId: 'd8017132-1909-4bee-b604-b07e8081dc82',
       commsType: 'email',
-      commsAddresses: [
-        'jane.doe@defra.gov.uk',
-        'john.doe@defra.gov.uk'
-      ],
+      recipient: 'jane.doe@defra.gov.uk',
       personalisation: {
         reference: 'test-reference',
         applicationReference: 'test-application-reference',

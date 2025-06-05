@@ -1,15 +1,15 @@
 import { describe, test, expect, beforeEach, afterAll, beforeAll } from 'vitest'
 
-import { startServer } from '../../../../src/api/common/helpers/start-server.js'
-import { config } from '../../../../src/config/index.js'
-import db from '../../../../src/data/db.js'
+import { startServer } from '../../../../../src/api/common/helpers/start-server.js'
+import { config } from '../../../../../src/config/index.js'
+import db from '../../../../../src/data/db.js'
 
-import { makeApiRequest } from '../../../helpers/makeApiRequest.js'
-import { clearCollection, insertMockEventToDb } from '../../../helpers/mongo.js'
-import mockEvent from '../../../mocks/file-metadata/v1.js'
+import { makeApiRequest } from '../../../../helpers/makeApiRequest.js'
+import { clearCollection, insertMockEventToDb } from '../../../../helpers/mongo.js'
+import mockEvent from '../../../../mocks/file-metadata/v1.js'
 
-const metadataCollection = config.get('mongo.collections.fileMetadata')
-const baseUrl = '/api/v1/metadata/events/id'
+const METADATA_COLLECTION = config.get('mongo.collections.fileMetadata')
+const BASE_URL = '/api/v1/metadata/events/id'
 const MOCK_CORRELATION_ID = mockEvent.metadata.data.correlationId
 const MOCK_EVENT = mockEvent.metadata
 
@@ -23,7 +23,7 @@ beforeEach(async () => {
   if (!db.client.topology?.isConnected()) {
     await db.client.connect()
   }
-  await clearCollection(metadataCollection)
+  await clearCollection(METADATA_COLLECTION)
 })
 
 afterAll(async () => {
@@ -34,9 +34,9 @@ afterAll(async () => {
 describe('API routes for metadata', () => {
   describe('GET /api/v1/metadata/events/id/{id}', () => {
     test('Return 200 when document is found with corresponding ID', async () => {
-      await insertMockEventToDb(metadataCollection, MOCK_CORRELATION_ID, MOCK_EVENT)
+      await insertMockEventToDb(METADATA_COLLECTION, MOCK_CORRELATION_ID, MOCK_EVENT)
 
-      const response = await makeApiRequest(server, baseUrl, MOCK_CORRELATION_ID)
+      const response = await makeApiRequest(server, BASE_URL, MOCK_CORRELATION_ID)
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('application/json')
@@ -51,7 +51,7 @@ describe('API routes for metadata', () => {
     test('Return 404 when document is not found with corresponding ID', async () => {
       const nonExistingId = 'a058de5b-42ad-473c-91e7-0797a43fda30'
 
-      const response = await makeApiRequest(server, baseUrl, nonExistingId)
+      const response = await makeApiRequest(server, BASE_URL, nonExistingId)
 
       expect(response.statusCode).toBe(404)
       expect(JSON.parse(response.payload)).toMatchObject({
@@ -64,7 +64,7 @@ describe('API routes for metadata', () => {
     test('Return 400 when id is not a valid UUID', async () => {
       const invalidId = 'not-a-valid-uuid'
 
-      const response = await makeApiRequest(server, baseUrl, invalidId)
+      const response = await makeApiRequest(server, BASE_URL, invalidId)
 
       expect(response.statusCode).toBe(400)
       expect(JSON.parse(response.payload)).toMatchObject({
@@ -77,7 +77,7 @@ describe('API routes for metadata', () => {
     test('Return 500 when there is a database error', async () => {
       await db.client.close()
 
-      const response = await makeApiRequest(server, baseUrl, MOCK_CORRELATION_ID)
+      const response = await makeApiRequest(server, BASE_URL, MOCK_CORRELATION_ID)
 
       expect(response.statusCode).toBe(500)
       expect(JSON.parse(response.payload)).toMatchObject({
