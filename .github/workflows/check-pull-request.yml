@@ -44,6 +44,6 @@ jobs:
           docker compose -f compose.yaml -f compose.test.yaml run --rm "fcp-sfd-data"
 
       - name: SonarQubeScan
-        uses: SonarSource/sonarqube-scan-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         env: 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
